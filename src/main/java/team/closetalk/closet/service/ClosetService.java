@@ -6,4 +6,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ClosetService {
+    public void readByCloset() {
+    }
+
+    public void readByCategory() {
+    }
 }
