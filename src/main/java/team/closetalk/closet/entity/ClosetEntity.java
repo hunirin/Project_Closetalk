@@ -10,7 +10,9 @@ public class ClosetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "closet_name", unique = true)
     private String closetName;
+    @Column(name = "is_hidden")
     private Boolean isHidden;
 
 //    @ManyToOne
