@@ -27,7 +27,7 @@ public class CustomUserDetails implements UserDetails {
     private String userRole;
     private Date createdAt;
 
-    private MultipartFile proifleImage;
+    private MultipartFile profileImage;
 
     public static CustomUserDetails fromEntity(UserEntity entity){
         return CustomUserDetails.builder()

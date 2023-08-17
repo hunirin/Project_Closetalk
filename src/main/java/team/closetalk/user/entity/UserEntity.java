@@ -29,6 +29,7 @@ public class UserEntity {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @ColumnDefault(value = "'/src/main/resources/static/images/profile/default_profile.png'")
     private String profileImageUrl;
     private String social;
     @ColumnDefault(value = "'USER'")
