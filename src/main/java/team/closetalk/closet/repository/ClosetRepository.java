@@ -6,4 +6,5 @@ import team.closetalk.closet.entity.ClosetEntity;
 
 @Repository
 public interface ClosetRepository extends JpaRepository<ClosetEntity, Long> {
+    ClosetEntity findTopByOrderByIdDesc();
 }

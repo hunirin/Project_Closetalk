@@ -20,4 +20,11 @@ public class ClosetDto {
                 .isHidden(closet.getIsHidden())
                 .build();
     }
+
+    public ClosetEntity newCloset(String closetName, Boolean isHidden) {
+        ClosetEntity closet = new ClosetEntity();
+        closet.setClosetName(closetName);
+        closet.setIsHidden(isHidden);
+        return closet;
+    }
 }
