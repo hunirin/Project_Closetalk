@@ -9,35 +9,24 @@ import team.closetalk.user.entity.UserEntity;
 import java.util.Collection;
 import java.util.Date;
 
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
-    @Getter
+
     private Long id;
-    @Getter
+
     private String loginId;
-    @Getter
     private String nickname;
     private String password;
-    @Getter
     private String email;
 
-    @Getter
-    @Setter
     private String profileImageUrl;
-    @Getter
-    @Setter
     private String social;
-    @Getter
-    @Setter
     private String userRole;
-    @Getter
-    @Setter
     private Date createdAt;
 
-    @Getter
-    @Setter
     private MultipartFile proifleImage;
 
     public static CustomUserDetails fromEntity(UserEntity entity){
