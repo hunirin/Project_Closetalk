@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -111,8 +112,16 @@ public class UserService implements UserDetailsManager {
     }
 
     //로그인
-    public void loginUser(UserDetails user){
 
+    @Override
+    public CustomUserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
+        Optional<UserEntity> optionalUser = userRepository.findByLoginId(loginId);
+
+        if(optionalUser.isEmpty()) throw new UsernameNotFoundException(loginId);
+        if(optionalUser.get().getSocial() != null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+
+
+        return CustomUserDetails.fromEntity(optionalUser.get());
     }
 
 
@@ -136,8 +145,4 @@ public class UserService implements UserDetailsManager {
         return false;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
-    }
 }

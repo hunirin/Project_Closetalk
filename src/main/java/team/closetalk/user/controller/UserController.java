@@ -2,11 +2,16 @@ package team.closetalk.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.user.dto.CustomUserDetails;
+import team.closetalk.user.dto.JwtTokenDto;
 import team.closetalk.user.service.UserService;
+import team.closetalk.user.utils.JwtUtils;
 
 @Slf4j
 @RestController
@@ -15,7 +20,7 @@ import team.closetalk.user.service.UserService;
 public class UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-
+    private final JwtUtils jwtUtils;
     //회원가입
     @PostMapping(value = "/register"
             , consumes = "multipart/form-data"
@@ -44,6 +49,23 @@ public class UserController {
             log.warn("password mismatch");
             return "mismatch";
         }
+
+    }
+
+    @PostMapping("/login")
+    public JwtTokenDto loginUser(@RequestParam("loginId") String loginId
+                            , @RequestParam("password") String password
+    ){//토큰 반환?
+        log.info("password: {}, encodedPassword: {}", password, passwordEncoder.encode(password));
+
+        //반환된 값은 아이디 유무, 소셜여부까지 확인된 것(우선 없는 것만 통과)
+        CustomUserDetails responseUser = userService.loadUserByUsername(loginId);
+        passwordEncoder.matches(password, responseUser.getPassword());
+
+        JwtTokenDto response = new JwtTokenDto();
+        response.setToken(jwtUtils.generateToken(responseUser));
+
+        return response;
 
     }
 
