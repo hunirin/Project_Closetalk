@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" >
+    <title>Infinite Scroll Example</title>
+    <link rel="stylesheet" href="/static/ootd/css/main.css">
+    <script src="/static/ootd/js/ootdMain.js"></script>
+    <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+<section class="ootd">
+<div id="body-container">
+    <div class="header-content">
+    헤더
+    </div>
+    <div class="ootd-container">
+        <div class="ootd-image">
+            <thead>
+            <tr th:each="ootd : ${ootd}">
+
+            </tr>
+            </thead>
+        </div>
+    </div>
+</div>
+</section>
+</body>
+</html>
