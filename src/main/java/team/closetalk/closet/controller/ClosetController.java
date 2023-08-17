@@ -29,6 +29,12 @@ public class ClosetController {
         closetService.addCloset(closetName, isHidden);
     }
 
+    // 옷장 삭제
+    @DeleteMapping("/{closetId}")
+    public void closetRemove(@PathVariable("closetId") Long closetId) {
+        closetService.removeCloset(closetId);
+    }
+
     // 해당 옷장 아이템 목록 조회
     @PostMapping("/{closetId}")
     public List<ClosetItemDto> readItems(@PathVariable("closetId") Long closetId,
