@@ -34,6 +34,7 @@ public class CustomUserDetails implements UserDetails {
                 .id(entity.getId())
                 .loginId(entity.getLoginId())
                 .nickname(entity.getNickname())
+                .password(entity.getPassword())
                 .email(entity.getEmail())
                 .profileImageUrl(entity.getProfileImageUrl())
                 .social(entity.getSocial())

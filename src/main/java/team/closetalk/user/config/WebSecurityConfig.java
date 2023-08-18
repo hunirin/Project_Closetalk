@@ -23,6 +23,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(
                         authHttp -> authHttp.requestMatchers(
                                 "/users/register"
+                                , "/users/login"
                         ).permitAll()
                 ).sessionManagement(
                         sessionManagement -> sessionManagement.sessionCreationPolicy(
