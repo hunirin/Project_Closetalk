@@ -46,12 +46,8 @@ public class ClosetService {
     // 1-2. 옷장 삭제 (해당 옷장 내 모든 아이템 포함)
     @Transactional // 메서드 내 모든 작업 중 하나라도 실패 시 전체 작업 취소
     public void removeCloset(Long closetId) {
-        String closetName = closetRepository.findById(closetId)
-                .orElseThrow(() -> {
-                    log.error("존재하지 않는 Closet_id : {}", closetId);
-                    return new ResponseStatusException(HttpStatus.NOT_FOUND);
-                })
-                .getClosetName();
+        ClosetEntity closet = getClosetEntity(closetId);
+        String closetName = closet.getClosetName();
 
         // 해당 옷장 내 모든 아이템 삭제
         closetItemRepository.deleteAllByClosetId_Id(closetId);
@@ -61,20 +57,41 @@ public class ClosetService {
         log.info("{} 삭제 완료", closetName);
     }
 
+    // 1-3. 옷장 이름 수정
+    public void modifyClosetName(Long closetId, String changeName) {
+        ClosetEntity closet = getClosetEntity(closetId);
+        if (closet.getClosetName().equals(changeName)) {
+            log.error("이전 이름과 동일");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        closet.setClosetName(changeName);
+        closetRepository.save(closet);
+        log.info("{}으로 이름 변경", changeName);
+    }
+
+    // 1-4. 옷장 공개 여부 수정
+    public void modifyClosetHidden(Long closetId, Boolean isHidden) {
+        ClosetEntity closet = getClosetEntity(closetId);
+        if (closet.getIsHidden() == isHidden) {
+            log.error("동일한 공개 설정");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        closet.setIsHidden(isHidden);
+        closetRepository.save(closet);
+        if (isHidden) log.info("{} : 공개 설정", closet.getClosetName());
+        else log.info("{} : 비공개 설정", closet.getClosetName());
+    }
+
     // 2. 해당 옷장의 아이템 목록 조회
     public List<ClosetItemDto> readByCloset(Long closetId) {
-        ClosetEntity closet = closetRepository.findById(closetId)
-                .orElseThrow(() -> {
-                    log.error("존재하지 않는 Closet_id : {}", closetId);
-                    return new ResponseStatusException(HttpStatus.NOT_FOUND);
-                });
+        ClosetEntity closet = getClosetEntity(closetId);
         List<ClosetItemEntity> itemEntities =
                 closetItemRepository.findAllByClosetId_Id(closet.getId());
         log.info("{}의 아이템 목록 조회 완료", closet.getClosetName());
         return itemEntities.stream().map(ClosetItemDto::viewClosetItem).toList();
     }
 
-    // 3. 해당 옷장의 카테고리 별 아이템 목록 조회
+    // 2-1. 해당 옷장의 카테고리 별 아이템 목록 조회
     public List<ClosetItemDto> readByCategory(Long closetId, String category) {
         ClosetEntity closet = closetRepository.findById(closetId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -82,5 +99,14 @@ public class ClosetService {
                 closetItemRepository.findAllByClosetId_IdAndCategory(closet.getId(), category);
         log.info("{}의 {} 별 아이템 목록 조회 완료", closet.getClosetName(), category);
         return itemEntities.stream().map(ClosetItemDto::viewClosetItem).toList();
+    }
+
+    // closet_id로 해당 closet 찾기
+    private ClosetEntity getClosetEntity(Long closetId) {
+        return closetRepository.findById(closetId)
+                .orElseThrow(() -> {
+                    log.error("존재하지 않는 Closet_id : {}", closetId);
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND);
+                });
     }
 }
