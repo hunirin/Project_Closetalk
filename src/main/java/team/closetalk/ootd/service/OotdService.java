@@ -45,17 +45,24 @@ public class OotdService {
 
     // READ
     // 커서 페이지네이션을 통한 무한 스크롤 => no offset
-    public Page<OotdArticleDto> readOotdPagedWithCursor(Long cursor, Integer pageSize) {
-        Pageable pageable;
-        if (cursor == null) {
-            pageable = PageRequest.of(0, pageSize, Sort.by("id").ascending());
-        } else {
-            pageable = PageRequest.of(0, pageSize, Sort.by("id").ascending());
-        }
-
-        Page<OotdArticleEntity> ootdEntityPage = ootdArticleRepository.findByCursor(cursor, pageable);
-        Page<OotdArticleDto> ootdDtoPage = ootdEntityPage.map(OotdArticleDto::fromEntity);
-        return ootdDtoPage;
+//    public Page<OotdArticleDto> readOotdPagedWithCursor(Long cursor, Integer pageSize) {
+//        Pageable pageable;
+//        if (cursor == null) {
+//            pageable = PageRequest.of(0, pageSize, Sort.by("id").ascending());
+//        } else {
+//            pageable = PageRequest.of(0, pageSize, Sort.by("id").ascending());
+//        }
+//
+//        Page<OotdArticleEntity> ootdEntityPage = ootdArticleRepository.findByCursor(cursor, pageable);
+//        Page<OotdArticleDto> ootdDtoPage = ootdEntityPage.map(OotdArticleDto::fromEntity);
+//        return ootdDtoPage;
+//    }
+    //페이지 단위로 조회
+    public Page<OotdArticleDto> readOotdPaged(Integer pageNum, Integer pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNum, pageSize, Sort.by("id").descending());
+        Page<OotdArticleEntity> ootdEntityPage = ootdArticleRepository.findAll(pageable);
+        return ootdEntityPage.map(OotdArticleDto::fromEntity);
     }
 
     // POST
@@ -93,7 +100,7 @@ public class OotdService {
         log.info(articleImageFilename);
 
         // 폴더와 이미지 이름을 포함한 파일 경로
-        String articleImagePath = articleImageDir + articleImageFilename; // 파일 경로
+        String articleImagePath = String.format("../../static/ootd/image/article_%s/", ootdArticleId) + articleImageFilename; // 파일 경로
         log.info(articleImagePath);
 
         // MultipartFile을 저장
