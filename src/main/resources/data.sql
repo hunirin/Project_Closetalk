@@ -29,17 +29,18 @@ spring:
 */
 
 
--- INSERT USERS
+-- INSERT USERS( login_id = 암호화 되지 않은 password 입니다.)
 INSERT INTO users (id, login_id, password,  nickname, email, profile_image_url, created_at)
-VALUES (1,'user01', '', 'userNo.1', 'user01@closetalk.com', '/src/main/resources/static/images/profile/default_profile.png', '2023-08-17 17:54:33');
+VALUES (1,'user01', '$2a$10$683FGWMTZkLKSfjRAstivenYNj9Jrz5N7UTLxLDLfRQ54a1bILHuG', 'userNo.1', 'user01@closetalk.com', '/src/main/resources/static/images/profile/default_profile.png', '2023-08-17 17:54:33');
 INSERT INTO users (id, login_id, password,  nickname, email, profile_image_url, created_at)
-VALUES (2,'user02', '', 'NextUser', 'user02@closetalk.com', '/src/main/resources/static/images/profile/default_profile.png', '2023-08-17 17:13:44');
+VALUES (2,'user02', '$2a$10$fogJdUbb478vgoFMw6SiheyB.tILLROmEBCE5qYo7KvTfigix56dq', 'NextUser', 'user02@closetalk.com', '/src/main/resources/static/images/profile/default_profile.png', '2023-08-17 17:13:44');
 INSERT INTO users (id, login_id, password,  nickname, email, profile_image_url, created_at)
-VALUES (3,'user03', '', '블랙맘바를삼켜', 'user03@closetalk.com', '/src/main/resources/static/images/profile/default_profile.png', '2023-08-17 22:10:06');
+VALUES (3,'user03', '$2a$10$vJIDksp34bWZ7KzCbKp73esekbDK0LjUPWnrdMDCSXSEyd29.ffBK', '블랙맘바를삼켜', 'user03@closetalk.com', '/src/main/resources/static/images/profile/default_profile.png', '2023-08-17 22:10:06');
 INSERT INTO users (id, login_id, password,  nickname, email, profile_image_url, created_at)
-VALUES (4,'user04', '', '힘내어떡해이겨내', 'user04@closetalk.com', '/src/main/resources/static/images/profile/default_profile.png', '2023-08-18 00:11:03');
+VALUES (4,'user04', '$2a$10$gg3hLcEPfC8aWWLnzbrWb.3k0dURlZDsJ8ogj.B0oU8RVXTzDPeRG', '힘내어떡해이겨내', 'user04@closetalk.com', '/src/main/resources/static/images/profile/default_profile.png', '2023-08-18 00:11:03');
 INSERT INTO users (id, login_id, password,  nickname, email, profile_image_url, created_at)
-VALUES (5,'user05', '', '우주최강햄스터', 'user05@closetalk.com', '/src/main/resources/static/images/profile/default_profile.png', '2023-08-18 03:11:22');
+VALUES (5,'user05', '$2a$10$vyqR/N0.Ph.0A.Jvn5Kqv.3HcRbjHamlKL4KRRxdlBhazPZ/2I6Q6', '우주최강햄스터', 'user05@closetalk.com', '/src/main/resources/static/images/profile/default_profile.png', '2023-08-18 03:11:22');
+
 
 -- INSERT CLOSET
 INSERT INTO closet (closet_name, is_hidden) VALUES ('My closet 1', false);
