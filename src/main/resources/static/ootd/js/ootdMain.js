@@ -1,33 +1,38 @@
-let page = 0; // Initialize the page number
+let cursor = null; // Initialize the cursor
 
 function loadMoreArticles() {
     $.ajax({
-        url: `/ootd/articles?cursor=${cursor}`,
+        url: `/ootd/list?cursor=${cursor}`,
         method: "GET",
         success: function(data) {
-            if (data.length > 0) {
+            if (data.ootdPage.content.length > 0) {
                 // Append new articles to the container
                 const articlesContainer = $("#articles-container");
-                for (const article of data) {
-                    const articleElement = createArticleElement(article);
+                for (const ootdPage of data.ootdPage.content) {
+                    const articleElement = createArticleElement(ootdPage);
                     articlesContainer.append(articleElement);
                 }
-                cursor = data[data.length - 1].id; // Update the cursor
+                cursor = data.ootdPage.content[data.ootdPage.content.length - 1].id; // Update the cursor
             }
         },
         error: function() {
             console.error("Error loading articles.");
         }
     });
-
 }
 
-function createArticleElement(article) {
+function createArticleElement(ootdPage) {
     // Create and return an HTML element for the article
-    // You can customize the rendering of each article here
-    const articleElement = $("<div>").addClass("article");
-    articleElement.append($("<h2>").text(article.title));
-    articleElement.append($("<p>").text(article.content));
+    const articleElement = $("<div>").addClass("ootdPage");
+    articleElement.append($("<h2>").text(ootdPage.content));
+    articleElement.append($("<p>").text(ootdPage.hashtag));
+
+    // Display the thumbnail image if available
+    if (ootdPage.thumbnail) {
+        const thumbnailElement = $("<img>").attr("src", ootdPage.thumbnail).attr("alt", "Thumbnail");
+        articleElement.append(thumbnailElement);
+    }
+
     return articleElement;
 }
 

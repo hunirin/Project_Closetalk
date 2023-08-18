@@ -1,1 +1,40 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/closetalk
+    username: 'closetalk_admin'
+    password: 'rladlarladlsk1212'
+
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    hibernate:
+      ddl-auto: update
+
+  sql:
+    init:
+      mode: always
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    check-template-location: true
+    cache: false
+
+  mvc:
+    static-path-pattern: "/static/**"
+    hiddenmethod:
+      filter:
+        enabled: true
+
+  web:
+    resources:
+      static-locations: file:media/,classpath:/static
+
+#jwt:
+#  secret: binfsdkfjgajjjwjjwFJFJSDFnwnenfnakqfffffqqfdfasdvbbbnbn
 

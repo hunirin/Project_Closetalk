@@ -1,29 +1,174 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" >
     <title>Infinite Scroll Example</title>
     <link rel="stylesheet" href="/static/ootd/css/main.css">
-    <script src="/static/ootd/js/ootdMain.js"></script>
+    <script type="text/javascript" src="/static/ootd/js/ootdMain.js"></script>
     <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
 </head>
 <body>
-<section class="ootd">
-<div id="body-container">
-    <div class="header-content">
-    헤더
-    </div>
-    <div class="ootd-container">
-        <div class="ootd-image">
-            <thead>
-            <tr th:each="ootd : ${ootd}">
+<section class="main">
+    <form action="/ootd/list" method="get">
+    <div class="body-container">
+        <div class="header-container">
+            <div class="header-top">
+                <div class="header-icon alert">
+                    <i class="fa-solid fa-bell fa-2x"></i>
+                </div>
+                <div class="header-icon mypage">
+                    <i class="fa-solid fa-circle-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="header-closetalk">closetalk</div>
+            <div id="menu">
+                <div class="header-menu">ootd</div>
+                <div class="header-menu">community</div>
+                <div class="header-menu">issue</div>
+            </div>
+        </div>
 
-            </tr>
-            </thead>
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="/static/issue/1.jpg"></div>
+                <div class="swiper-slide"><img src="/static/issue/2.jpg"></div>
+                <div class="swiper-slide"><img src="/static/issue/3.jpg"></div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+        <div class="ootd-container-a">
+            <div class="ootd-container-b">
+                <th:block th:each="ootd : ${ootdPage}">
+                <div class="ootd-image" th:if="${ootd.thumbnail != null}">
+
+                        <img th:src="@{${ootd.getThumbnail()}}" style="border-radius: 0px; width: 100%; height: 100%;">
+
+                </div>
+                </th:block>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/1.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/2.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/3.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/4.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/5.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/6.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/7.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/8.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/9.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/10.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/11.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/12.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/1.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/2.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/3.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/4.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/5.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/6.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/7.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/8.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/9.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/10.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/11.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/12.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/1.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/2.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/3.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/4.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/5.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/6.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/7.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/8.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/9.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/10.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/11.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+                <div class="ootd-image">
+                    <img src="/static/ootd/image/ex/12.jpg" class="ootd-image first" style="border-radius: 0px; width: 100%; height: 100%;">
+                </div>
+            </div>
         </div>
     </div>
-</div>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+        <script>
+            var swiper = new Swiper(".mySwiper", {
+                pagination: {
+                    el: ".swiper-pagination",
+                },
+            });
+        </script>
+    </form>
 </section>
 </body>
 </html>
