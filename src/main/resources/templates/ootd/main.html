@@ -42,10 +42,8 @@
         <div class="ootd-container-a">
             <div class="ootd-container-b">
                 <th:block th:each="ootd : ${ootdPage}">
-                <div class="ootd-image" th:if="${ootd.thumbnail != null}">
-
-                        <img th:src="@{${ootd.getThumbnail()}}" style="border-radius: 0px; width: 100%; height: 100%;">
-
+                <div class="ootd-image">
+                    <img th:src="@{${ootd.getThumbnail()}}" style="border-radius: 0px; width: 100%; height: 100%;">
                 </div>
                 </th:block>
                 <div class="ootd-image">
