@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 public class ViewController {
     @GetMapping("loginPage")
-    public String getLoginForm(){
+    public String viewLoginForm(){
         return "html/login-form";
     }
 }
