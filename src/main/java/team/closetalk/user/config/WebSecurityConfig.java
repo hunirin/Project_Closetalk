@@ -25,7 +25,14 @@ public class WebSecurityConfig {
                                 "/users/register"
                                 , "/users/login"
                         ).permitAll()
-                ).sessionManagement(
+                )
+                //폼로그인 추가
+                .formLogin( formHttp -> formHttp.loginPage("/loginPage")
+                        .defaultSuccessUrl("/loginPage")
+                        .failureUrl("/loginPage")
+                        .permitAll()
+                )
+                .sessionManagement(
                         sessionManagement -> sessionManagement.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
                         )
