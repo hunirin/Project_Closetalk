@@ -55,12 +55,10 @@ public class UserController {
     @PostMapping("/login")
     public JwtTokenDto loginUser(@RequestParam("loginId") String loginId
                             , @RequestParam("password") String password
-    ){//토큰 반환?
-        log.info("password: {}, encodedPassword: {}", password, passwordEncoder.encode(password));
-
+    ){
         //반환된 값은 아이디 유무, 소셜여부까지 확인된 것(우선 없는 것만 통과)
         CustomUserDetails responseUser = userService.loadUserByUsername(loginId);
-        passwordEncoder.matches(password, responseUser.getPassword());
+        if (!passwordEncoder.matches(password, responseUser.getPassword())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 
         JwtTokenDto response = new JwtTokenDto();
         response.setToken(jwtUtils.generateToken(responseUser));
