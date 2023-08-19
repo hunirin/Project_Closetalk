@@ -21,6 +21,7 @@ import java.util.List;
 public class ClosetService {
     private final ClosetRepository closetRepository;
     private final ClosetItemRepository closetItemRepository;
+    private final EntityRetrievalService entityRetrievalService;
 
     // 1. 옷장 목록 조회(이름, 공개 여부)
     public List<ClosetDto> findCloset() {
@@ -101,12 +102,8 @@ public class ClosetService {
         return itemEntities.stream().map(ClosetItemDto::toClosetItemDto).toList();
     }
 
-    // closet_id로 해당 closet 찾기
+    // closetId로 해당 ClosetEntity 찾기
     private ClosetEntity getClosetEntity(Long closetId) {
-        return closetRepository.findById(closetId)
-                .orElseThrow(() -> {
-                    log.error("존재하지 않는 Closet_id : {}", closetId);
-                    return new ResponseStatusException(HttpStatus.NOT_FOUND);
-                });
+        return entityRetrievalService.getClosetEntity(closetId);
     }
 }

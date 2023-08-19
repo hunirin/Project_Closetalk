@@ -19,14 +19,11 @@ import java.util.Map;
 public class ClosetItemService {
     private final ClosetItemRepository closetItemRepository;
     private final ClosetRepository closetRepository;
+    private final EntityRetrievalService entityRetrievalService;
 
     // 1. 해당 옷장의 단일 아이템 조회
     public ClosetItemDto readClosetItem(Long itemId) {
-        ClosetItemEntity item = closetItemRepository.findById(itemId)
-                .orElseThrow(() -> {
-                    log.error("존재하지 않는 item_id : {}", itemId);
-                    return new ResponseStatusException(HttpStatus.NOT_FOUND);
-                });
+        ClosetItemEntity item = getClosetItemEntity(itemId);
 
         log.info("[{}]의 [{}]번 아이템 조회 완료",
                 item.getClosetId().getClosetName(), item.getId());
@@ -34,11 +31,7 @@ public class ClosetItemService {
     }
 
     public void modifyClosetItem(Long itemId, Map<String, String> itemParams) {
-        ClosetItemEntity item = closetItemRepository.findById(itemId)
-                .orElseThrow(() -> {
-                    log.error("존재하지 않는 item_id : {}", itemId);
-                    return new ResponseStatusException(HttpStatus.NOT_FOUND);
-                });
+        ClosetItemEntity item = getClosetItemEntity(itemId);
 
         ClosetEntity closet = closetRepository
                 .findById(Long.valueOf(itemParams.get("closetId")))
@@ -52,12 +45,13 @@ public class ClosetItemService {
     }
 
     public void deleteClosetItem(Long itemId) {
-        ClosetItemEntity item = closetItemRepository.findById(itemId)
-                .orElseThrow(() -> {
-                    log.error("존재하지 않는 item_id : {}", itemId);
-                    return new ResponseStatusException(HttpStatus.NOT_FOUND);
-                });
+        getClosetItemEntity(itemId); // 해당 아이템이 존재하는 지 확인(굳이 안해도 됨)
         log.info("[{}]번 아이템 삭제 완료", itemId);
         closetItemRepository.deleteById(itemId);
+    }
+
+    // itemId로 해당 ClosetItemEntity 찾기
+    private ClosetItemEntity getClosetItemEntity(Long itemId) {
+        return entityRetrievalService.getClosetItemEntity(itemId);
     }
 }
