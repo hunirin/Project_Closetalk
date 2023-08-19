@@ -1,10 +1,11 @@
 package team.closetalk.closet.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "closet")
 public class ClosetEntity {
     @Id
@@ -15,7 +16,21 @@ public class ClosetEntity {
     @Column(name = "is_hidden")
     private Boolean isHidden;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private UserEntity userId;
+    // 새로운 옷장 생성
+    public ClosetEntity(String closetName, Boolean isHidden) {
+        this.closetName = closetName;
+        this.isHidden = isHidden;
+    }
+
+    // 옷장 이름 변경
+    public ClosetEntity updateEntity(String closetName) {
+        this.closetName = closetName;
+        return this;
+    }
+
+    // 옷장 공개 여부 수정
+    public ClosetEntity updateEntity(Boolean isHidden) {
+        this.isHidden = isHidden;
+        return this;
+    }
 }

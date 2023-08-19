@@ -30,7 +30,7 @@ public class ClosetItemService {
 
         log.info("[{}]의 [{}]번 아이템 조회 완료",
                 item.getClosetId().getClosetName(), item.getId());
-        return ClosetItemDto.viewClosetItem(item);
+        return ClosetItemDto.toClosetItemDto(item);
     }
 
     public void modifyClosetItem(Long itemId, Map<String, String> itemParams) {

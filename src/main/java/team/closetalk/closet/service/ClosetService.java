@@ -26,7 +26,7 @@ public class ClosetService {
     public List<ClosetDto> findCloset() {
         List<ClosetEntity> closetEntities = closetRepository.findAll();
         log.info("가지고 있는 옷장 목록 조회 완료");
-        return closetEntities.stream().map(ClosetDto::viewCloset).toList();
+        return closetEntities.stream().map(ClosetDto::toClosetDto).toList();
     }
 
     // 1-1. 옷장 생성
@@ -39,7 +39,7 @@ public class ClosetService {
         if (closetName == null || closetName.equals(""))
             closetName = String.format("My Closet %d",
                         closetRepository.findTopByOrderByIdDesc().getId() + 1);
-        closetRepository.save(new ClosetDto().newCloset(closetName, isHidden));
+        closetRepository.save(new ClosetEntity(closetName, isHidden));
         log.info("옷장 생성 완료");
     }
 
@@ -64,8 +64,8 @@ public class ClosetService {
             log.error("이전 이름과 동일");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        closet.setClosetName(changeName);
-        closetRepository.save(closet);
+
+        closetRepository.save(closet.updateEntity(changeName));
         log.info("{}으로 이름 변경", changeName);
     }
 
@@ -76,8 +76,8 @@ public class ClosetService {
             log.error("동일한 공개 설정");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        closet.setIsHidden(isHidden);
-        closetRepository.save(closet);
+
+        closetRepository.save(closet.updateEntity(isHidden));
         if (isHidden) log.info("{} : 공개 설정", closet.getClosetName());
         else log.info("{} : 비공개 설정", closet.getClosetName());
     }
@@ -88,7 +88,7 @@ public class ClosetService {
         List<ClosetItemEntity> itemEntities =
                 closetItemRepository.findAllByClosetId_Id(closet.getId());
         log.info("{}의 아이템 목록 조회 완료", closet.getClosetName());
-        return itemEntities.stream().map(ClosetItemDto::viewClosetItem).toList();
+        return itemEntities.stream().map(ClosetItemDto::toClosetItemDto).toList();
     }
 
     // 2-1. 해당 옷장의 카테고리 별 아이템 목록 조회
@@ -98,7 +98,7 @@ public class ClosetService {
         List<ClosetItemEntity> itemEntities =
                 closetItemRepository.findAllByClosetId_IdAndCategory(closet.getId(), category);
         log.info("{}의 {} 별 아이템 목록 조회 완료", closet.getClosetName(), category);
-        return itemEntities.stream().map(ClosetItemDto::viewClosetItem).toList();
+        return itemEntities.stream().map(ClosetItemDto::toClosetItemDto).toList();
     }
 
     // closet_id로 해당 closet 찾기
