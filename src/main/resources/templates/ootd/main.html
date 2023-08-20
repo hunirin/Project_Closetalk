@@ -48,6 +48,11 @@
             </div>
         </div>
     </div>
+        <div class="pop-up-btn">
+            <i id="up-btn" class="fa-solid fa-square-caret-up fa-2x"></i>
+            <i id="plus-btn" class="fa-solid fa-square-plus fa-2x"></i>
+            <i id="down-btn" class="fa-solid fa-square-caret-down fa-2x"></i>
+        </div>
         <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 
         <script>
@@ -113,6 +118,36 @@
             });
 
             loadMoreThumbnails();
+        </script>
+
+        <script>
+            $(document).ready(function() {
+                $("#up-btn").click(function() {
+                    $('html, body').animate({scrollTop: 0}, 500);
+                });
+
+                $("#down-btn").click(function() {
+                    $('html, body').animate({scrollTop: $(document).height()}, 500);
+                });
+
+                function updateButtonPosition() {
+                    var scrollPos = $(window).scrollTop();
+                    var windowHeight = $(window).height();
+                    var documentHeight = $(document).height();
+                    var buttonHeight = $(".pop-up-btn").outerHeight();
+
+                    var maxButtonPosition = documentHeight - buttonHeight - 20;
+
+                    if (scrollPos > maxButtonPosition) {
+                        $(".pop-up-btn").css("transform", "translateY(" + (maxButtonPosition - scrollPos) + "px)");
+                    } else {
+                        $(".pop-up-btn").css("transform", "translateY(0)");
+                    }
+                }
+
+                updateButtonPosition();
+                $(window).on("scroll", updateButtonPosition);
+            });
         </script>
     </form>
 </section>

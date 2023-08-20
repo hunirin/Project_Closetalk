@@ -2,18 +2,12 @@ package team.closetalk.ootd.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import team.closetalk.ootd.dto.OotdArticleDto;
-import team.closetalk.ootd.entity.OotdArticleEntity;
 import team.closetalk.ootd.service.OotdService;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping("/ootd")
