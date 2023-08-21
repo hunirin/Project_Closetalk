@@ -9,7 +9,6 @@ import java.util.List;
 public class OotdArticleDto {
     private Long id;
 
-    private String nickname;
     private String content;
     private String hashtag;
 
@@ -30,7 +29,9 @@ public class OotdArticleDto {
         // service 단계에서 저장해주면 굳이 안써도됨
         List<OotdArticleImagesEntity> ootdImages = entity.getOotdImages();
         if (ootdImages != null && !ootdImages.isEmpty()) {
-            dto.setThumbnail(ootdImages.stream().map(OotdArticleImagesDto::fromEntity).toList().get(0).getImageUrl());
+            dto.setThumbnail(ootdImages.stream()
+                    .map(OotdArticleImagesDto::fromEntity)
+                    .toList().get(0).getImageUrl());
         }
         System.out.println(dto.getThumbnail());
 

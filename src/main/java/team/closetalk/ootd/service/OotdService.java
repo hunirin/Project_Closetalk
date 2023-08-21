@@ -18,7 +18,7 @@ import team.closetalk.ootd.repository.OotdArticleRepository;
 public class OotdService {
     private final OotdArticleRepository ootdArticleRepository;
 
-    //페이지 단위로 조회
+    // 페이지 단위로 조회
     public Page<OotdArticleDto> readOotdPaged(Integer pageNum, Integer pageSize) {
         Pageable pageable = PageRequest.of(
                 pageNum, pageSize, Sort.by("id").descending());

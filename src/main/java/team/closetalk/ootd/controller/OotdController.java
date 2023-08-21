@@ -15,7 +15,7 @@ import team.closetalk.ootd.service.OotdService;
 public class OotdController {
     private final OotdService ootdService;
 
-    @GetMapping("/main")
+    @GetMapping
     public String mainPage() {
         return "ootd/main";
     }
