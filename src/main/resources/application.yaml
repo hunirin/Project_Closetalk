@@ -5,6 +5,14 @@ spring:
     username: 'closetalk_admin'
     password: 'rladlarladlsk1212'
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+      enabled: true
+      file-size-threshold: 2KB
+
+
   jpa:
     hibernate:
       ddl-auto: create
@@ -16,9 +24,10 @@ spring:
 
   web:
     resources:
-      static-locations: file:media/,classpath:/static
+      static-locations: file:issue/,classpath:/static
 
-
+file:
+  upload-dir=/Users/KYS/git/Project_Closetalk/src/main/resources/static/images/issue
 #    defer-datasource-initialization: true
 #  sql:
 #    init:
