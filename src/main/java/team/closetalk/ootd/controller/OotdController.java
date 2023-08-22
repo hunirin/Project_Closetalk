@@ -20,6 +20,11 @@ public class OotdController {
         return "ootd/main";
     }
 
+    @GetMapping("/header")
+    public String mainHeader() {
+        return "ootd/header";
+    }
+
      // 메인페이지 무한 스크롤 조회
     @GetMapping("/list")
     public String getOotd(
