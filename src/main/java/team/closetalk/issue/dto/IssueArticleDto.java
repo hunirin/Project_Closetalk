@@ -1,0 +1,40 @@
+package team.closetalk.issue.dto;
+
+import lombok.Data;
+import team.closetalk.issue.entity.IssueArticleEntity;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
+@Data
+public class IssueArticleDto {
+    private Long id;
+    private Long userId;
+    private String title;
+    private String content;
+    private String imageUrl;
+    private Long hits;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
+
+    public static IssueArticleDto fromEntity(IssueArticleEntity entity) {
+        IssueArticleDto dto = new IssueArticleDto();
+        dto.setId(entity.getId());
+        dto.setUserId(entity.getUserId());
+        dto.setTitle(entity.getTitle());
+        dto.setContent(entity.getContent());
+        dto.setImageUrl(entity.getImageUrl());
+        dto.setHits(entity.getHits());
+        dto.setCreatedAt(entity.getCreatedAt());
+//        dto.setModified_at(entity.getModified_at());
+        return dto;
+    }
+
+    private static LocalDateTime presentLocalDateTime(Date date){
+        Instant instant = date.toInstant();
+        ZoneId zoneId = ZoneId.of("Asia/Seoul");
+        return instant.atZone(zoneId).toLocalDateTime();
+    }
+}
