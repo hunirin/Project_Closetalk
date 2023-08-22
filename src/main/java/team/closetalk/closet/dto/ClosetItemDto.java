@@ -1,19 +1,13 @@
 package team.closetalk.closet.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import team.closetalk.closet.entity.ClosetItemEntity;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class ClosetItemDto {
-    private Long id;
     private LocalDateTime createdAt;
 
     private String brand;
@@ -25,9 +19,9 @@ public class ClosetItemDto {
     private String description;
     private String closetName;
 
-    public static ClosetItemDto viewClosetItem(ClosetItemEntity item) {
+    // ClosetItemEntity -> ClosetItemDto
+    public static ClosetItemDto toClosetItemDto(ClosetItemEntity item) {
         return ClosetItemDto.builder()
-                .id(item.getId())
                 .createdAt(item.getCreatedAt())
                 .itemImageUrl(item.getItemImageUrl())
                 .category(item.getCategory())

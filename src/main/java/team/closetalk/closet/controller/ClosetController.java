@@ -7,6 +7,7 @@ import team.closetalk.closet.dto.ClosetItemDto;
 import team.closetalk.closet.service.ClosetService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,9 +53,9 @@ public class ClosetController {
     @PostMapping("/{closetId}")
     public List<ClosetItemDto> readItems(@PathVariable("closetId") Long closetId,
                                          @RequestParam(name = "category", required = false) String category) {
-        // 카테고리 입력이 없을 시 전체 목록
-        if (category == null || category.isEmpty()) return closetService.readByCloset(closetId);
-        // 있으면 카테고리 별 목록
-        else return closetService.readByCategory(closetId, category);
+        Optional<String> optionalCategory = Optional.ofNullable(category);
+        // 카테고리 입력이 없을 시 전체 목록, 있으면 카테고리 별 목록
+        if (optionalCategory.isEmpty()) return closetService.readByCloset(closetId);
+        else return closetService.readByCategory(closetId, optionalCategory.get());
     }
 }
