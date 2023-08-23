@@ -18,7 +18,7 @@ public class IssueArticleDto {
     private String thumbnail;
 
     // 이슈 전체 이미지 불러오기
-    private List<IssueArticleDto> issueImages;
+    private List<IssueArticleImagesDto> issueImages;
 
     // 이슈 목록
     // 첫번째 이미지를 thumbnail에 저장

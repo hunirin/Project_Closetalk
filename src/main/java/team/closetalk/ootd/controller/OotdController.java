@@ -20,6 +20,7 @@ public class OotdController {
         return "ootd/main";
     }
 
+    // 헤더 불러오는 주소
     @GetMapping("/header")
     public String mainHeader() {
         return "ootd/header";
