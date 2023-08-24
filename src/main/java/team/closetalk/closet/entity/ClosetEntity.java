@@ -2,22 +2,32 @@ package team.closetalk.closet.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.web.server.ResponseStatusException;
+import team.closetalk.user.entity.UserEntity;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "closet")
+@Table(name = "closet", uniqueConstraints = @UniqueConstraint(
+        columnNames = {"users_id", "closet_name"}))
 public class ClosetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "closet_name", unique = true)
+    @Column(name = "closet_name")
     private String closetName;
     @Column(name = "is_hidden")
     private Boolean isHidden;
 
+    @ManyToOne
+    @JoinColumn(name = "users_id")
+    private UserEntity userId;
+
     // 새로운 옷장 생성
-    public ClosetEntity(String closetName, Boolean isHidden) {
+    public ClosetEntity(String closetName, Boolean isHidden, UserEntity user) {
+        this.userId = user;
         this.closetName = closetName;
         this.isHidden = isHidden;
     }
