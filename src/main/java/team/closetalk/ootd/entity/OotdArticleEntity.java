@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "ootd_article")
+@Table(name = "ootdArticle")
 public class OotdArticleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class OotdArticleEntity {
     private List<OotdArticleImagesEntity> ootdImages = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "users_id")
-    private UserEntity user;
+    @JoinColumn(name = "user")
+    private UserEntity userId;
 
 }

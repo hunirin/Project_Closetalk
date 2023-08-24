@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "issue_articleImages")
+@Table(name = "issue_article_images")
 public class IssueArticleImagesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +15,6 @@ public class IssueArticleImagesEntity {
     private String imageUrl;
 
     @ManyToOne
-    @JoinColumn(name = "issueArticle_id")
+    @JoinColumn(name = "issueArticleId")
     private IssueArticleEntity issueArticle;
 }
