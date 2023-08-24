@@ -4,6 +4,7 @@ package team.closetalk.community.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +22,8 @@ public class CommunityArticleEntity {
     private String content;     // 내용
     private Long hits;          // 조회수
     private String thumbnail;   // 대표이미지
-//    private LocalDateTime createdAt;    // 작성 날짜
-//    private LocalDateTime modifiedAt;    // 수정 날짜
+    private LocalDate createdAt;    // 작성 날짜
+    private LocalDate modifiedAt;    // 수정 날짜
 
     @OneToMany(mappedBy = "communityArticle")
     private List<CommunityArticleImagesEntity> communityImages = new ArrayList<>();

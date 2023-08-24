@@ -3,6 +3,7 @@ package team.closetalk.community.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,8 @@ public class CommunityCommentEntity {
 
     private String content;             // 내용
 
-//    private LocalDateTime createdAt;    // 작성 날짜
-//    private LocalDateTime modifiedAt;   // 수정 날짜
+    private LocalDate createdAt;    // 작성 날짜
+    private LocalDate modifiedAt;   // 수정 날짜
 
     @ManyToOne
     @JoinColumn(name = "communityArticle_id")

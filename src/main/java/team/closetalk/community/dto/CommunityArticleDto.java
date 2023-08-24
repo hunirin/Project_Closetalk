@@ -8,6 +8,7 @@ import team.closetalk.community.entity.CommunityArticleEntity;
 import team.closetalk.community.entity.CommunityArticleImagesEntity;
 import team.closetalk.community.entity.CommunityCommentEntity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -26,8 +27,8 @@ public class CommunityArticleDto {
     private String content;     // 내용
     private Long hits;          // 조회수
     private String thumbnail;   // 대표이미지
-//    private LocalDateTime createdAt;    // 작성 날짜
-//    private LocalDateTime modifiedAt;    // 수정 날짜
+    private LocalDate createdAt;    // 작성 날짜
+    private LocalDate modifiedAt;    // 수정 날짜
 
     private List<CommunityArticleImagesDto> communityImages;
     private List<CommunityCommentDto> communityComments;
@@ -42,7 +43,7 @@ public class CommunityArticleDto {
                 .category(category)
                 .title(title)
                 .content(content)
-//                .createdAt(LocalDateTime.now(ZoneId.of("Asia/seoul")))
+                .createdAt(LocalDate.now())
                 .build();
     }
 
@@ -54,8 +55,7 @@ public class CommunityArticleDto {
                 .content(entity.getContent())
                 .hits(entity.getHits())
                 .thumbnail(entity.getThumbnail())
-//                .createdAt(LocalDateTime.parse(entity.getCreatedAt()
-//                        .format(DateTimeFormatter.ofPattern("MM월 dd일"))))
+                .createdAt(entity.getCreatedAt().atStartOfDay().toLocalDate())
                 .build();
     }
 
@@ -65,6 +65,7 @@ public class CommunityArticleDto {
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
         dto.setContent(entity.getContent());
+        dto.setCreatedAt(entity.getCreatedAt());
         // 이미지 전체 불러오기
         List<CommunityArticleImagesEntity> communityImages = entity.getCommunityImages();
         if (communityImages != null && !communityImages.isEmpty()) {

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import team.closetalk.community.entity.CommunityArticleEntity;
 import team.closetalk.community.entity.CommunityCommentEntity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -20,8 +21,8 @@ public class CommunityCommentDto {
 
     private String content;             // 내용
 
-//    private LocalDateTime createdAt;    // 작성 날짜
-//    private LocalDateTime modifiedAt;   // 수정 날짜
+    private LocalDate createdAt;    // 작성 날짜
+    private LocalDate modifiedAt;   // 수정 날짜
 
     private CommunityArticleEntity articleId;
     private CommunityCommentEntity commentId;
@@ -32,7 +33,7 @@ public class CommunityCommentDto {
                 .content(content)
                 .articleId(articleId)
                 .commentId(commentId)
-//                .createdAt(LocalDateTime.now(ZoneId.of("Asia/seoul")))
+                .createdAt(LocalDate.now())
                 .build();
     }
 
@@ -40,8 +41,7 @@ public class CommunityCommentDto {
     public static CommunityCommentDto fromEntity(CommunityCommentEntity entity) {
         return CommunityCommentDto.builder()
                 .content(entity.getContent())
-//                .createdAt(LocalDateTime.parse(entity.getCreatedAt()
-//                        .format(DateTimeFormatter.ofPattern("MM월 dd일"))))
+                .createdAt(entity.getCreatedAt())
                 .build();
     }
 }
