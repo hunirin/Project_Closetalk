@@ -3,13 +3,15 @@ package team.closetalk.user.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.user.dto.CustomUserDetails;
+import team.closetalk.user.dto.EmailAuthDto;
 import team.closetalk.user.dto.JwtTokenDto;
+import team.closetalk.user.service.EmailSendService;
 import team.closetalk.user.service.UserService;
 import team.closetalk.user.utils.JwtUtils;
 
@@ -21,11 +23,14 @@ public class UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
+
+    private final EmailSendService emailSendService;
+
     //회원가입
     @PostMapping(value = "/register"
             , consumes = "multipart/form-data"
     )
-    public String registerUser(
+    public void registerUser(  //ResponseEntity<> 로 리턴타입 변경할 것 .
             @RequestParam("loginId") String loginId
             , @RequestParam("password") String password
             , @RequestParam("password-check") String passwordCheck
@@ -44,10 +49,11 @@ public class UserController {
                     .profileImage(profileImage)
                     .build()
             );
-            return "redirect:/users/loginPage";
+
+//            return ResponseEntity.status(HttpStatus.OK).body("join success");
         } else {
             log.warn("password mismatch");
-            return "mismatch";
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("password mismatch");
         }
 
     }
@@ -55,12 +61,10 @@ public class UserController {
     @PostMapping("/login")
     public JwtTokenDto loginUser(@RequestParam("loginId") String loginId
                             , @RequestParam("password") String password
-    ){//토큰 반환?
-        log.info("password: {}, encodedPassword: {}", password, passwordEncoder.encode(password));
-
+    ){
         //반환된 값은 아이디 유무, 소셜여부까지 확인된 것(우선 없는 것만 통과)
         CustomUserDetails responseUser = userService.loadUserByUsername(loginId);
-        passwordEncoder.matches(password, responseUser.getPassword());
+        if (!passwordEncoder.matches(password, responseUser.getPassword())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 
         JwtTokenDto response = new JwtTokenDto();
         response.setToken(jwtUtils.generateToken(responseUser));
@@ -68,13 +72,19 @@ public class UserController {
         return response;
 
     }
+    
+    //이메일 인증 처리
+    @ResponseBody
+    @PostMapping(value = "/sendEmail")
+    public ResponseEntity<EmailAuthDto> sendAuthEmail(@RequestBody String email){
+        String code = emailSendService.makeEmailAuth(email.substring(1,email.length()-1));
 
-    //회원가입 이미지 등록
-    @PostMapping(value = "registerImage"
-                , consumes = "multipart/form-data")
-    public String registerProfileImage(@RequestParam("profileImage") MultipartFile profileImage){
-        return "upload profile Image success";
+        EmailAuthDto emailAuthDto = new EmailAuthDto();
+        emailAuthDto.setAuthCode(code);
+
+        return ResponseEntity.status(HttpStatus.OK).body(emailAuthDto);
     }
+    
 
 
 }
