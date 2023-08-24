@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<header></header>
+
+<main class="main-content">
+    <div class="title">
+        <h1>LOGIN</h1>
+    </div>
+    <form th:action="@{/users/login}" method="post">
+        <div class="div-input">
+            <input name="loginId" placeholder="ID">
+            <input name="password" placeholder="PASSWORD">
+
+        </div>
+        <button type="submit">LOGIN</button>
+    </form>
+    <div style="margin-top: 16px; text-align: right">
+        <a href="/oauth2/authorization/kakao">카카오</a>
+        <a href="/oauth2/authorization/naver">네이버</a>
+        <a href="/views/register">회원가입</a>
+    </div>
+</main>
+
+<footer></footer>
+</body>
+</html>
