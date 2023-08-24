@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,6 +18,7 @@ import team.closetalk.user.utils.OAuth2SuccessHandler;
 
 @Slf4j
 @Configuration
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
     private final JwtFilter jwtFilter;
@@ -36,6 +38,7 @@ public class WebSecurityConfig {
                                         ,"/ootd/main"
                                         ,"/ootd/header"
                                         ,"/ootd/list"
+                                        ,"/static/**"
                                 ).permitAll()
                                 .anyRequest()
                                 .authenticated()
@@ -61,6 +64,6 @@ public class WebSecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         // 정적 자원에 스프링 시큐리티 필터 규칙을 적용하지 않도록 설정
-        return (web) -> web.ignoring().requestMatchers("/static/css/**");
+        return (web) -> web.ignoring().requestMatchers("/static/**").anyRequest();
     }
 }

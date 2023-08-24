@@ -20,6 +20,17 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
+  mvc:
+    static-path-pattern: "/static/**"
+    hiddenmethod:
+      filter:
+        enabled: true
+
+  web:
+    resources:
+      static-locations: file:media/, classpath:/static
+
+
   #소셜 로그인 관련 yaml 설정
   security:
     oauth2:
