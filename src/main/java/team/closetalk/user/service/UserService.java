@@ -42,7 +42,7 @@ public class UserService implements UserDetailsManager {
         String imagePath = PROFILE_IMAGE_DIRECTORY + PROFILE_IMAGE_DEFAULT;
 
         //이미지를 등록한 경우 imagePath 변경 및 이미지 파일 저장
-        if(!profileImage.isEmpty()){
+        if(profileImage != null && !profileImage.isEmpty()){
             //이미지 확장자명 가져오기
             String[] originalFilenameSplit = profileImage.getOriginalFilename().split("\\.");
             String extension = originalFilenameSplit[originalFilenameSplit.length - 1];
@@ -118,7 +118,7 @@ public class UserService implements UserDetailsManager {
         Optional<UserEntity> optionalUser = userRepository.findByLoginId(loginId);
 
         if(optionalUser.isEmpty()) throw new UsernameNotFoundException(loginId);
-        if(optionalUser.get().getSocial() != null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+//        if(optionalUser.get().getSocial() != null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 
 
         return CustomUserDetails.fromEntity(optionalUser.get());
@@ -142,7 +142,7 @@ public class UserService implements UserDetailsManager {
 
     @Override
     public boolean userExists(String username) {
-        return false;
+        return userRepository.existsByLoginId(username);
     }
 
 }

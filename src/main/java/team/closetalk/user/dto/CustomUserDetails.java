@@ -11,8 +11,6 @@ import java.util.Date;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
     private Long id;
