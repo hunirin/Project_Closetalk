@@ -34,12 +34,14 @@ public class ClosetItemService {
         return ClosetItemDto.toClosetItemDto(item);
     }
 
+    // 2. 아이템 수정
     public void modifyClosetItem(Long itemId, Map<String, String> itemParams,
                                  Authentication authentication) {
         String nickName = getUserEntity(authentication.getName()).getNickname();
         ClosetItemEntity item = getClosetItemEntity(itemId, nickName);
 
-        if (itemParams.get("changeCloset").isEmpty()) {
+        if (!closetRepository.existsByClosetNameAndUserId_Nickname(
+                itemParams.get("changeCloset"), nickName)) {
             log.error("존재하지 않는 closet_name : {}", itemParams.get("changeCloset"));
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -50,6 +52,7 @@ public class ClosetItemService {
         }
     }
 
+    // 3. 아이템 삭제
     public void deleteClosetItem(Long itemId, Authentication authentication) {
         String nickName = getUserEntity(authentication.getName()).getNickname();
         ClosetEntity closetEntity = getClosetItemEntity(itemId, nickName).getClosetId();

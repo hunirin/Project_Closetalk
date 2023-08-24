@@ -12,4 +12,5 @@ public interface ClosetRepository extends JpaRepository<ClosetEntity, Long> {
     List<ClosetEntity> findAllByUserId_LoginId(String LoginId);
     ClosetEntity findByClosetNameAndUserId_Nickname(String closetName, String nickName);
     Boolean existsByIdAndUserId_LoginId(Long closetId, String loginId);
+    Boolean existsByClosetNameAndUserId_Nickname(String closetName, String nickName);
 }
