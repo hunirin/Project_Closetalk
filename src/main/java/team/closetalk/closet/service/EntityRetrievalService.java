@@ -21,12 +21,13 @@ public class EntityRetrievalService {
     private final UserRepository userRepository;
 
     // closetId로 해당 ClosetEntity 찾기
-    ClosetEntity getClosetEntity(Long closetId) {
-        return closetRepository.findById(closetId)
-                .orElseThrow(() -> {
-                    log.error("존재하지 않는 Closet_id : {}", closetId);
-                    return new ResponseStatusException(HttpStatus.NOT_FOUND);
-                });
+    ClosetEntity getClosetEntity(String closetName, String nickName) {
+        try {
+            return closetRepository.findByClosetNameAndUserId_Nickname(closetName, nickName);
+        } catch (Exception e) {
+            log.error("{} 님의 옷장 [{}]은 존재하지 않습니다.", nickName, closetName);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 
     // itemId로 해당 ClosetItemEntity 찾기
