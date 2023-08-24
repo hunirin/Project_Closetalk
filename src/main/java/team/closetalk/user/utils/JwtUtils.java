@@ -32,7 +32,7 @@ public class JwtUtils {
 
     //Jwt 파싱
     public Claims parseClaims(String token) {
-        return jwtParser.parseClaimsJwt(token).getBody();
+        return jwtParser.parseClaimsJws(token).getBody();
     }
 
     public boolean validate(String token) {
