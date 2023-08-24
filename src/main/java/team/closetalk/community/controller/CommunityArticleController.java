@@ -14,12 +14,14 @@ import team.closetalk.community.service.CommunityArticleService;
 public class CommunityArticleController {
     private final CommunityArticleService communityService;
 
+    /* 게시글 기능 */
+
     @GetMapping("/main")
     public String mainPage() {
         return "community/main";
     }
 
-
+    // 게시글 목록 조회
     @GetMapping("/list")
     public Page<CommunityArticleDto> readAll(
             Model model,
@@ -32,6 +34,7 @@ public class CommunityArticleController {
         return communityService.readCommunityPaged(page, limit);
     }
 
+    // 게시글 상세 조회
     @GetMapping("/{articleId}")
     public CommunityArticleDto readOne(
             @PathVariable Long articleId
@@ -39,4 +42,32 @@ public class CommunityArticleController {
         return communityService.readArticleOne(articleId);
     }
 
+    // 게시글 삭제
+    @DeleteMapping("/{articleId}")
+    public void deleteArticle(
+            @PathVariable Long articleId
+    ) {
+        communityService.deleteArticle(articleId);
+    }
+
+    /* 댓글 기능 */
+
+    // 댓글 삭제
+    @DeleteMapping("/{articleId}/{commentId}")
+    public void deleteComment(
+            @PathVariable Long articleId,
+            @PathVariable Long commentId
+    ) {
+        communityService.deleteComment(articleId, commentId);
+    }
+
+    // 대댓글 삭제
+    @DeleteMapping("/{articleId}/{commentId}/{reCommentId}")
+    public void deleteComment(
+            @PathVariable Long articleId,
+            @PathVariable Long commentId,
+            @PathVariable Long reCommentId
+    ) {
+        communityService.deleteReComment(articleId, commentId, reCommentId);
+    }
 }

@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.community.dto.CommunityArticleDto;
 import team.closetalk.community.entity.CommunityArticleEntity;
+import team.closetalk.community.entity.CommunityCommentEntity;
 import team.closetalk.community.repository.CommunityArticleRepository;
+import team.closetalk.community.repository.CommunityCommentRepository;
 
 import java.util.Optional;
 
@@ -19,6 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CommunityArticleService {
     private final CommunityArticleRepository communityArticleRepository;
+    private final CommunityCommentRepository communityCommentRepository;
 
     // READ
     // 페이지 단위로 조회
@@ -36,5 +39,42 @@ public class CommunityArticleService {
         if (optionalArticle.isPresent()) {
             return CommunityArticleDto.fromEntity2(optionalArticle.get());
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+
+    // DELETE
+    // 게시글 삭제
+    public void deleteArticle(Long articleId) {
+        // 게시글 찾기
+        Optional<CommunityArticleEntity> optionalCommunity = communityArticleRepository.findById(articleId);
+        if (optionalCommunity.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        // 삭제
+        communityArticleRepository.deleteById(articleId);
+    }
+
+    // 댓글 삭제
+    public void deleteComment(Long articleId, Long commentId) {
+        // 게시글 찾기
+        Optional<CommunityArticleEntity> optionalCommunity = communityArticleRepository.findById(articleId);
+        if (optionalCommunity.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        // 댓글 찾기
+        Optional<CommunityCommentEntity> optionalCommunityComment = communityCommentRepository.findById(commentId);
+        if (optionalCommunityComment.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        // 삭제
+        communityCommentRepository.deleteById(commentId);
+    }
+
+    // 대댓글 삭제
+    public void deleteReComment(Long articleId, Long commentId, Long reCommentId) {
+        // 게시글 찾기
+        Optional<CommunityArticleEntity> optionalCommunity = communityArticleRepository.findById(articleId);
+        if (optionalCommunity.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        // 댓글 찾기
+        Optional<CommunityCommentEntity> optionalCommunityComment = communityCommentRepository.findById(commentId);
+        if (optionalCommunityComment.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        // 대댓글 찾기
+        Optional<CommunityCommentEntity> optionalCommunityReComment = communityCommentRepository.findById(reCommentId);
+        if (optionalCommunityReComment.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        // 삭제
+        communityCommentRepository.deleteById(reCommentId);
     }
 }
