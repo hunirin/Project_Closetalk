@@ -42,7 +42,17 @@ INSERT INTO users (id, login_id, password,  nickname, email, profile_image_url, 
 VALUES (5,'user05', '', '우주최강햄스터', 'user05@closetalk.com', '/src/main/resources/static/images/profile/default_profile.png', '2023-08-18 03:11:22');
 
 -- INSERT CLOSET
+INSERT INTO closet (closet_name, is_hidden, users_id) VALUES ('My closet 1', false, (SELECT id FROM users LIMIT 1 OFFSET 0));
+INSERT INTO closet (closet_name, is_hidden, users_id) VALUES ('아우터 모음', true, (SELECT id FROM users LIMIT 1 OFFSET 0));
+
 -- INSERT CLOSET_ITEM
+INSERT INTO closet_item (brand, category, item_image_url, item_name, price, description, created_at, closet_id)
+VALUES ('나이키', 'TOP', '/nike1.png', '나이키 반팔', 29800, '운동용', NOW(), (SELECT id FROM closet LIMIT 1 OFFSET 0));
+INSERT INTO closet_item (brand, category, item_image_url, item_name, price, description, created_at, modified_at, closet_id)
+VALUES ('아디다스', 'OUTER', '/adi_ter1.png', '아디다스 패딩', 324207, '생존용 롱패딩 구비', '2023-08-15 13:24:12', NOW(), (SELECT id FROM closet LIMIT 1 OFFSET 1));
+INSERT INTO closet_item (brand, category, item_image_url, item_name, price, description, created_at, modified_at, closet_id)
+VALUES ('보세', 'OUTER', '/dlalwl2_zz.png', '흑청자켓', 77000, '', '2023-08-16 11:23:32', NOW(), (SELECT id FROM closet LIMIT 1 OFFSET 1));
+
 -- INSERT OOTD_ARTICLE
 -- INSERT OOTD_COMMENT
 -- INSERT OOTD_LIKE..?

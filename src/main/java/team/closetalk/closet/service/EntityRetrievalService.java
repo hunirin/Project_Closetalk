@@ -31,12 +31,13 @@ public class EntityRetrievalService {
     }
 
     // itemId로 해당 ClosetItemEntity 찾기
-    ClosetItemEntity getClosetItemEntity(Long itemId) {
-        return closetItemRepository.findById(itemId)
-                .orElseThrow(() -> {
-                    log.error("존재하지 않는 item_id : {}", itemId);
-                    return new ResponseStatusException(HttpStatus.NOT_FOUND);
-                });
+    ClosetItemEntity getClosetItemEntity(Long itemId, String nickName) {
+        try {
+            return closetItemRepository.findByIdAndClosetId_UserId_Nickname(itemId, nickName);
+        } catch (Exception e) {
+            log.error("{} 님의 [{}]번 아이템은 존재하지 않습니다.", nickName, itemId);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 
     // LoginId == authentication.getName() -> UserEntity 찾기
