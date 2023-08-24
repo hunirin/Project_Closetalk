@@ -2,7 +2,6 @@ package team.closetalk.community.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import team.closetalk.community.dto.CommunityArticleDto;
@@ -61,7 +60,7 @@ public class CommunityArticleController {
         communityService.deleteComment(articleId, commentId);
     }
 
-    // 대댓글 삭제
+    // 대댓글 삭제 -- 수정 필요
     @DeleteMapping("/{articleId}/{commentId}/{reCommentId}")
     public void deleteComment(
             @PathVariable Long articleId,

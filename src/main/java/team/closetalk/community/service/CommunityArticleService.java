@@ -63,7 +63,7 @@ public class CommunityArticleService {
         communityCommentRepository.deleteById(commentId);
     }
 
-    // 대댓글 삭제
+    // 대댓글 삭제 -- 수정필요
     public void deleteReComment(Long articleId, Long commentId, Long reCommentId) {
         // 게시글 찾기
         Optional<CommunityArticleEntity> optionalCommunity = communityArticleRepository.findById(articleId);
