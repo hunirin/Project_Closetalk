@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.closet.dto.ClosetDto;
@@ -12,6 +13,7 @@ import team.closetalk.closet.entity.ClosetEntity;
 import team.closetalk.closet.entity.ClosetItemEntity;
 import team.closetalk.closet.repository.ClosetItemRepository;
 import team.closetalk.closet.repository.ClosetRepository;
+import team.closetalk.user.entity.UserEntity;
 
 import java.util.List;
 
@@ -24,55 +26,69 @@ public class ClosetService {
     private final EntityRetrievalService entityRetrievalService;
 
     // 1. 옷장 목록 조회(이름, 공개 여부)
-    public List<ClosetDto> findCloset() {
-        List<ClosetEntity> closetEntities = closetRepository.findAll();
+    public List<ClosetDto> findCloset(Authentication authentication) {
+        List<ClosetEntity> closetEntities =
+                closetRepository.findAllByUserId_LoginId(authentication.getName());
+        if (closetEntities.isEmpty()) {
+            addCloset("My Closet 1", true, authentication);
+            closetEntities = closetRepository.findAllByUserId_LoginId(authentication.getName());
+        }
         log.info("가지고 있는 옷장 목록 조회 완료");
         return closetEntities.stream().map(ClosetDto::toClosetDto).toList();
     }
 
     // 1-1. 옷장 생성
-    public void addCloset(String closetName, Boolean isHidden) {
+    public void addCloset(String closetName, Boolean isHidden,
+                          Authentication authentication) {
         if (closetRepository.findAll().size() == 5) {
             log.error("옷장 최대 생성 개수 제한");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+        UserEntity user = getUserEntity(authentication.getName());
+
         // 옷장 이름이 없으면 Closet (마지막 생성 옷장의 ClosetId + 1)으로 생성
         if (closetName == null || closetName.equals(""))
             closetName = String.format("My Closet %d",
                         closetRepository.findTopByOrderByIdDesc().getId() + 1);
-        closetRepository.save(new ClosetEntity(closetName, isHidden));
+        closetRepository.save(new ClosetEntity(closetName, isHidden, user));
         log.info("옷장 생성 완료");
     }
 
     // 1-2. 옷장 삭제 (해당 옷장 내 모든 아이템 포함)
     @Transactional // 메서드 내 모든 작업 중 하나라도 실패 시 전체 작업 취소
-    public void removeCloset(Long closetId) {
-        ClosetEntity closet = getClosetEntity(closetId);
-        String closetName = closet.getClosetName();
+    public void removeCloset(String closetName, Authentication authentication) {
+        UserEntity user = getUserEntity(authentication.getName());
+        ClosetEntity closet = getClosetEntity(closetName, user.getNickname());
 
         // 해당 옷장 내 모든 아이템 삭제
-        closetItemRepository.deleteAllByClosetId_Id(closetId);
+        closetItemRepository.deleteAllByClosetId_Id(closet.getId());
 
         // 해당 옷장 삭제
-        closetRepository.deleteById(closetId);
+        closetRepository.deleteById(closet.getId());
         log.info("{} 삭제 완료", closetName);
     }
 
     // 1-3. 옷장 이름 수정
-    public void modifyClosetName(Long closetId, String changeName) {
-        ClosetEntity closet = getClosetEntity(closetId);
+    public void modifyClosetName(String closetName, String changeName,
+                                 Authentication authentication) {
+        UserEntity user = getUserEntity(authentication.getName());
+        ClosetEntity closet = getClosetEntity(closetName, user.getNickname());
+
         if (closet.getClosetName().equals(changeName)) {
             log.error("이전 이름과 동일");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         closetRepository.save(closet.updateEntity(changeName));
-        log.info("{}으로 이름 변경", changeName);
+        log.info("{}으로 이름 변경 완료", changeName);
     }
 
     // 1-4. 옷장 공개 여부 수정
-    public void modifyClosetHidden(Long closetId, Boolean isHidden) {
-        ClosetEntity closet = getClosetEntity(closetId);
+    public void modifyClosetHidden(String closetName, Boolean isHidden,
+                                   Authentication authentication) {
+        UserEntity user = getUserEntity(authentication.getName());
+        ClosetEntity closet = getClosetEntity(closetName, user.getNickname());
+
         if (closet.getIsHidden() == isHidden) {
             log.error("동일한 공개 설정");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -84,8 +100,10 @@ public class ClosetService {
     }
 
     // 2. 해당 옷장의 아이템 목록 조회
-    public List<ClosetItemDto> readByCloset(Long closetId) {
-        ClosetEntity closet = getClosetEntity(closetId);
+    public List<ClosetItemDto> readByCloset(String closetName, Authentication authentication) {
+        UserEntity user = getUserEntity(authentication.getName());
+        ClosetEntity closet = getClosetEntity(closetName, user.getNickname());
+
         List<ClosetItemEntity> itemEntities =
                 closetItemRepository.findAllByClosetId_Id(closet.getId());
         log.info("{}의 아이템 목록 조회 완료", closet.getClosetName());
@@ -93,9 +111,11 @@ public class ClosetService {
     }
 
     // 2-1. 해당 옷장의 카테고리 별 아이템 목록 조회
-    public List<ClosetItemDto> readByCategory(Long closetId, String category) {
-        ClosetEntity closet = closetRepository.findById(closetId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public List<ClosetItemDto> readByCategory(String closetName, String category,
+                                              Authentication authentication) {
+        UserEntity user = getUserEntity(authentication.getName());
+        ClosetEntity closet = getClosetEntity(closetName, user.getNickname());
+
         List<ClosetItemEntity> itemEntities =
                 closetItemRepository.findAllByClosetId_IdAndCategory(closet.getId(), category);
         log.info("{}의 {} 별 아이템 목록 조회 완료", closet.getClosetName(), category);
@@ -103,7 +123,12 @@ public class ClosetService {
     }
 
     // closetId로 해당 ClosetEntity 찾기
-    private ClosetEntity getClosetEntity(Long closetId) {
-        return entityRetrievalService.getClosetEntity(closetId);
+    private ClosetEntity getClosetEntity(String closetName, String nickName) {
+        return entityRetrievalService.getClosetEntity(closetName, nickName);
+    }
+
+    // LoginId == authentication.getName() 사용자 찾기
+    private UserEntity getUserEntity(String LoginId) {
+        return entityRetrievalService.getUserEntity(LoginId);
     }
 }
