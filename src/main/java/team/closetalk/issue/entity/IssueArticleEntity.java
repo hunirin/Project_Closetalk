@@ -2,13 +2,14 @@ package team.closetalk.issue.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import team.closetalk.user.entity.UserEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Entity
-@Table(name = "issueArticle")
+@Table(name = "issue_article")
 public class IssueArticleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,4 +24,8 @@ public class IssueArticleEntity {
 
     @OneToMany(mappedBy = "issueArticle")
     private List<IssueArticleImagesEntity> issueImages = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "users_id")
+    private UserEntity userId;
 }

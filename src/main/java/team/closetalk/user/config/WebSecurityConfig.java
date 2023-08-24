@@ -14,6 +14,7 @@ import team.closetalk.user.service.CustomOAuth2UserService;
 import team.closetalk.user.utils.JwtFilter;
 import team.closetalk.user.utils.OAuth2SuccessHandler;
 
+
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
