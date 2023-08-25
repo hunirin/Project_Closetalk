@@ -2,6 +2,7 @@ package team.closetalk.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.user.dto.CustomUserDetails;
-//import team.closetalk.user.dto.EmailAuthDto;
+import team.closetalk.user.dto.EmailAuthDto;
 import team.closetalk.user.dto.JwtTokenDto;
-//import team.closetalk.user.service.EmailSendService;
+import team.closetalk.user.service.EmailSendService;
 import team.closetalk.user.service.UserService;
 import team.closetalk.user.utils.JwtUtils;
 
@@ -24,7 +25,7 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
 
-//    private final EmailSendService emailSendService;
+    private final EmailSendService emailSendService;
 
     //회원가입
     @PostMapping(value = "/register"
@@ -85,6 +86,34 @@ public class UserController {
 //        return ResponseEntity.status(HttpStatus.OK).body(emailAuthDto);
 //    }
     
+    @ResponseBody
+    @PostMapping(value = "/sendEmail")
+    public ResponseEntity<EmailAuthDto> sendAuthEmail(@RequestBody String email){
+        String code = emailSendService.makeEmailAuth(email.substring(1,email.length()-1));
 
+        EmailAuthDto emailAuthDto = new EmailAuthDto();
+        emailAuthDto.setAuthCode(code);
+
+        return ResponseEntity.status(HttpStatus.OK).body(emailAuthDto);
+    }
+
+    // Header -> Response token
+    @PostMapping("/login-token")
+    public ResponseEntity<?> loginUserToJwt(@RequestParam("loginId") String loginId,
+                                       @RequestParam("password") String password) {
+        CustomUserDetails responseUser = userService.loadUserByUsername(loginId);
+        if (!passwordEncoder.matches(password, responseUser.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        String token = jwtUtils.generateToken(responseUser);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + token);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body("Login successful");
+    }
 
 }

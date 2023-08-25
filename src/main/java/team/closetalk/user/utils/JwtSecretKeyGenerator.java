@@ -23,4 +23,8 @@ public class JwtSecretKeyGenerator {
         secureRandom.nextBytes(key);
         return key;
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/CLTK-35
