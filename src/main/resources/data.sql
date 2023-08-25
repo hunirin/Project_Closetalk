@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
     CLOSETALK 개발용 초기 데이터
 
@@ -55,14 +54,6 @@ INSERT INTO closet_item (brand, category, item_image_url, item_name, price, desc
 VALUES ('보세', 'OUTER', '/dlalwl2_zz.png', '흑청자켓', 77000, '', '2023-08-16 11:23:32', NOW(), (SELECT id FROM closet LIMIT 1 OFFSET 1));
 
 -- INSERT OOTD_ARTICLE
--- INSERT OOTD_COMMENT
--- INSERT OOTD_LIKE..?
--- INSERT COUMMUNITY_ARTICLE
--- INSERT COMMUNITY_COMMENT
--- INSERT COMMUNITY_LIKE
--- INSERT COMMUNITY_CLOSET_ITEM
--- INSERT ISSUE
-=======
 insert into ootd_article (id, content, thumbnail) VALUES (1, '첫번째 글', '/static/ootd/images/1/1.jpg');
 insert into ootd_article (id, content, thumbnail) VALUES (2, '두번째 글', '/static/ootd/images/2/2.jpg');
 insert into ootd_article (id, content, thumbnail) VALUES (3, '세번째 글', '/static/ootd/images/3/3.jpg');
@@ -94,6 +85,7 @@ insert into ootd_article (id, content, thumbnail) VALUES (28, 'test 글', '/stat
 insert into ootd_article (id, content, thumbnail) VALUES (29, 'test 글', '/static/ootd/images/29/29.jpg');
 insert into ootd_article (id, content, thumbnail) VALUES (30, 'test 글', '/static/ootd/images/30/30.jpg');
 
+-- INSERT OOTD_ARTICLE_IMAGES
 insert into ootd_article_images (id, ootd_article_id, image_url) values (1, 1, '/static/ootd/images/1/1.jpg');
 insert into ootd_article_images (id, ootd_article_id, image_url) values (2, 2, '/static/ootd/images/2/2.jpg');
 insert into ootd_article_images (id, ootd_article_id, image_url) values (3, 3, '/static/ootd/images/3/3.jpg');
@@ -125,6 +117,10 @@ insert into ootd_article_images (id, ootd_article_id, image_url) values (28, 28,
 insert into ootd_article_images (id, ootd_article_id, image_url) values (29, 29, '/static/ootd/images/29/29.jpg');
 insert into ootd_article_images (id, ootd_article_id, image_url) values (30, 30, '/static/ootd/images/30/30.jpg');
 
+-- INSERT OOTD_COMMENT
+-- INSERT OOTD_LIKE..?
+
+-- INSERT ISSUE_ARTICLE
 insert into issue_article (id, content, thumbnail) VALUES (1, '첫번째 글', '/static/issue/1/1.jpg');
 insert into issue_article (id, content, thumbnail) VALUES (2, '두번째 글', '/static/issue/2/2.jpg');
 insert into issue_article (id, content, thumbnail) VALUES (3, '세번째 글', '/static/issue/3/3.jpg');
@@ -132,6 +128,7 @@ insert into issue_article (id, content, thumbnail) VALUES (4, '네번째 글', '
 insert into issue_article (id, content, thumbnail) VALUES (5, '다섯번째 글', '/static/issue/5/2.jpg');
 insert into issue_article (id, content, thumbnail) VALUES (6, '여섯번째 글', '/static/issue/6/3.jpg');
 
+-- INSERT ISSUE_ARTICLE_IMAGES
 insert into issue_article_images (id, issue_article_id, image_url) values (1, 1, '/static/issue/1/1.jpg');
 insert into issue_article_images (id, issue_article_id, image_url) values (2, 2, '/static/issue/2/2.jpg');
 insert into issue_article_images (id, issue_article_id, image_url) values (3, 3, '/static/issue/3/3.jpg');
@@ -139,12 +136,14 @@ insert into issue_article_images (id, issue_article_id, image_url) values (4, 4,
 insert into issue_article_images (id, issue_article_id, image_url) values (5, 5, '/static/issue/5/2.jpg');
 insert into issue_article_images (id, issue_article_id, image_url) values (6, 6, '/static/issue/6/3.jpg');
 
+-- INSERT COMMUNITY_ARTICLE
 insert into community_article (id, category, title, content, thumbnail, created_at) values (1, 'test', '예시 1번', 'test', '/static/community/1/1', '2023-08-24');
 insert into community_article (id, category, title, content, thumbnail, created_at) values (2, 'test', '예시 2번', 'test', '/static/community/2/4', '2023-08-24');
 insert into community_article (id, category, title, content, thumbnail, created_at) values (3, 'test', '예시 3번', 'test', '/static/community/3/7', '2023-08-24');
 insert into community_article (id, category, title, content, thumbnail, created_at) values (4, 'test', '예시 4번', 'test', '/static/community/4/10', '2023-08-24');
 insert into community_article (id, category, title, content, thumbnail, created_at) values (5, 'test', '예시 5번', 'test', '/static/community/5/13', '2023-08-24');
 
+-- INSERT COMMUNITY_ARTICLE_IMAGES
 insert into community_article_images (id, community_article_id, image_url) values (1, 1, '/static/community/1/1');
 insert into community_article_images (id, community_article_id, image_url) values (2, 1, '/static/community/1/2');
 insert into community_article_images (id, community_article_id, image_url) values (3, 1, '/static/community/1/3');
@@ -161,9 +160,10 @@ insert into community_article_images (id, community_article_id, image_url) value
 insert into community_article_images (id, community_article_id, image_url) values (14, 5, '/static/community/5/14');
 insert into community_article_images (id, community_article_id, image_url) values (15, 5, '/static/community/5/15');
 
+-- INSERT COMMUNITY_COMMENT
 insert into community_comment (id, community_article_id, content, created_at) values  (1, 1, 'bdns', '2023-08-24');
 insert into community_comment (id, community_article_id, content, created_at) values  (2, 1, '오~씻', '2023-08-24');
-
 insert into community_comment (id, community_article_id, parent_comment_id, content, created_at) values  (3, 1, 1, 'presents', '2023-08-24');
 
->>>>>>> CLTK-35
+-- INSERT COMMUNITY_LIKE
+-- INSERT COMMUNITY_CLOSET_ITEM

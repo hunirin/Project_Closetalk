@@ -2,18 +2,6 @@ spring:
   datasource:
     url: jdbc:mariadb://localhost:3306/closetalk
     driver-class-name: org.mariadb.jdbc.Driver
-<<<<<<< HEAD
-    username: username
-    password: password
-  jpa:
-    hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.MariaDBDialect
-    defer-datasource-initialization: true
-  #  sql:
-  #    init:
-  #      mode: always
-=======
     username: 'closetalk_admin'
     password: 'rladlarladlsk1212'
 
@@ -27,14 +15,11 @@ spring:
     init:
       mode: always
 
->>>>>>> CLTK-35
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
 
-<<<<<<< HEAD
-=======
   mvc:
     static-path-pattern: "/static/**"
     hiddenmethod:
@@ -43,9 +28,8 @@ spring:
 
   web:
     resources:
-      static-locations: file:media/, classpath:/static
+      static-locations: file:media/,classpath:/static
 
->>>>>>> CLTK-35
   #소셜 로그인 관련 yaml 설정
   security:
     oauth2:
@@ -94,11 +78,7 @@ spring:
       mail.smtp.auth: true
       mail.smtp.ssl.enable: true
       mail.smtp.trust: smtp.naver.com   #호스트와 동일하게
-<<<<<<< HEAD
-      mail.smtp.starttls.enable: true
-=======
       mail.smtp.starttls.enable: true
 
 jwt:
-  secret: fsdjkf12n3kjl1j23knklwjfkdn1mlk23em1klmfldksfmk1lmfd1f
->>>>>>> CLTK-35
+  secret: 15pdaDsLrQSklv1J5XBurbg8UvF7aW5rgbh4viOEV9c=
