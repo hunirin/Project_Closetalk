@@ -2,6 +2,7 @@ package team.closetalk.issue.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 import team.closetalk.user.entity.UserEntity;
 
 import java.time.LocalDateTime;
@@ -10,20 +11,18 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "issue")
+@Table(name = "issue_article")
 public class IssueArticleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-//    private Long userId;
     private String title;
     private String content;
-    private String imageUrl;
 
     // 미리보기용
     private String thumbnail;
 
-    @Column(nullable =  false)
+    @ColumnDefault(value = "0")
     private Long hits;
 
     @Column(name = "created_at")
@@ -31,11 +30,10 @@ public class IssueArticleEntity {
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
 
-    @OneToMany(mappedBy = "issueArticleEntityId")
+    @OneToMany(mappedBy = "issueArticle")
     private List<IssueArticleImageEntity> issueImages = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "users_id")
-
-    private UserEntity userId;
+    @JoinColumn(name = "users")
+    private UserEntity user;
 }
