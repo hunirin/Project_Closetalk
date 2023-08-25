@@ -25,7 +25,7 @@ public class OotdArticleEntity {
     private List<OotdArticleImagesEntity> ootdImages = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "users")
     private UserEntity userId;
 
 }

@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import team.closetalk.issue.dto.IssueArticleDto;
-import team.closetalk.issue.service.IssueArticleService;
+import team.closetalk.issue.service.IssueBannerService;
 
 @Controller
 @RequestMapping("/ootd")
 @RequiredArgsConstructor
-public class IssueController {
-    private final IssueArticleService issueService;
+public class IssueBannerController {
+    private final IssueBannerService issueBannerService;
 
     @GetMapping("/main")
     public String getIssue(
@@ -22,7 +22,7 @@ public class IssueController {
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "limit", defaultValue = "12") Integer limit
     ) {
-        Page<IssueArticleDto> issuePage = issueService.readLastThreeIssues();
+        Page<IssueArticleDto> issuePage = issueBannerService.readLastThreeIssues();
         model.addAttribute("issuePage", issuePage);
 
         return "ootd/main";

@@ -30,7 +30,7 @@ public class IssueViewController {
         Page<IssueArticleDto> issuePage = issueArticleService.readIssueArticleAll(pageNumber, pageSize);
         model.addAttribute("issueArticleEntity", issuePage.getContent());
         model.addAttribute("issuePage", issuePage);
-        return "issueMain";
+        return "/issue/issueMain";
     }
 
     @GetMapping("/issue/view/{id}")
@@ -42,9 +42,11 @@ public class IssueViewController {
 
         model.addAttribute("issueArticleEntity", issueArticleDto.getContent());
         model.addAttribute("id", id);
-        return "issueDetail";
+        return "/issue/issueDetail";
     }
 
+
+    // 수정 필요
     @PostMapping("/issue/view/create")
     public String createIssue(
             @RequestParam("IssueTitle") String title,

@@ -23,7 +23,7 @@ public class OotdController {
     // 헤더 불러오는 주소
     @GetMapping("/header")
     public String mainHeader() {
-        return "ootd/header";
+        return "header";
     }
 
      // 메인페이지 무한 스크롤 조회

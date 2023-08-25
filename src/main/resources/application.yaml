@@ -47,8 +47,8 @@ spring:
         #서비스 사용을 위한 클라이언트 식별 정보(api 사용 허가 받은 정보)
         registration:
           naver:
-            client-id: username
-            client-secret: password
+            client-id: JbvuCrDHXSw_kaJUQqf3
+            client-secret: fD2YiB5Vn6
             client-name: naver
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
@@ -57,8 +57,8 @@ spring:
               - nickname
               - email
           kakao:
-            client-id: username
-            client-secret: password
+            client-id: 1a625aba6d243fae639cd64af15bd43c
+            client-secret: nnrKMUYhR671EmoGD6nScVIYyk7LyrL8
             client-name: kakao
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code

@@ -35,5 +35,5 @@ public class IssueArticleEntity {
 
     @ManyToOne
     @JoinColumn(name = "users")
-    private UserEntity user;
+    private UserEntity userId;
 }

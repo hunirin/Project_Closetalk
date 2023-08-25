@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.issue.dto.IssueArticleDto;
+import team.closetalk.issue.dto.IssueBannerDto;
 import team.closetalk.issue.entity.IssueArticleEntity;
 import team.closetalk.issue.repository.IssueArticleImageRepository;
 import team.closetalk.issue.repository.IssueArticleRepository;
@@ -28,19 +29,19 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class IssueArticleService {
     private final IssueArticleRepository issueArticleRepository;
-    private final IssueArticleImageRepository issueArticleImageRepository;
 
     public IssueArticleDto createIssueArticle(IssueArticleDto dto) {
         IssueArticleEntity newIssueArticle = new IssueArticleEntity();
         newIssueArticle.setTitle(dto.getTitle());
         newIssueArticle.setContent(dto.getContent());
-//        newIssueArticle.setImageUrl(dto.getImageUrl());
         newIssueArticle.setHits(dto.getHits());
         newIssueArticle.setCreatedAt(dto.getCreatedAt());
         return IssueArticleDto.fromEntity(issueArticleRepository.save(newIssueArticle));
     }
 
-    // 이슈 이미지 업로드
+    // 이슈 이미지 업로드 -- 수정필요
+    // 1. thumbnail에 첫번째 사진 저장하기
+    // 2. imageUrl의 첫번째 사진 불러오기 -> html에 연결
     public List<IssueArticleDto> uploadIssueImg(Long id, List<MultipartFile> issueImages) {
 
 
@@ -149,11 +150,6 @@ public class IssueArticleService {
         else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    // 마지막 세개만 조회
-    public Page<IssueArticleDto> readLastThreeIssues() {
-        Pageable pageable = PageRequest.of(0, 3, Sort.by("id").descending());
-        Page<IssueArticleEntity> issueEntityPage = issueArticleRepository.findAll(pageable);
-        return issueEntityPage.map(IssueArticleDto::fromEntity2);
-    }
+
 
 }

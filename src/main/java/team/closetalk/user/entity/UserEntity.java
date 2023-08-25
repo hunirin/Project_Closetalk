@@ -41,12 +41,4 @@ public class UserEntity {
     private String userRole;
     private Date createdAt;
 
-//    @OneToMany(mappedBy = "userId")
-//    private List<IssueArticleEntity> issueArticleEntity = new ArrayList<>();
-//    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<OotdArticleEntity> ootdEntity = new ArrayList<>();
-
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<IssueArticleEntity> issueEntity = new ArrayList<>() ;
-
 }

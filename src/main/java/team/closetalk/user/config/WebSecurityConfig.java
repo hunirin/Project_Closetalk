@@ -35,6 +35,7 @@ public class WebSecurityConfig {
                                         ,"/ootd/main"
                                         ,"/ootd/header"
                                         ,"/ootd/list"
+                                        ,"/ootd/banner"
                                         ,"/static/**"
                                         ,"/loginPage"
                                 ).permitAll()

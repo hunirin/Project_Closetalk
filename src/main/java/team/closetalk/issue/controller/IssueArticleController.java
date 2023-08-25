@@ -34,7 +34,7 @@ public class IssueArticleController {
     ) {
         service.createIssueArticle(dto);
         dto.setCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
-        return service.createIssueArticle(dto);
+        return dto;
     }
 
     // 이미지 업로드
@@ -99,6 +99,7 @@ public class IssueArticleController {
         service.deleteIssueArticle(id);
     }
 
+    // 수정 필요
     @GetMapping("/issueMain")
     public String getIssues(Model model) {
         Page<IssueArticleDto> issueArticlePage = service.readIssueArticleAll(0, 8);
