@@ -19,12 +19,13 @@
                     <tr><td><label>아이디</label></td>
                         <td><input name="loginId" placeholder="ID"></td></tr>
                     <tr><td><label>비밀번호</label></td>
-                        <td><input name="password" placeholder="PASSWORD"></td></tr>
+                        <td><input name="password" type="password" placeholder="PASSWORD"></td></tr>
                     <tr><td><label>비밀번호 확인</label></td>
-                        <td><input name="password-check" placeholder="PASSWORD"></td></tr>
+                        <td><input name="password-check" type="password" placeholder="PASSWORD"></td></tr>
                     <tr><td><label>이메일</label></td>
                         <td>
-                            <input name="email" placeholder="email" id="input-email">
+                            <input name="show-email" placeholder="email" id="input-email">
+                            <input name="email" type="hidden" placeholder="email" id="input-real-email">
                             <button type="button" id="btn-mail-send">인증번호 받기</button>
                         </td>
                     </tr>
@@ -109,6 +110,7 @@
             document.querySelector('#input-auth-code').disabled = true;
             btnCodeCheck.disabled = true;
             document.querySelector('#input-email').disabled = true;
+            document.querySelector("#input-real-email").value = document.querySelector('#input-email').value
 
         }
         alert(message)
