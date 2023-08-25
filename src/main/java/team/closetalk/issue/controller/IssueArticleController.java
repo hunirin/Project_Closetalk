@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import team.closetalk.issue.dto.IssueArticleDto;
@@ -18,14 +20,15 @@ import java.time.ZoneId;
 import java.util.List;
 
 @Slf4j
-@RestController
-@RequestMapping("/issueArticles")
+@Controller
+@RequestMapping("/issue")
 @RequiredArgsConstructor
 public class IssueArticleController {
     private final IssueArticleService service;
 
-    // POST /issueArticles
-    @PostMapping
+    // POST /issue/create
+    @PostMapping("/create")
+    @ResponseBody
     public IssueArticleDto create(
             @RequestBody IssueArticleDto dto
     ) {
@@ -59,35 +62,47 @@ public class IssueArticleController {
     }
 
 //    @GetMapping("/main")
-//    public String getIssueArticles() {
-//        return "issueArticles";
+//    public String getIssues() {
+//        return "issue";
 //    }
 
-    // GET /issueArticles
+    // GET /issue
     @GetMapping
+    @ResponseBody
     public Page<IssueArticleDto> readAll() {
         return service.readIssueArticleAll(0, 8);
     }
 
-    // GET /issueArticles/{id}
+    // GET /issue/{id}
     @GetMapping("/{id}")
+    @ResponseBody
     public IssueArticleDto read(@PathVariable("id") Long id) {
         return service.readIssueArticle(id);
     }
 
-    // PUT /issueArticles/{id}
+    // PUT /issue/{id}
     @PutMapping("/{id}")
+    @ResponseBody
     public IssueArticleDto update(
             @PathVariable("id") Long id,
             @RequestBody IssueArticleDto dto
     ) {
+        dto.setModifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         return service.updateIssueArticle(id, dto);
     }
 
-    // DELETE /issueArticles/{id}
+    // DELETE /issue/{id}
     @DeleteMapping("/{id}")
+    @ResponseBody
     public void delete(
             @PathVariable("id") Long id) {
         service.deleteIssueArticle(id);
+    }
+
+    @GetMapping("/issueMain")
+    public String getIssues(Model model) {
+        Page<IssueArticleDto> issueArticlePage = service.readIssueArticleAll(0, 8);
+        model.addAttribute("issueList", issueArticlePage.getContent());
+        return "issueMain";
     }
 }

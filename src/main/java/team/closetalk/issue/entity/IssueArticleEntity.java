@@ -19,7 +19,10 @@ public class IssueArticleEntity {
     private String content;
     private String imageUrl;
 
-    @Column(nullable = false)
+    // 썸네일용
+    private String thumbnail;
+
+    @Column(nullable =  false)
     private Long hits;
 
     @Column(name = "created_at")

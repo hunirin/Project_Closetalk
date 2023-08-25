@@ -1,4 +1,4 @@
-package team.closetalk;
+package team.closetalk.issue;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -12,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.issue.dto.IssueArticleDto;
 import team.closetalk.issue.entity.IssueArticleEntity;
+import team.closetalk.issue.entity.IssueArticleImageEntity;
+import team.closetalk.issue.repository.IssueArticleImageRepository;
 import team.closetalk.issue.repository.IssueArticleRepository;
 
 import java.io.IOException;
@@ -20,12 +22,14 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class IssueArticleService {
     private final IssueArticleRepository issueArticleRepository;
+    private final IssueArticleImageRepository issueArticleImageRepository;
 
     public IssueArticleDto createIssueArticle(IssueArticleDto dto) {
         IssueArticleEntity newIssueArticle = new IssueArticleEntity();
@@ -37,6 +41,7 @@ public class IssueArticleService {
         newIssueArticle.setCreatedAt(dto.getCreatedAt());
         return IssueArticleDto.fromEntity(issueArticleRepository.save(newIssueArticle));
     }
+
     // 이슈 이미지 업로드
     public List<IssueArticleDto> uploadIssueImg(Long id, List<MultipartFile> issueImages) {
 
@@ -54,6 +59,7 @@ public class IssueArticleService {
             log.info(issueDir);
             try {
                 Files.createDirectories(Path.of(issueDir));
+
             } catch (IOException e) {
                 log.error(e.getMessage());
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -133,7 +139,7 @@ public class IssueArticleService {
             issueArticle.setTitle(dto.getTitle());
             issueArticle.setContent(dto.getContent());
             issueArticle.setHits(dto.getHits());
-            issueArticle.setImageUrl(dto.getImageUrl());
+//            issueArticle.setImageUrl(dto.getImageUrl());
             issueArticle.setModifiedAt(dto.getModifiedAt());
             issueArticleRepository.save(issueArticle);
             return IssueArticleDto.fromEntity(issueArticle);

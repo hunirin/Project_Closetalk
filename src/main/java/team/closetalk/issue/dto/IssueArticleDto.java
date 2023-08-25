@@ -28,7 +28,7 @@ public class IssueArticleDto {
         dto.setImageUrl(entity.getImageUrl());
         dto.setHits(entity.getHits());
         dto.setCreatedAt(entity.getCreatedAt());
-//        dto.setModified_at(entity.getModified_at());
+        dto.setModifiedAt(entity.getModifiedAt());
         return dto;
     }
 
@@ -37,4 +37,6 @@ public class IssueArticleDto {
         ZoneId zoneId = ZoneId.of("Asia/Seoul");
         return instant.atZone(zoneId).toLocalDateTime();
     }
+
+
 }
