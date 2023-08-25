@@ -40,18 +40,44 @@ public class ClosetService {
     // 1-1. 옷장 생성
     public void addCloset(String closetName, Boolean isHidden,
                           Authentication authentication) {
-        if (closetRepository.findAll().size() == 5) {
+        UserEntity user = getUserEntity(authentication.getName());
+
+        if (closetRepository.findAllByUserId_LoginId(user.getLoginId()).size() == 5) {
             log.error("옷장 최대 생성 개수 제한");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        UserEntity user = getUserEntity(authentication.getName());
-
+        
         // 옷장 이름이 없으면 Closet (마지막 생성 옷장의 ClosetId + 1)으로 생성
-        if (closetName == null || closetName.equals(""))
-            closetName = String.format("My Closet %d",
-                        closetRepository.findTopByOrderByIdDesc().getId() + 1);
-        closetRepository.save(new ClosetEntity(closetName, isHidden, user));
+        String newClosetName;
+        if (closetName == null || closetName.equals("")) {
+            int nextClosetNumber = getNextClosetNumber();
+            newClosetName = "My Closet " + nextClosetNumber;
+        } else newClosetName = closetName;
+
+        closetRepository.save(new ClosetEntity(newClosetName, isHidden, user));
         log.info("옷장 생성 완료");
+    }
+
+    // 1-1. My Closet + count 자동 생성
+    public int getNextClosetNumber() {
+        String baseName = "My Closet ";
+        int maxNumber = 0;
+
+        List<ClosetEntity> closetEntities =
+                closetRepository.findAllByClosetNameStartingWith(baseName);
+        for (ClosetEntity closetEntity : closetEntities) {
+            String existingName = closetEntity.getClosetName();
+            String numberString = existingName.substring(baseName.length()).trim();
+            try {
+                int number = Integer.parseInt(numberString);
+                if (number > maxNumber) {
+                    maxNumber = number;
+                }
+            } catch (NumberFormatException e) {
+                // 숫자 아닌 경우 무시
+            }
+        }
+        return maxNumber + 1;
     }
 
     // 1-2. 옷장 삭제 (해당 옷장 내 모든 아이템 포함)

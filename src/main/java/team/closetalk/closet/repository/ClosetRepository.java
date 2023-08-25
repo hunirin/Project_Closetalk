@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ClosetRepository extends JpaRepository<ClosetEntity, Long> {
-    ClosetEntity findTopByOrderByIdDesc();
+    List<ClosetEntity> findAllByClosetNameStartingWith(String closetName);
     List<ClosetEntity> findAllByUserId_LoginId(String LoginId);
     ClosetEntity findByClosetNameAndUserId_Nickname(String closetName, String nickName);
     Boolean existsByIdAndUserId_LoginId(Long closetId, String loginId);
