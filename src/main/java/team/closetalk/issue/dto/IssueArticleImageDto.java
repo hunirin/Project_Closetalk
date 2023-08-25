@@ -10,7 +10,7 @@ public class IssueArticleImageDto {
 
     private String imageUrl;
 
-    public static IssueArticleImageDto fromEntity(IssueArticleImageEntity images) {
+    public static IssueArticleImageDto fromEntity2(IssueArticleImageEntity images) {
         IssueArticleImageDto dto = new IssueArticleImageDto();
         dto.setId(images.getId());
         dto.setImageUrl(images.getImageUrl());

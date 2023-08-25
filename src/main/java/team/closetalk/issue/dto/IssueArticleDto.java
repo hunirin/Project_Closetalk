@@ -41,14 +41,11 @@ public class IssueArticleDto {
 //        dto.setCreatedAt(entity.getCreatedAt());
 //        dto.setModifiedAt(entity.getModifiedAt());
 
-        List<IssueArticleImageEntity> issueImages = entity.getIssueImages();
-        if (issueImages != null && !issueImages.isEmpty()) {
-            dto.setThumbnail(issueImages.stream()
-                    .map(IssueArticleImageDto::fromEntity)
-                    .toList().get(0).getImageUrl());
-        }
+
+
         return dto;
     }
+
 
 
     // 이슈 목록
@@ -60,6 +57,12 @@ public class IssueArticleDto {
         dto.setTitle(entity.getTitle());
         dto.setContent(entity.getContent());
 
+        List<IssueArticleImageEntity> issueImages = entity.getIssueImages();
+        if (issueImages != null && !issueImages.isEmpty()) {
+            dto.setThumbnail(issueImages.stream()
+                    .map(IssueArticleImageDto::fromEntity2)
+                    .toList().get(0).getImageUrl());
+        }
         return dto;
     }
 }
