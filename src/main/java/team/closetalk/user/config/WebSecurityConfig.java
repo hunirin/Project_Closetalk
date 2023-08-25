@@ -39,6 +39,7 @@ public class WebSecurityConfig {
                                         ,"/ootd/header"
                                         ,"/ootd/list"
                                         ,"/static/**"
+                                        ,"/loginPage"
                                 ).permitAll()
                                 .anyRequest()
                                 .authenticated()
