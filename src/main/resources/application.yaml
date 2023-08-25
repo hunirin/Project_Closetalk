@@ -1,20 +1,68 @@
-
 spring:
   datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/closetalk
-    username: 'closetalk_admin'
-    password: 'rladlarladlsk1212'
-
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: username
+    password: password
   jpa:
+    hibernate:
+      ddl-auto: update
     database-platform: org.hibernate.dialect.MariaDBDialect
     defer-datasource-initialization: true
-    hibernate:
-      ddl-auto: create
+  #  sql:
+  #    init:
+  #      mode: always
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
-  sql:
-    init:
-      mode: always
+  #소셜 로그인 관련 yaml 설정
+  security:
+    oauth2:
+      client:
+        #서비스 제공자
+        provider:
+          naver:
+            authorization-uri: https://nid.naver.com/oauth2.0/authorize
+            token-uri: https://nid.naver.com/oauth2.0/token
+            user-info-uri: https://openapi.naver.com/v1/nid/me
+            user-name-attribute: response
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+        #서비스 사용을 위한 클라이언트 식별 정보(api 사용 허가 받은 정보)
+        registration:
+          naver:
+            client-id: username
+            client-secret: password
+            client-name: naver
+            client-authentication-method: client_secret_post
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/login/oauth2/code/naver
+            scope:
+              - nickname
+              - email
+          kakao:
+            client-id: username
+            client-secret: password
+            client-name: kakao
+            client-authentication-method: client_secret_post
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            scope:
+              - profile_nickname
+              - account_email
 
-jwt:
-  secret: p0s+ooKbS4Z8Wcx0BkGJiLEOwyC34f1mLapC4swTT5Y=
+  mail:
+    host: smtp.naver.com                #네이버: smtp.naver.com
+    port: 465                           #네이버 설정에 포트는 모바일 메일 포트인 듯. PC서비스에서는 465
+    username: username         #네이버 이메일 주소
+    password: password
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.trust: smtp.naver.com   #호스트와 동일하게
+      mail.smtp.starttls.enable: true
