@@ -35,6 +35,7 @@ public class WebSecurityConfig {
                                         , "/users/sendEmail"
                                         , "/users/register"
                                         , "/users/login"
+                                        , "users/login-token"
                                         ,"/ootd/main"
                                         ,"/ootd/header"
                                         ,"/ootd/list"
@@ -61,10 +62,5 @@ public class WebSecurityConfig {
                 );
 
         return http.build();
-    }
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        // 정적 자원에 스프링 시큐리티 필터 규칙을 적용하지 않도록 설정
-        return (web) -> web.ignoring().requestMatchers("/static/**").anyRequest();
     }
 }

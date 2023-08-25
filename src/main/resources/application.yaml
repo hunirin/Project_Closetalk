@@ -81,4 +81,4 @@ spring:
       mail.smtp.starttls.enable: true
 
 jwt:
-  secret: fsdjkf12n3kjl1j23knklwjfkdn1mlk23em1klmfldksfmk1lmfd1f
+  secret: 15pdaDsLrQSklv1J5XBurbg8UvF7aW5rgbh4viOEV9c=
