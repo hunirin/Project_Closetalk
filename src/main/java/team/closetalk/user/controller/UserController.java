@@ -11,7 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.user.dto.CustomUserDetails;
 import team.closetalk.user.dto.EmailAuthDto;
 import team.closetalk.user.dto.JwtTokenDto;
-import team.closetalk.user.service.EmailSendService;
+//import team.closetalk.user.service.EmailSendService;
 import team.closetalk.user.service.UserService;
 import team.closetalk.user.utils.JwtUtils;
 
@@ -24,7 +24,7 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
 
-    private final EmailSendService emailSendService;
+//    private final EmailSendService emailSendService;
 
     //회원가입
     @PostMapping(value = "/register"
@@ -74,16 +74,16 @@ public class UserController {
     }
     
     //이메일 인증 처리
-    @ResponseBody
-    @PostMapping(value = "/sendEmail")
-    public ResponseEntity<EmailAuthDto> sendAuthEmail(@RequestBody String email){
-        String code = emailSendService.makeEmailAuth(email.substring(1,email.length()-1));
-
-        EmailAuthDto emailAuthDto = new EmailAuthDto();
-        emailAuthDto.setAuthCode(code);
-
-        return ResponseEntity.status(HttpStatus.OK).body(emailAuthDto);
-    }
+//    @ResponseBody
+//    @PostMapping(value = "/sendEmail")
+//    public ResponseEntity<EmailAuthDto> sendAuthEmail(@RequestBody String email){
+//        String code = emailSendService.makeEmailAuth(email.substring(1,email.length()-1));
+//
+//        EmailAuthDto emailAuthDto = new EmailAuthDto();
+//        emailAuthDto.setAuthCode(code);
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(emailAuthDto);
+//    }
     
 
 
