@@ -30,7 +30,6 @@ spring:
     resources:
       static-locations: file:media/, classpath:/static
 
-
   #소셜 로그인 관련 yaml 설정
   security:
     oauth2:

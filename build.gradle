@@ -37,11 +37,11 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-	//Mail Send
-	implementation 'org.springframework.boot:spring-boot-starter-mail'
-
 	// oauth2
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	//Mail Send
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 	// mariaDB
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
