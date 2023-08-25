@@ -24,7 +24,7 @@ public class IssueArticleDto {
     // 이슈 전체 이미지 불러오기
     private List<IssueArticleImageDto> issueImages;
 
-    private static LocalDateTime presentLocalDateTime(Date date){
+    private static LocalDateTime presentLocalDateTime(Date date) {
         Instant instant = date.toInstant();
         ZoneId zoneId = ZoneId.of("Asia/Seoul");
         return instant.atZone(zoneId).toLocalDateTime();
@@ -42,7 +42,7 @@ public class IssueArticleDto {
 //        dto.setModifiedAt(entity.getModifiedAt());
 
         List<IssueArticleImageEntity> issueImages = entity.getIssueImages();
-        if (issueImages != null && ! issueImages.isEmpty()) {
+        if (issueImages != null && !issueImages.isEmpty()) {
             dto.setThumbnail(issueImages.stream()
                     .map(IssueArticleImageDto::fromEntity)
                     .toList().get(0).getImageUrl());
@@ -54,10 +54,12 @@ public class IssueArticleDto {
     // 이슈 목록
     // 첫번째 이미지를 thumbnail에 저장
     // service 단계에서 저장 해주면 굳이 안쓰는게 나음
-//    public static IssueArticleDto fromEntity(IssueArticleEntity entity) {
-//        IssueArticleDto dto = new IssueArticleDto();
-//        dto.setId(entity.getId());
-//        dto.setTitle(entity.getTitle());
-//        dto.setContent(entity.getContent());
+    public static IssueArticleDto fromEntity2(IssueArticleEntity entity) {
+        IssueArticleDto dto = new IssueArticleDto();
+        dto.setId(entity.getId());
+        dto.setTitle(entity.getTitle());
+        dto.setContent(entity.getContent());
 
+        return dto;
+    }
 }
