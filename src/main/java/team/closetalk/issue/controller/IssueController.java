@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import team.closetalk.issue.dto.IssueArticleDto;
-import team.closetalk.issue.service.IssueService;
+import team.closetalk.issue.service.IssueArticleService;
 
 @Controller
 @RequestMapping("/ootd")
 @RequiredArgsConstructor
 public class IssueController {
-    private final IssueService issueService;
+    private final IssueArticleService issueService;
 
     @GetMapping("/main")
     public String getIssue(

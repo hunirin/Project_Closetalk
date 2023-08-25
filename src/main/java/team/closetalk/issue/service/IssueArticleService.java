@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.issue.dto.IssueArticleDto;
 import team.closetalk.issue.entity.IssueArticleEntity;
-import team.closetalk.issue.entity.IssueArticleImageEntity;
 import team.closetalk.issue.repository.IssueArticleImageRepository;
 import team.closetalk.issue.repository.IssueArticleRepository;
 
@@ -22,7 +22,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -33,10 +32,9 @@ public class IssueArticleService {
 
     public IssueArticleDto createIssueArticle(IssueArticleDto dto) {
         IssueArticleEntity newIssueArticle = new IssueArticleEntity();
-//        newIssueArticle.setUserId(dto.getUserId());
         newIssueArticle.setTitle(dto.getTitle());
         newIssueArticle.setContent(dto.getContent());
-        newIssueArticle.setImageUrl(dto.getImageUrl());
+//        newIssueArticle.setImageUrl(dto.getImageUrl());
         newIssueArticle.setHits(dto.getHits());
         newIssueArticle.setCreatedAt(dto.getCreatedAt());
         return IssueArticleDto.fromEntity(issueArticleRepository.save(newIssueArticle));
@@ -90,7 +88,7 @@ public class IssueArticleService {
             log.info(String.format("/images/issue/%d/%s", id, issueFilename));
 
 
-            issueArticleEntity.setImageUrl(String.format("/images/issue/%d/%s", id, issueFilename));
+//            issueArticleEntity.setImageUrl(String.format("/images/issue/%d/%s", id, issueFilename));
 
             IssueArticleEntity savedIssueArticle = issueArticleRepository.save(issueArticleEntity);
             uploadedIssueArticles.add(IssueArticleDto.fromEntity(savedIssueArticle));
@@ -135,11 +133,10 @@ public class IssueArticleService {
         Optional<IssueArticleEntity> optionalIssueArticle = issueArticleRepository.findById(id);
         if (optionalIssueArticle.isPresent()) {
             IssueArticleEntity issueArticle = optionalIssueArticle.get();
-//            issueArticle.setUserId(dto.getUserId());
             issueArticle.setTitle(dto.getTitle());
             issueArticle.setContent(dto.getContent());
             issueArticle.setHits(dto.getHits());
-            issueArticle.setImageUrl(dto.getImageUrl());
+//            issueArticle.setImageUrl(dto.getImageUrl());
             issueArticle.setModifiedAt(dto.getModifiedAt());
             issueArticleRepository.save(issueArticle);
             return IssueArticleDto.fromEntity(issueArticle);
@@ -150,6 +147,13 @@ public class IssueArticleService {
     public void deleteIssueArticle(Long id) {
         if (issueArticleRepository.existsById(id)) issueArticleRepository.deleteById(id);
         else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+
+    // 마지막 세개만 조회
+    public Page<IssueArticleDto> readLastThreeIssues() {
+        Pageable pageable = PageRequest.of(0, 3, Sort.by("id").descending());
+        Page<IssueArticleEntity> issueEntityPage = issueArticleRepository.findAll(pageable);
+        return issueEntityPage.map(IssueArticleDto::fromEntity2);
     }
 
 }
