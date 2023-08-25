@@ -56,13 +56,13 @@ spring:
               - profile_nickname
               - account_email
 
-  mail:
-    host: smtp.naver.com                #네이버: smtp.naver.com
-    port: 465                           #네이버 설정에 포트는 모바일 메일 포트인 듯. PC서비스에서는 465
-    username: username         #네이버 이메일 주소
-    password: password
-    properties:
-      mail.smtp.auth: true
-      mail.smtp.ssl.enable: true
-      mail.smtp.trust: smtp.naver.com   #호스트와 동일하게
-      mail.smtp.starttls.enable: true
+mail:
+  host: smtp.naver.com                #네이버: smtp.naver.com
+  port: 465                           #네이버 설정에 포트는 모바일 메일 포트인 듯. PC서비스에서는 465
+  username: username         #네이버 이메일 주소
+  password: password
+  properties:
+    mail.smtp.auth: true
+    mail.smtp.ssl.enable: true
+    mail.smtp.trust: smtp.naver.com   #호스트와 동일하게
+    mail.smtp.starttls.enable: true
