@@ -7,8 +7,11 @@ import lombok.NonNull;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.boot.context.properties.bind.DefaultValue;
+import team.closetalk.issue.entity.IssueArticleEntity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -36,5 +39,6 @@ public class UserEntity {
     private String userRole;
     private Date createdAt;
 
-
+    @OneToMany(mappedBy = "userId")
+    private List<IssueArticleEntity> issueArticleEntity = new ArrayList<>();
 }

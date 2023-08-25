@@ -6,7 +6,7 @@ spring:
     password: 'rladlarladlsk1212'
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     database-platform: org.hibernate.dialect.MariaDBDialect
     defer-datasource-initialization: true
   #  sql:
@@ -68,4 +68,4 @@ spring:
 #      mail.smtp.starttls.enable: true
 
 jwt:
-  secret : qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqwwwwwwwwwwwwwwwwwwwwwwwwwww
+  secret : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c

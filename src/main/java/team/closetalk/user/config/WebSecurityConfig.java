@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
-import team.closetalk.user.service.CustomOAuth2UserService;
+//import team.closetalk.user.service.CustomOAuth2UserService;
 import team.closetalk.user.utils.JwtFilter;
 //import team.closetalk.user.utils.OAuth2SuccessHandler;
 
@@ -18,7 +18,7 @@ import team.closetalk.user.utils.JwtFilter;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
     private final JwtFilter jwtFilter;
-    private final CustomOAuth2UserService customOAuth2UserService;
+//    private final CustomOAuth2UserService customOAuth2UserService;
 //    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
@@ -29,6 +29,7 @@ public class WebSecurityConfig {
                                 "/"
                                 ,"/testPage"
                                 , "/js/join-form.js"
+                                ,"/issue/**"
 //                                "/main"
 //                                , "relayAuth"
                         ).permitAll()
@@ -38,11 +39,12 @@ public class WebSecurityConfig {
                                 , "/users/register"
                                 , "/users/login"
                         ).anonymous()
-//                        .requestMatchers(
+                        .requestMatchers(
+                                "/issue/create"
 //                                "/myPage"
 ////                                , "/users/userInfo"
 ////                                , "/authPage"
-//                        ).authenticated()
+                        ).authenticated()
 
                 )
                 //폼로그인 추가

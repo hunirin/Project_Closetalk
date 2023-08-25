@@ -33,7 +33,7 @@ public class IssueArticleService {
 
     public IssueArticleDto createIssueArticle(IssueArticleDto dto) {
         IssueArticleEntity newIssueArticle = new IssueArticleEntity();
-        newIssueArticle.setUserId(dto.getUserId());
+//        newIssueArticle.setUserId(dto.getUserId());
         newIssueArticle.setTitle(dto.getTitle());
         newIssueArticle.setContent(dto.getContent());
         newIssueArticle.setImageUrl(dto.getImageUrl());
@@ -135,11 +135,11 @@ public class IssueArticleService {
         Optional<IssueArticleEntity> optionalIssueArticle = issueArticleRepository.findById(id);
         if (optionalIssueArticle.isPresent()) {
             IssueArticleEntity issueArticle = optionalIssueArticle.get();
-            issueArticle.setUserId(dto.getUserId());
+//            issueArticle.setUserId(dto.getUserId());
             issueArticle.setTitle(dto.getTitle());
             issueArticle.setContent(dto.getContent());
             issueArticle.setHits(dto.getHits());
-//            issueArticle.setImageUrl(dto.getImageUrl());
+            issueArticle.setImageUrl(dto.getImageUrl());
             issueArticle.setModifiedAt(dto.getModifiedAt());
             issueArticleRepository.save(issueArticle);
             return IssueArticleDto.fromEntity(issueArticle);

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.user.dto.CustomUserDetails;
-import team.closetalk.user.dto.EmailAuthDto;
+//import team.closetalk.user.dto.EmailAuthDto;
 import team.closetalk.user.dto.JwtTokenDto;
 //import team.closetalk.user.service.EmailSendService;
 import team.closetalk.user.service.UserService;

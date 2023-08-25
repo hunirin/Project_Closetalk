@@ -22,7 +22,7 @@ public class IssueArticleDto {
     public static IssueArticleDto fromEntity(IssueArticleEntity entity) {
         IssueArticleDto dto = new IssueArticleDto();
         dto.setId(entity.getId());
-        dto.setUserId(entity.getUserId());
+//        dto.setUserId(entity.getUserId());
         dto.setTitle(entity.getTitle());
         dto.setContent(entity.getContent());
         dto.setImageUrl(entity.getImageUrl());
