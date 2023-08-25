@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
     CLOSETALK 개발용 초기 데이터
 
@@ -61,3 +62,108 @@ VALUES ('보세', 'OUTER', '/dlalwl2_zz.png', '흑청자켓', 77000, '', '2023-0
 -- INSERT COMMUNITY_LIKE
 -- INSERT COMMUNITY_CLOSET_ITEM
 -- INSERT ISSUE
+=======
+insert into ootd_article (id, content, thumbnail) VALUES (1, '첫번째 글', '/static/ootd/images/1/1.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (2, '두번째 글', '/static/ootd/images/2/2.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (3, '세번째 글', '/static/ootd/images/3/3.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (4, '네번째 글', '/static/ootd/images/4/4.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (5, '다섯번째 글', '/static/ootd/images/5/5.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (6, '여섯번째 글', '/static/ootd/images/6/6.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (7, '일곱번째 글', '/static/ootd/images/7/7.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (8, '여덟번째 글', '/static/ootd/images/8/8.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (9, '아홉번째 글', '/static/ootd/images/9/9.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (10, '열번째 글', '/static/ootd/images/10/10.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (11, '열한번째 글', '/static/ootd/images/11/11.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (12, '열두번째 글', '/static/ootd/images/12/12.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (13, 'test', '/static/ootd/images/13/13.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (14, 'test', '/static/ootd/images/14/14.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (15, 'test 글', '/static/ootd/images/15/15.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (16, 'test 글', '/static/ootd/images/16/16.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (17, 'test 글', '/static/ootd/images/17/17.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (18, 'test 글', '/static/ootd/images/18/18.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (19, 'test 글', '/static/ootd/images/19/19.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (20, 'test 글', '/static/ootd/images/20/20.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (21, 'test 글', '/static/ootd/images/21/21.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (22, 'test 글', '/static/ootd/images/22/22.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (23, 'test 글', '/static/ootd/images/23/23.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (24, 'test 글', '/static/ootd/images/24/24.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (25, 'test 글', '/static/ootd/images/25/25.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (26, 'test 글', '/static/ootd/images/26/26.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (27, 'test 글', '/static/ootd/images/27/27.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (28, 'test 글', '/static/ootd/images/28/28.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (29, 'test 글', '/static/ootd/images/29/29.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (30, 'test 글', '/static/ootd/images/30/30.jpg');
+
+insert into ootd_article_images (id, ootd_article_id, image_url) values (1, 1, '/static/ootd/images/1/1.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (2, 2, '/static/ootd/images/2/2.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (3, 3, '/static/ootd/images/3/3.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (4, 4, '/static/ootd/images/4/4.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (5, 5, '/static/ootd/images/5/5.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (6, 6, '/static/ootd/images/6/6.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (7, 7, '/static/ootd/images/7/7.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (8, 8, '/static/ootd/images/8/8.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (9, 9, '/static/ootd/images/9/9.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (10, 10, '/static/ootd/images/10/10.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (11, 11, '/static/ootd/images/11/11.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (12, 12, '/static/ootd/images/12/12.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (13, 13, '/static/ootd/images/13/13.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (14, 14, '/static/ootd/images/14/14.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (15, 15, '/static/ootd/images/15/15.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (16, 16, '/static/ootd/images/16/16.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (17, 17, '/static/ootd/images/17/17.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (18, 18, '/static/ootd/images/18/18.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (19, 19, '/static/ootd/images/19/19.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (20, 20, '/static/ootd/images/20/20.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (21, 21, '/static/ootd/images/21/21.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (22, 22, '/static/ootd/images/22/22.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (23, 23, '/static/ootd/images/23/23.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (24, 24, '/static/ootd/images/24/24.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (25, 25, '/static/ootd/images/25/25.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (26, 26, '/static/ootd/images/26/26.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (27, 27, '/static/ootd/images/27/27.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (28, 28, '/static/ootd/images/28/28.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (29, 29, '/static/ootd/images/29/29.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (30, 30, '/static/ootd/images/30/30.jpg');
+
+insert into issue_article (id, content, thumbnail) VALUES (1, '첫번째 글', '/static/issue/1/1.jpg');
+insert into issue_article (id, content, thumbnail) VALUES (2, '두번째 글', '/static/issue/2/2.jpg');
+insert into issue_article (id, content, thumbnail) VALUES (3, '세번째 글', '/static/issue/3/3.jpg');
+insert into issue_article (id, content, thumbnail) VALUES (4, '네번째 글', '/static/issue/4/1.jpg');
+insert into issue_article (id, content, thumbnail) VALUES (5, '다섯번째 글', '/static/issue/5/2.jpg');
+insert into issue_article (id, content, thumbnail) VALUES (6, '여섯번째 글', '/static/issue/6/3.jpg');
+
+insert into issue_article_images (id, issue_article_id, image_url) values (1, 1, '/static/issue/1/1.jpg');
+insert into issue_article_images (id, issue_article_id, image_url) values (2, 2, '/static/issue/2/2.jpg');
+insert into issue_article_images (id, issue_article_id, image_url) values (3, 3, '/static/issue/3/3.jpg');
+insert into issue_article_images (id, issue_article_id, image_url) values (4, 4, '/static/issue/4/1.jpg');
+insert into issue_article_images (id, issue_article_id, image_url) values (5, 5, '/static/issue/5/2.jpg');
+insert into issue_article_images (id, issue_article_id, image_url) values (6, 6, '/static/issue/6/3.jpg');
+
+insert into community_article (id, category, title, content, thumbnail, created_at) values (1, 'test', '예시 1번', 'test', '/static/community/1/1', '2023-08-24');
+insert into community_article (id, category, title, content, thumbnail, created_at) values (2, 'test', '예시 2번', 'test', '/static/community/2/4', '2023-08-24');
+insert into community_article (id, category, title, content, thumbnail, created_at) values (3, 'test', '예시 3번', 'test', '/static/community/3/7', '2023-08-24');
+insert into community_article (id, category, title, content, thumbnail, created_at) values (4, 'test', '예시 4번', 'test', '/static/community/4/10', '2023-08-24');
+insert into community_article (id, category, title, content, thumbnail, created_at) values (5, 'test', '예시 5번', 'test', '/static/community/5/13', '2023-08-24');
+
+insert into community_article_images (id, community_article_id, image_url) values (1, 1, '/static/community/1/1');
+insert into community_article_images (id, community_article_id, image_url) values (2, 1, '/static/community/1/2');
+insert into community_article_images (id, community_article_id, image_url) values (3, 1, '/static/community/1/3');
+insert into community_article_images (id, community_article_id, image_url) values (4, 2, '/static/community/2/4');
+insert into community_article_images (id, community_article_id, image_url) values (5, 2, '/static/community/2/5');
+insert into community_article_images (id, community_article_id, image_url) values (6, 2, '/static/community/2/6');
+insert into community_article_images (id, community_article_id, image_url) values (7, 3, '/static/community/3/7');
+insert into community_article_images (id, community_article_id, image_url) values (8, 3, '/static/community/3/8');
+insert into community_article_images (id, community_article_id, image_url) values (9, 3, '/static/community/3/9');
+insert into community_article_images (id, community_article_id, image_url) values (10, 4, '/static/community/4/10');
+insert into community_article_images (id, community_article_id, image_url) values (11, 4, '/static/community/4/11');
+insert into community_article_images (id, community_article_id, image_url) values (12, 4, '/static/community/4/12');
+insert into community_article_images (id, community_article_id, image_url) values (13, 5, '/static/community/5/13');
+insert into community_article_images (id, community_article_id, image_url) values (14, 5, '/static/community/5/14');
+insert into community_article_images (id, community_article_id, image_url) values (15, 5, '/static/community/5/15');
+
+insert into community_comment (id, community_article_id, content, created_at) values  (1, 1, 'bdns', '2023-08-24');
+insert into community_comment (id, community_article_id, content, created_at) values  (2, 1, '오~씻', '2023-08-24');
+
+insert into community_comment (id, community_article_id, parent_comment_id, content, created_at) values  (3, 1, 1, 'presents', '2023-08-24');
+
+>>>>>>> CLTK-35

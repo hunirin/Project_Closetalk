@@ -15,7 +15,7 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class EmailSendService {
     private final JavaMailSender javaMailSender;
-    private static final String ADMIN_ADDRESS = "xhxh006@naver.com";
+    private static final String ADMIN_ADDRESS = "hun053@naver.com";
 
     private int authCode;
 
