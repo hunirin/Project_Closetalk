@@ -58,7 +58,7 @@ spring:
               - email
           kakao:
             client-id: ${KAKAO_CLIENT_ID}
-            client-secret: ${NAVER_CLIENT_SECRET}
+            client-secret: ${KAKAO_CLIENT_SECRET}
             client-name: kakao
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
