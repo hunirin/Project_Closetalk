@@ -34,16 +34,16 @@ public class ClosetController {
 
     // 옷장 업데이트
     @PutMapping("/{closetName}")
-    public void closetModify(@PathVariable("closetName") String closetName,
-                             @RequestParam(name = "changeName", required = false)
-                             String changeName,
-                             @RequestParam(name = "isHidden", required = false)
-                             Boolean isHidden,
+    public void closetModifyName(@PathVariable("closetName") String closetName,
+                             @RequestParam(name = "changeName") String changeName,
                              Authentication authentication) {
-        if (!(changeName == null || changeName.isEmpty()))
-            closetService.modifyClosetName(closetName, changeName, authentication);
-        if (isHidden != null)
-            closetService.modifyClosetHidden(closetName, isHidden, authentication);
+        closetService.modifyClosetName(closetName, changeName, authentication);
+    }
+
+    @PutMapping("/{closetName}/hidden")
+    public void closetModifyHidden(@PathVariable("closetName") String closetName,
+                                 Authentication authentication) {
+            closetService.modifyClosetHidden(closetName, authentication);
     }
 
     // 옷장 삭제

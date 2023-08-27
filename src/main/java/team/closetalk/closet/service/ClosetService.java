@@ -110,19 +110,18 @@ public class ClosetService {
     }
 
     // 1-4. 옷장 공개 여부 수정
-    public void modifyClosetHidden(String closetName, Boolean isHidden,
+    public void modifyClosetHidden(String closetName,
                                    Authentication authentication) {
         UserEntity user = getUserEntity(authentication.getName());
         ClosetEntity closet = getClosetEntity(closetName, user.getNickname());
-
-        if (closet.getIsHidden() == isHidden) {
-            log.error("동일한 공개 설정");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        if (closet.getIsHidden()) {
+            closetRepository.save(closet.updateEntity(false));
+            log.info("{} : 비공개 설정", closet.getClosetName());
         }
-
-        closetRepository.save(closet.updateEntity(isHidden));
-        if (isHidden) log.info("{} : 공개 설정", closet.getClosetName());
-        else log.info("{} : 비공개 설정", closet.getClosetName());
+        else {
+            closetRepository.save(closet.updateEntity(true));
+            log.info("{} : 공개 설정", closet.getClosetName());
+        }
     }
 
     // 2. 해당 옷장의 아이템 목록 조회
