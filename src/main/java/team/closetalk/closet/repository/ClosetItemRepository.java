@@ -9,5 +9,5 @@ public interface ClosetItemRepository extends JpaRepository<ClosetItemEntity, Lo
     List<ClosetItemEntity> findAllByClosetId_Id(Long closetId);
     List<ClosetItemEntity> findAllByClosetId_IdAndCategory(Long closetId, String category);
     void deleteAllByClosetId_Id(Long closetId);
-    ClosetItemEntity findByIdAndClosetId_UserId_Nickname(Long itemId, String nickName);
+    ClosetItemEntity findByIdAndClosetId_UserId_Nickname(Long itemId, String nickname);
 }

@@ -26,8 +26,8 @@ public class ClosetItemService {
 
     // 1. 해당 옷장의 단일 아이템 조회
     public ClosetItemDto readClosetItem(Long itemId, Authentication authentication) {
-        String nickName = getUserEntity(authentication.getName()).getNickname();
-        ClosetItemEntity item = getClosetItemEntity(itemId, nickName);
+        String nickname = getUserEntity(authentication.getName()).getNickname();
+        ClosetItemEntity item = getClosetItemEntity(itemId, nickname);
 
         log.info("[{}]의 [{}]번 아이템 조회 완료",
                 item.getClosetId().getClosetName(), item.getId());
@@ -37,16 +37,16 @@ public class ClosetItemService {
     // 2. 아이템 수정
     public void modifyClosetItem(Long itemId, Map<String, String> itemParams,
                                  Authentication authentication) {
-        String nickName = getUserEntity(authentication.getName()).getNickname();
-        ClosetItemEntity item = getClosetItemEntity(itemId, nickName);
+        String nickname = getUserEntity(authentication.getName()).getNickname();
+        ClosetItemEntity item = getClosetItemEntity(itemId, nickname);
 
         if (!closetRepository.existsByClosetNameAndUserId_Nickname(
-                itemParams.get("changeCloset"), nickName)) {
+                itemParams.get("changeCloset"), nickname)) {
             log.error("존재하지 않는 closet_name : {}", itemParams.get("changeCloset"));
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         else {
-            ClosetEntity closet = getClosetEntity(itemParams.get("changeCloset"), nickName);
+            ClosetEntity closet = getClosetEntity(itemParams.get("changeCloset"), nickname);
             closetItemRepository.save(item.updateEntity(itemParams, closet));
             log.info("[{}]번 아이템 수정 완료", itemId);
         }
@@ -54,8 +54,8 @@ public class ClosetItemService {
 
     // 3. 아이템 삭제
     public void deleteClosetItem(Long itemId, Authentication authentication) {
-        String nickName = getUserEntity(authentication.getName()).getNickname();
-        ClosetEntity closetEntity = getClosetItemEntity(itemId, nickName).getClosetId();
+        String nickname = getUserEntity(authentication.getName()).getNickname();
+        ClosetEntity closetEntity = getClosetItemEntity(itemId, nickname).getClosetId();
 
         if (closetRepository.existsByIdAndUserId_LoginId(closetEntity.getId(), authentication.getName())) {
             closetItemRepository.deleteById(itemId);
