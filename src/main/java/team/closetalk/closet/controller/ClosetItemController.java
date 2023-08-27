@@ -10,24 +10,26 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/closet/item")
+@RequestMapping("/closet")
 public class ClosetItemController {
     private final ClosetItemService closetItemService;
 
-    @PostMapping("/{itemId}")
-    public ClosetItemDto closetItemRead(@PathVariable("itemId") Long itemId,
+    @PostMapping("{nickname}/{closetName}/{itemId}")
+    public ClosetItemDto closetItemRead(@PathVariable("nickname") String nickname,
+                                        @PathVariable("closetName") String closetName,
+                                        @PathVariable("itemId") Long itemId,
                                         Authentication authentication) {
-        return closetItemService.readClosetItem(itemId, authentication);
+        return closetItemService.readClosetItem(nickname, closetName, itemId, authentication);
     }
 
-    @PutMapping("/{itemId}")
+    @PutMapping("/item/{itemId}")
     public void closetItemModify(@PathVariable("itemId") Long itemId,
                                  @RequestParam Map<String, String> itemParams,
                                  Authentication authentication) {
         closetItemService.modifyClosetItem(itemId, itemParams, authentication);
     }
 
-    @DeleteMapping("/{itemId}")
+    @DeleteMapping("/item/{itemId}")
     public void closetItemDelete(@PathVariable("itemId") Long itemId,
                                  Authentication authentication) {
         closetItemService.deleteClosetItem(itemId, authentication);

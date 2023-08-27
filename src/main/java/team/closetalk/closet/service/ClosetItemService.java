@@ -13,7 +13,6 @@ import team.closetalk.closet.repository.ClosetItemRepository;
 import team.closetalk.closet.repository.ClosetRepository;
 import team.closetalk.user.entity.UserEntity;
 
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -25,13 +24,21 @@ public class ClosetItemService {
     private final EntityRetrievalService entityRetrievalService;
 
     // 1. 해당 옷장의 단일 아이템 조회
-    public ClosetItemDto readClosetItem(Long itemId, Authentication authentication) {
-        String nickname = getUserEntity(authentication.getName()).getNickname();
-        ClosetItemEntity item = getClosetItemEntity(itemId, nickname);
+    public ClosetItemDto readClosetItem(String nickname, String closetName, Long itemId,
+                                        Authentication authentication) {
+        UserEntity user = getUserEntityByNickname(nickname);
+        ClosetEntity closet = getClosetEntity(closetName, user.getNickname());
 
-        log.info("[{}]의 [{}]번 아이템 조회 완료",
-                item.getClosetId().getClosetName(), item.getId());
-        return ClosetItemDto.toClosetItemDto(item);
+        if (user == getUserEntity(authentication.getName()) || closet.getIsHidden()) {
+            ClosetItemEntity item = getClosetItemEntity(itemId, closet.getUserId().getNickname());
+
+            log.info("[{}]의 [{}]번 아이템 조회 완료",
+                    item.getClosetId().getClosetName(), item.getId());
+            return ClosetItemDto.toClosetItemDto(item);
+        } else {
+            log.info("비공개 옷장입니다.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     // 2. 아이템 수정
@@ -79,5 +86,10 @@ public class ClosetItemService {
     // LoginId == authentication.getName() 사용자 찾기
     private UserEntity getUserEntity(String LoginId) {
         return entityRetrievalService.getUserEntity(LoginId);
+    }
+
+    // nickname == authentication.getName() 사용자 찾기
+    private UserEntity getUserEntityByNickname(String nickname) {
+        return entityRetrievalService.getUserEntityByNickname(nickname);
     }
 }
