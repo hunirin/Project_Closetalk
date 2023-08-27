@@ -32,12 +32,14 @@ public class WebSecurityConfig {
                                         , "/users/register"
                                         , "/users/login"
                                         , "users/login-token"
-                                        ,"/ootd/main"
-                                        ,"/ootd/header"
-                                        ,"/ootd/list"
-                                        ,"/ootd/banner"
-                                        ,"/static/**"
-                                        ,"/loginPage"
+                                        , "/ootd/main"
+                                        , "/ootd/header"
+                                        , "/ootd/list"
+                                        , "/ootd/banner"
+                                        , "/static/**"
+                                        , "/loginPage"
+                                        , "/issue"
+                                        , "/issue/{id}"
                                 ).permitAll()
                                 .anyRequest()
                                 .authenticated()
