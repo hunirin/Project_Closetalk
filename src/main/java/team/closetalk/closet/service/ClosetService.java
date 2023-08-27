@@ -168,7 +168,7 @@ public class ClosetService {
         return entityRetrievalService.getUserEntity(LoginId);
     }
 
-    //
+    // nickname == authentication.getName() 사용자 찾기
     private UserEntity getUserEntityByNickname(String nickname) {
         return entityRetrievalService.getUserEntityByNickname(nickname);
     }
