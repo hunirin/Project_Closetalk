@@ -43,7 +43,7 @@ VALUES (5,'user05', '$2a$10$vyqR/N0.Ph.0A.Jvn5Kqv.3HcRbjHamlKL4KRRxdlBhazPZ/2I6Q
 
 -- INSERT CLOSET
 INSERT INTO closet (closet_name, is_hidden, users_id) VALUES ('My closet 1', false, (SELECT id FROM users LIMIT 1 OFFSET 0));
-INSERT INTO closet (closet_name, is_hidden, users_id) VALUES ('아우터 모음', true, (SELECT id FROM users LIMIT 1 OFFSET 0));
+INSERT INTO closet (closet_name, is_hidden, users_id) VALUES ('아우터 모음', false, (SELECT id FROM users LIMIT 1 OFFSET 0));
 
 -- INSERT CLOSET_ITEM
 INSERT INTO closet_item (brand, category, item_image_url, item_name, price, description, created_at, closet_id)
