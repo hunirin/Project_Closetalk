@@ -53,14 +53,15 @@ public class ClosetController {
         closetService.removeCloset(closetName, authentication);
     }
 
-    // 해당 옷장 아이템 목록 조회
-    @PostMapping("/{closetName}")
-    public List<ClosetItemDto> readItems(@PathVariable("closetName") String closetName,
+    // 해당하는 닉네임을 가진 유저의 옷장 아이템 목록 조회
+    @PostMapping("/{nickname}/{closetName}")
+    public List<ClosetItemDto> readItems(@PathVariable("nickname") String nickname,
+                                         @PathVariable("closetName") String closetName,
                                          @RequestParam(name = "category", required = false) String category,
                                          Authentication authentication) {
         Optional<String> optionalCategory = Optional.ofNullable(category);
         // 카테고리 입력이 없을 시 전체 목록, 있으면 카테고리 별 목록
-        if (optionalCategory.isEmpty()) return closetService.readByCloset(closetName, authentication);
-        else return closetService.readByCategory(closetName, optionalCategory.get(), authentication);
+        if (optionalCategory.isEmpty()) return closetService.readByCloset(nickname, closetName, authentication);
+        else return closetService.readByCategory(nickname, closetName, optionalCategory.get(), authentication);
     }
 }

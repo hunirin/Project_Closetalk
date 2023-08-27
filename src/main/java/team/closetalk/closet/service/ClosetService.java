@@ -124,27 +124,38 @@ public class ClosetService {
         }
     }
 
-    // 2. 해당 옷장의 아이템 목록 조회
-    public List<ClosetItemDto> readByCloset(String closetName, Authentication authentication) {
-        UserEntity user = getUserEntity(authentication.getName());
+    // 2. 해당하는 닉네임의 유저 옷장 아이템 목록 조회
+    public List<ClosetItemDto> readByCloset(String nickname, String closetName,
+                                            Authentication authentication) {
+        UserEntity user = getUserEntityByNickname(nickname);
         ClosetEntity closet = getClosetEntity(closetName, user.getNickname());
 
-        List<ClosetItemEntity> itemEntities =
-                closetItemRepository.findAllByClosetId_Id(closet.getId());
-        log.info("{}의 아이템 목록 조회 완료", closet.getClosetName());
-        return itemEntities.stream().map(ClosetItemDto::toClosetItemDto).toList();
+        if (user == getUserEntity(authentication.getName()) || closet.getIsHidden()) {
+            List<ClosetItemEntity> itemEntities =
+                    closetItemRepository.findAllByClosetId_Id(closet.getId());
+            log.info("{}의 아이템 목록 조회 완료", closet.getClosetName());
+            return itemEntities.stream().map(ClosetItemDto::toClosetItemDto).toList();
+        } else {
+            log.info("비공개 옷장입니다.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
     }
 
-    // 2-1. 해당 옷장의 카테고리 별 아이템 목록 조회
-    public List<ClosetItemDto> readByCategory(String closetName, String category,
+    // 3. 해당하는 닉네임의 유저 옷장 카테고리 별 아이템 목록 조회
+    public List<ClosetItemDto> readByCategory(String nickname, String closetName, String category,
                                               Authentication authentication) {
-        UserEntity user = getUserEntity(authentication.getName());
+        UserEntity user = getUserEntityByNickname(nickname);
         ClosetEntity closet = getClosetEntity(closetName, user.getNickname());
 
-        List<ClosetItemEntity> itemEntities =
-                closetItemRepository.findAllByClosetId_IdAndCategory(closet.getId(), category);
-        log.info("{}의 {} 별 아이템 목록 조회 완료", closet.getClosetName(), category);
-        return itemEntities.stream().map(ClosetItemDto::toClosetItemDto).toList();
+        if (user == getUserEntity(authentication.getName()) || closet.getIsHidden()) {
+            List<ClosetItemEntity> itemEntities =
+                    closetItemRepository.findAllByClosetId_IdAndCategory(closet.getId(), category);
+            log.info("{}의 {} 별 아이템 목록 조회 완료", closet.getClosetName(), category);
+            return itemEntities.stream().map(ClosetItemDto::toClosetItemDto).toList();
+        } else {
+            log.info("비공개 옷장입니다.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     // closetId로 해당 ClosetEntity 찾기
@@ -155,5 +166,10 @@ public class ClosetService {
     // LoginId == authentication.getName() 사용자 찾기
     private UserEntity getUserEntity(String LoginId) {
         return entityRetrievalService.getUserEntity(LoginId);
+    }
+
+    //
+    private UserEntity getUserEntityByNickname(String nickname) {
+        return entityRetrievalService.getUserEntityByNickname(nickname);
     }
 }
