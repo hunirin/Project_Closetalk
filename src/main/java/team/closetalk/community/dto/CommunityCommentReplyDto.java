@@ -15,10 +15,16 @@ public class CommunityCommentReplyDto {
     private LocalDate createdAt;    // 작성 날짜
 
     public static CommunityCommentReplyDto toReplyDto(CommunityCommentEntity comment) {
-        return CommunityCommentReplyDto.builder()
-                .userName(comment.getUserId().getNickname())
-                .content(comment.getContent())
-                .createdAt(comment.getCreatedAt())
-                .build();
+        if (comment.getDeletedAt() != null) {
+            return CommunityCommentReplyDto.builder()
+                    .content("삭제된 댓글입니다.")
+                    .build();
+        } else {
+            return CommunityCommentReplyDto.builder()
+                    .userName(comment.getUserId().getNickname())
+                    .content(comment.getContent())
+                    .createdAt(comment.getCreatedAt())
+                    .build();
+        }
     }
 }

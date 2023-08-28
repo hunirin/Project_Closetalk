@@ -17,11 +17,17 @@ public class CommunityCommentListDto {
 
     public static CommunityCommentListDto toCommentDto(CommunityCommentEntity comment,
                                                        List<CommunityCommentReplyDto> replies) {
-        return CommunityCommentListDto.builder()
-                .userName(comment.getUserId().getNickname())
-                .content(comment.getContent())
-                .createdAt(comment.getCreatedAt())
-                .replies(replies)
-                .build();
+        if (comment.getDeletedAt() != null) {
+            return CommunityCommentListDto.builder()
+                    .content("삭제된 댓글입니다.")
+                    .build();
+        } else {
+            return CommunityCommentListDto.builder()
+                    .userName(comment.getUserId().getNickname())
+                    .content(comment.getContent())
+                    .createdAt(comment.getCreatedAt())
+                    .replies(replies)
+                    .build();
+        }
     }
 }

@@ -23,6 +23,8 @@ public class CommunityCommentEntity {
     private LocalDate createdAt;
     @Column(name = "modified_at")
     private LocalDate modifiedAt;
+    @Column(name = "deleted_at")
+    private LocalDate deletedAt;
 
     @ManyToOne
     @JoinColumn(name = "users_id")
@@ -48,5 +50,11 @@ public class CommunityCommentEntity {
         this.communityArticle = article;
         this.commentId = comment;
         this.createdAt = LocalDate.now(ZoneId.of("Asia/Seoul"));
+    }
+
+    // 댓글 삭제(Soft Delete)
+    public CommunityCommentEntity deleteEntity() {
+        this.deletedAt = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        return this;
     }
 }

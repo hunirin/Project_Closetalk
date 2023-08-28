@@ -63,7 +63,7 @@ public class CommunityCommentService {
         log.info("게시물 [{}] 댓글 등록 완료", article.getTitle());
     }
 
-    // 1-1. 리플 생성
+    // 1-1. 대댓글 생성
     public void createReply(Long articleId, Long commentId,
                             String content,
                             Authentication authentication) {
@@ -71,7 +71,7 @@ public class CommunityCommentService {
         CommunityCommentEntity comment = getByComment(commentId);
         UserEntity user = getUserEntity(authentication.getName());
         communityCommentRepository.save(new CommunityCommentEntity(content, user, article, comment));
-        log.info("게시물 [{}]의 댓글 [{}]에 댓글 등록 완료", article.getTitle(), commentId);
+        log.info("게시물 [{}]의 댓글 [{}]에 댓글 등록 완료", article.getTitle(), comment.getContent());
     }
 
     // 2. 댓글 수정
@@ -80,31 +80,21 @@ public class CommunityCommentService {
 
     // 3. 댓글 삭제
     public void deleteComment(Long articleId, Long commentId, Authentication authentication) {
-        // 게시글 찾기
-        Optional<CommunityArticleEntity> optionalCommunity = communityArticleRepository.findById(articleId);
-        if (optionalCommunity.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        // 댓글 찾기
-        Optional<CommunityCommentEntity> optionalCommunityComment = communityCommentRepository.findById(commentId);
-        if (optionalCommunityComment.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        // 삭제
-        communityCommentRepository.deleteById(commentId);
+        CommunityArticleEntity article = getArticle(articleId);
+        CommunityCommentEntity comment = getByComment(commentId);
+        UserEntity user = getUserEntity(authentication.getName());
+
+        // 해당 게시물의 댓글인지 and 댓글 삭제 시도하는 사용자가 해당 댓글 작성자인지
+        if (comment.getCommunityArticle().equals(article) && comment.getUserId().equals(user)) {
+            communityCommentRepository.save(comment.deleteEntity());
+            log.info("게시물 [{}]의 [{}]번 댓글 삭제 완료", article.getTitle(), commentId);
+        } else {
+            log.error("댓글 작성자가 아닙니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
-    // 대댓글 삭제 -- 수정필요
-    public void deleteReComment(Long articleId, Long commentId, Long reCommentId) {
-        // 게시글 찾기
-        Optional<CommunityArticleEntity> optionalCommunity = communityArticleRepository.findById(articleId);
-        if (optionalCommunity.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        // 댓글 찾기
-        Optional<CommunityCommentEntity> optionalCommunityComment = communityCommentRepository.findById(commentId);
-        if (optionalCommunityComment.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        // 대댓글 찾기
-        Optional<CommunityCommentEntity> optionalCommunityReComment = communityCommentRepository.findById(reCommentId);
-        if (optionalCommunityReComment.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        // 삭제
-        communityCommentRepository.deleteById(reCommentId);
-    }
-    // LoginId == authentication.getName() 사용자 찾기
+    // LoginId == authentication.getName() user 찾기
     private UserEntity getUserEntity(String LoginId) {
         return entityRetrievalService.getUserEntity(LoginId);
     }
