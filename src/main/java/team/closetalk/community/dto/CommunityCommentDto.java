@@ -15,24 +15,12 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class CommunityCommentDto {
     private Long id;
-
     private String content;             // 내용
-
     private LocalDate createdAt;    // 작성 날짜
     private LocalDate modifiedAt;   // 수정 날짜
 
     private CommunityArticleEntity articleId;
     private CommunityCommentEntity commentId;
-
-    // 댓글 생성
-    public CommunityCommentDto newEntity() {
-        return CommunityCommentDto.builder()
-                .content(content)
-                .articleId(articleId)
-                .commentId(commentId)
-                .createdAt(LocalDate.now())
-                .build();
-    }
 
     // 댓글 조회
     public static CommunityCommentDto fromEntity(CommunityCommentEntity entity) {
