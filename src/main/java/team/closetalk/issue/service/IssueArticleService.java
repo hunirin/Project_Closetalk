@@ -1,5 +1,6 @@
 package team.closetalk.issue.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.issue.dto.IssueArticleDto;
 import team.closetalk.issue.dto.IssueBannerDto;
 import team.closetalk.issue.entity.IssueArticleEntity;
+import team.closetalk.issue.entity.IssueArticleImageEntity;
 import team.closetalk.issue.repository.IssueArticleImageRepository;
 import team.closetalk.issue.repository.IssueArticleRepository;
 
@@ -29,6 +31,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class IssueArticleService {
     private final IssueArticleRepository issueArticleRepository;
+    private final IssueArticleImageRepository issueArticleImageRepository;
 
     public IssueArticleDto createIssueArticle(IssueArticleDto dto) {
         IssueArticleEntity newIssueArticle = new IssueArticleEntity();
@@ -145,11 +148,22 @@ public class IssueArticleService {
         else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
+
+    @Transactional
     public void deleteIssueArticle(Long id) {
-        if (issueArticleRepository.existsById(id)) issueArticleRepository.deleteById(id);
-        else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        try {
+            // 이미지와의 관계 삭제
+            IssueArticleEntity issueArticle = issueArticleRepository.findById(id)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+            List<IssueArticleImageEntity> issueImages = issueArticle.getIssueImages();
+            for (IssueArticleImageEntity issueImage : issueImages) {
+                issueImage.setIssueArticle(null);
+            }
+            // 이미지와의 관계 삭제 후 게시글 삭제
+            issueArticleRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("게시글 삭제에 실패하였습니다.", e);
+        }
     }
-
-
-
 }
