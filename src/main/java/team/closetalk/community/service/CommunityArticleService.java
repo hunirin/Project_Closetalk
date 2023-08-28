@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.community.dto.CommunityArticleDto;
@@ -40,9 +41,23 @@ public class CommunityArticleService {
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
+    // 게시글 수정
+    public CommunityArticleDto updateCommunityArticle(Long id, CommunityArticleDto dto, Authentication authentication) {
+        Optional<CommunityArticleEntity> optionalCommunityArticle = communityArticleRepository.findById(id);
+        if (optionalCommunityArticle.isPresent()) {
+            CommunityArticleEntity communityArticle = optionalCommunityArticle.get();
+            communityArticle.setTitle(dto.getTitle());
+            communityArticle.setContent(dto.getContent());
+            communityArticle.setModifiedAt(dto.getModifiedAt());
+            communityArticleRepository.save(communityArticle);
+            return CommunityArticleDto.fromEntity(communityArticle);
+        }
+        else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+
     // DELETE
     // 게시글 삭제
-    public void deleteArticle(Long articleId) {
+    public void deleteArticle(Long articleId, Authentication authentication) {
         // 게시글 찾기
         Optional<CommunityArticleEntity> optionalCommunity = communityArticleRepository.findById(articleId);
         if (optionalCommunity.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
