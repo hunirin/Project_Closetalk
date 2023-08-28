@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" >
+    <title>Infinite Scroll Example</title>
+    <link rel="stylesheet" href="/static/css/ootd/main.css">
+    <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <!-- header.html 불러오는 -->
+    <script>
+        $(document).ready(function(){
+            $("#header").load("/ootd/header");
+        });
+    </script>
+</head>
+<body>
+<section class="main">
+    <form action="/images/ootd/main" method="get">
+        <!-- header -->
+        <div id="header"></div>
+
+    <div class="body-container">
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper" id="banner">
+                <th:block th:each="issue : ${issuePage}">
+                    <div class="swiper-slide" id="swiper-slide">
+                        <!-- 최근 썸네일 세개만 배너에 올라감 -->
+                        <img th:src="@{${issue.getThumbnail()}}" style="width: 100%;">
+                    </div>
+                </th:block>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+
+        <div class="ootd-container-a">
+            <div class="ootd-container-b" id="ootd-container">
+                <th:block th:each="ootd : ${ootdPage}">
+                    <div class="ootd-image" id="ootd-image">
+                        <img th:src="@{${ootd.getThumbnail()}}" style="border-radius: 0px; width: 100%; height: 100%;">
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </div>
+        <div class="pop-up-btn">
+            <i id="up-btn" class="fa-solid fa-square-caret-up fa-2x"></i>
+            <i id="plus-btn" class="fa-solid fa-square-plus fa-2x"></i>
+            <i id="down-btn" class="fa-solid fa-square-caret-down fa-2x"></i>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+        <!-- 배너 스와이프 API -->
+        <script>
+            var swiper = new Swiper(".mySwiper", {
+                pagination: {
+                    el: ".swiper-pagination",
+                },
+            });
+        </script>
+        <!-- 무한스크롤 JQuery 함수 -->
+        <script>
+            var page = 0; // 현재 페이지
+            var isLoading = false; // true가 되면 데이터를 가져오는 중임을 나타냄
+            var ootdContainer = document.getElementById('ootd-container');
+
+            function createOotdImage(thumbnailUrl) {
+                var ootdImageDiv = document.createElement('div');
+                ootdImageDiv.className = 'ootd-image';
+
+                var img = document.createElement('img');
+                img.src = thumbnailUrl;
+                img.style.borderRadius = '0px';
+                img.style.width = '100%';
+                img.style.height = '100%';
+
+                ootdImageDiv.appendChild(img);
+                return ootdImageDiv;
+            }
+
+            function loadMoreThumbnails() {
+                if (isLoading) {
+                    return;
+                }
+                isLoading = true;
+
+                $.get('/ootd/list?page=' + page, function(data) {
+                    var newThumbnails = $(data).find('.ootd-image img');
+
+                    newThumbnails.each(function() {
+                        var thumbnailUrl = $(this).attr('src');
+                        var ootdImageDiv = createOotdImage(thumbnailUrl);
+                        ootdContainer.appendChild(ootdImageDiv);
+                    });
+
+                    isLoading = false;
+                    page++;
+                });
+            }
+
+            var debounceTimer;
+
+            window.addEventListener('scroll', function() {
+                clearTimeout(debounceTimer);
+
+                var scrollPosition = window.innerHeight + window.scrollY;
+                var contentHeight = document.body.offsetHeight;
+                var distanceToBottom = contentHeight - scrollPosition;
+
+                // 0.5초 뒤에 로딩되도록 설정
+                if (distanceToBottom < 200) {
+                    debounceTimer = setTimeout(loadMoreThumbnails, 500); // 1000  = 1초
+                }
+            });
+
+            loadMoreThumbnails();
+        </script>
+        <!-- 팝업 버튼 함수 -->
+        <script>
+            $(document).ready(function() {
+                $("#up-btn").click(function() {
+                    $('html, body').animate({scrollTop: 0}, 500);
+                });
+
+                $("#down-btn").click(function() {
+                    $('html, body').animate({scrollTop: $(document).height()}, 500);
+                });
+
+                function updateButtonPosition() {
+                    var scrollPos = $(window).scrollTop();
+                    var windowHeight = $(window).height();
+                    var documentHeight = $(document).height();
+                    var buttonHeight = $(".pop-up-btn").outerHeight();
+
+                    var maxButtonPosition = documentHeight - buttonHeight - 20;
+
+                    if (scrollPos > maxButtonPosition) {
+                        $(".pop-up-btn").css("transform", "translateY(" + (maxButtonPosition - scrollPos) + "px)");
+                    } else {
+                        $(".pop-up-btn").css("transform", "translateY(0)");
+                    }
+                }
+
+                updateButtonPosition();
+                $(window).on("scroll", updateButtonPosition);
+            });
+        </script>
+    </form>
+</section>
+</body>
+</html>
