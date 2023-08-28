@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ISSUE</title>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <table class="table table-striped" style="text-align: center; border: 1px solid #dddddd">
+      <thead>
+      <tr>
+        <th style="background-color: #eeeeee; text-align: center;">제목</th>
+        <th style="background-color: #eeeeee; text-align: center;">작성자</th>
+        <th style="background-color: #eeeeee; text-align: center;">작성일</th>
+        <th style="background-color: #eeeeee; text-align: center;">조회수</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="issueArticleEntity : ${issueList}">
+        <td>
+          <img th:src="${issueArticleEntity.thumbnail}" style="max-width: 80px; max-height: 100px;" alt="Thumbnail">
+        </td>
+        <td style="text-align: center" th:text="${issueArticleEntity.title}"></td>
+        <td style="text-align: center" th:text="${issueArticleEntity.content}"></td>
+        <td style="text-align: center" th:text="${issueArticleEntity.createdAt}"></td>
+        <td style="text-align: center" th:text="${issueArticleEntity.hits}"></td>
+      </tr>
+      </tbody>
+    </table>
+    <a href="@{issue/view/create}" class="btn btn-primary pull-right">글쓰기</a>
+  </div>
+</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="../static/js/bootstrap.js"></script>
+</html>
