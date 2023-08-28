@@ -17,7 +17,7 @@ public class OotdController {
 
     @GetMapping
     public String mainPage() {
-        return "ootd/main";
+        return "ootd/ootdMain";
     }
 
     // 헤더 불러오는 주소
@@ -28,16 +28,24 @@ public class OotdController {
 
      // 메인페이지 무한 스크롤 조회
     @GetMapping("/list")
-    public String getOotd(
+    public String readOotdMain(
             Model model,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "limit", defaultValue = "12") Integer limit
     ) {
         Page<OotdArticleDto> ootdPage = ootdService.readOotdPaged(page, limit);
-        model.addAttribute("ootdEntity", ootdPage.getContent());
         model.addAttribute("ootdPage", ootdPage);
 
-        return "/ootd/main";
+        return "ootd/ootdMain";
     }
 
+    @GetMapping("/{articleId}")
+    public String readOotdOne(
+            Model model,
+            @PathVariable Long articleId
+    ) {
+        OotdArticleDto ootdArticle = ootdService.readOotdOne(articleId);
+        model.addAttribute("ootdArticle", ootdArticle);
+        return "ootd/ootdArticle";
+    }
 }

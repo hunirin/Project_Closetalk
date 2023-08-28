@@ -25,6 +25,6 @@ public class IssueBannerController {
         Page<IssueArticleDto> issuePage = issueBannerService.readLastThreeIssues();
         model.addAttribute("issuePage", issuePage);
 
-        return "ootd/main";
+        return "ootd/ootdMain";
     }
 }
