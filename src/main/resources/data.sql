@@ -54,7 +54,7 @@ INSERT INTO closet_item (brand, category, item_image_url, item_name, price, desc
 VALUES ('보세', 'OUTER', '/dlalwl2_zz.png', '흑청자켓', 77000, '', '2023-08-16 11:23:32', NOW(), (SELECT id FROM closet LIMIT 1 OFFSET 1));
 
 -- INSERT OOTD_ARTICLE
-insert into ootd_article (id, content, thumbnail) VALUES (1, '첫번째 글', '/static/images/ootd/1/1.jpg');
+insert into ootd_article (id, users, content, hashtag, created_at, thumbnail) VALUES (1, 1, '첫번째 글', '#ootd', '2023-08-16 11:23:32', '/static/images/ootd/1/1.jpg');
 insert into ootd_article (id, content, thumbnail) VALUES (2, '두번째 글', '/static/images/ootd/2/2.jpg');
 insert into ootd_article (id, content, thumbnail) VALUES (3, '세번째 글', '/static/images/ootd/3/3.jpg');
 insert into ootd_article (id, content, thumbnail) VALUES (4, '네번째 글', '/static/images/ootd/4/4.jpg');
