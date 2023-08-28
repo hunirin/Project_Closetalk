@@ -31,7 +31,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class IssueArticleService {
     private final IssueArticleRepository issueArticleRepository;
-    private final IssueArticleImageRepository issueArticleImageRepository;
 
     public IssueArticleDto createIssueArticle(IssueArticleDto dto) {
         IssueArticleEntity newIssueArticle = new IssueArticleEntity();
@@ -46,7 +45,6 @@ public class IssueArticleService {
     // 1. thumbnail에 첫번째 사진 저장하기
     // 2. imageUrl의 첫번째 사진 불러오기 -> html에 연결
     public List<IssueArticleDto> uploadIssueImg(Long id, List<MultipartFile> issueImages) {
-
 
         // 1. 유저 확인
         Optional<IssueArticleEntity> optionalUser = issueArticleRepository.findById(id);
@@ -96,9 +94,6 @@ public class IssueArticleService {
 
             IssueArticleEntity savedIssueArticle = issueArticleRepository.save(issueArticleEntity);
             uploadedIssueArticles.add(IssueArticleDto.fromEntity(savedIssueArticle));
-
-//            return IssueArticleDto.fromEntity(issueArticleRepository.save(issueArticleEntity));
-
         }
         return uploadedIssueArticles;
     }
