@@ -32,19 +32,21 @@ public class CommunityCommentEntity {
     @JoinColumn(name = "communityArticle")
     private CommunityArticleEntity communityArticle;
 
-//    @ManyToOne
-//    @JoinColumn(name = "parent_comment_id")
-//    private CommunityCommentEntity parentComment;
+    @ManyToOne
+    @JoinColumn(name = "comment_id")
+    private CommunityCommentEntity commentId;
 
 //    @OneToMany(mappedBy = "parentComment")  // mappedBy 수정
 //    private List<CommunityCommentEntity> childComments = new ArrayList<>();
 
     // 댓글 생성
     public CommunityCommentEntity(String content, UserEntity user,
-                                  CommunityArticleEntity article) {
+                                  CommunityArticleEntity article,
+                                  CommunityCommentEntity comment) {
         this.content = content;
         this.userId = user;
         this.communityArticle = article;
+        this.commentId = comment;
         this.createdAt = LocalDate.now(ZoneId.of("Asia/Seoul"));
     }
 }

@@ -3,7 +3,10 @@ package team.closetalk.community.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import team.closetalk.community.dto.CommunityCommentListDto;
 import team.closetalk.community.service.CommunityCommentService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/community")
@@ -23,8 +26,9 @@ public class CommunityCommentController {
     @PostMapping("/{articleId}/{commentId}")
     public void replyCreate(@PathVariable Long articleId,
                             @PathVariable Long commentId,
+                            @RequestParam("content") String content,
                             Authentication authentication) {
-        communityCommentService.createReply(articleId, commentId, authentication);
+        communityCommentService.createReply(articleId, commentId, content, authentication);
     }
 
     @PutMapping("/{articleId}/{commentId}")
@@ -32,6 +36,12 @@ public class CommunityCommentController {
                               @PathVariable Long commentId,
                               Authentication authentication) {
         communityCommentService.updateComment(articleId, commentId, authentication);
+    }
+
+    // 댓글 조회
+    @PostMapping("/{articleId}/comment")
+    public List<CommunityCommentListDto> commentList(@PathVariable Long articleId) {
+        return communityCommentService.readCommentList(articleId);
     }
 
     // 댓글 삭제
