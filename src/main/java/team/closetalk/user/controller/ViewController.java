@@ -10,8 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Controller
 @RequestMapping("/")
 public class ViewController {
+
     @GetMapping("loginPage")
     public String viewLoginForm(){
-        return "html/login-form";
+        return "user/login-form";
+    }
+
+    @GetMapping("joinPage")
+    public String viewJoinForm() {
+        return "user/join-form";
     }
 }

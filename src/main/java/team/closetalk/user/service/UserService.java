@@ -118,8 +118,6 @@ public class UserService implements UserDetailsManager {
         Optional<UserEntity> optionalUser = userRepository.findByLoginId(loginId);
 
         if(optionalUser.isEmpty()) throw new UsernameNotFoundException(loginId);
-//        if(optionalUser.get().getSocial() != null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-
 
         return CustomUserDetails.fromEntity(optionalUser.get());
     }

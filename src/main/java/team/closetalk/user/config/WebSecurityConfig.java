@@ -25,31 +25,24 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.csrf(AbstractHttpConfigurer :: disable)
                 .authorizeHttpRequests(
-                        authHttp -> authHttp.requestMatchers(
-                                "/"
-                                ,"/testPage"
-                                , "/js/join-form.js"
-//                                "/main"
-//                                , "relayAuth"
-                        ).permitAll()
-                        .requestMatchers(
-                                "/joinPage"
-                                , "/users/sendEmail"
-                                , "/users/register"
-                                , "/users/login"
-                        ).anonymous()
-//                        .requestMatchers(
-//                                "/myPage"
-////                                , "/users/userInfo"
-////                                , "/authPage"
-//                        ).authenticated()
-
-                )
-                //폼로그인 추가
-                .formLogin( formHttp -> formHttp.loginPage("/loginPage")
-                        .defaultSuccessUrl("/loginPage")
-                        .failureUrl("/loginPage")
-                        .permitAll()
+                        authHttp -> authHttp
+                                .requestMatchers(
+                                        "/joinPage"
+                                        , "/users/sendEmail"
+                                        , "/users/register"
+                                        , "/users/login"
+                                        , "users/login-token"
+                                        , "/ootd/main"
+                                        , "/ootd/header"
+                                        , "/ootd/list"
+                                        , "/ootd/banner"
+                                        , "/static/**"
+                                        , "/loginPage"
+                                        , "/issue"
+                                        , "/issue/{id}"
+                                ).permitAll()
+                                .anyRequest()
+                                .authenticated()
                 )
                 //소셜로그인 추가
                 .oauth2Login( oauthHttp -> oauthHttp.loginPage("/loginPage")
@@ -64,7 +57,7 @@ public class WebSecurityConfig {
                         )
                 ).addFilterBefore(
                         jwtFilter
-                , AuthorizationFilter.class
+                        , AuthorizationFilter.class
                 );
 
         return http.build();

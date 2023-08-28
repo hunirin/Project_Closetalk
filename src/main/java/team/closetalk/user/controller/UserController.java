@@ -2,6 +2,7 @@ package team.closetalk.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -72,7 +73,7 @@ public class UserController {
         return response;
 
     }
-    
+
     //이메일 인증 처리
     @ResponseBody
     @PostMapping(value = "/sendEmail")
@@ -84,7 +85,24 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(emailAuthDto);
     }
-    
 
+    // Header -> Response token
+    @PostMapping("/login-token")
+    public ResponseEntity<?> loginUserToJwt(@RequestParam("loginId") String loginId,
+                                       @RequestParam("password") String password) {
+        CustomUserDetails responseUser = userService.loadUserByUsername(loginId);
+        if (!passwordEncoder.matches(password, responseUser.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        String token = jwtUtils.generateToken(responseUser);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + token);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body("Login successful");
+    }
 
 }
