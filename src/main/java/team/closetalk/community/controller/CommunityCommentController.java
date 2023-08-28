@@ -31,11 +31,13 @@ public class CommunityCommentController {
         communityCommentService.createReply(articleId, commentId, content, authentication);
     }
 
+    // 댓글 수정
     @PutMapping("/{articleId}/{commentId}")
     public void commentUpdate(@PathVariable Long articleId,
                               @PathVariable Long commentId,
+                              @RequestParam("content") String content,
                               Authentication authentication) {
-        communityCommentService.updateComment(articleId, commentId, authentication);
+        communityCommentService.updateComment(articleId, commentId, content, authentication);
     }
 
     // 댓글 조회

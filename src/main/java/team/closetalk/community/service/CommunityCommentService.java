@@ -17,7 +17,6 @@ import team.closetalk.user.entity.UserEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -75,7 +74,20 @@ public class CommunityCommentService {
     }
 
     // 2. 댓글 수정
-    public void updateComment(Long articleId, Long commentId, Authentication authentication) {
+    public void updateComment(Long articleId, Long commentId, String content,
+                              Authentication authentication) {
+        CommunityArticleEntity article = getArticle(articleId);
+        CommunityCommentEntity comment = getByComment(commentId);
+        UserEntity user = getUserEntity(authentication.getName());
+
+        // 해당 게시물의 댓글인지 and 댓글 삭제 시도하는 사용자가 해당 댓글 작성자인지
+        if (comment.getCommunityArticle().equals(article) && comment.getUserId().equals(user)) {
+            communityCommentRepository.save(comment.updateEntity(content));
+            log.info("게시물 [{}]의 [{}]번 댓글 수정 완료", article.getTitle(), commentId);
+        } else {
+            log.error("댓글 작성자가 아닙니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
     // 3. 댓글 삭제

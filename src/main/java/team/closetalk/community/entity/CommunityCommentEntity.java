@@ -38,9 +38,6 @@ public class CommunityCommentEntity {
     @JoinColumn(name = "comment_id")
     private CommunityCommentEntity commentId;
 
-//    @OneToMany(mappedBy = "parentComment")  // mappedBy 수정
-//    private List<CommunityCommentEntity> childComments = new ArrayList<>();
-
     // 댓글 생성
     public CommunityCommentEntity(String content, UserEntity user,
                                   CommunityArticleEntity article,
@@ -55,6 +52,13 @@ public class CommunityCommentEntity {
     // 댓글 삭제(Soft Delete)
     public CommunityCommentEntity deleteEntity() {
         this.deletedAt = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        return this;
+    }
+
+    // 댓글 수정
+    public CommunityCommentEntity updateEntity(String content) {
+        this.content = content;
+        this.modifiedAt = LocalDate.now(ZoneId.of("Asia/Seoul"));
         return this;
     }
 }
