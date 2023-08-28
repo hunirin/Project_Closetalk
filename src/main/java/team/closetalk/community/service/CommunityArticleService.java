@@ -21,7 +21,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CommunityArticleService {
     private final CommunityArticleRepository communityArticleRepository;
-    private final CommunityCommentRepository communityCommentRepository;
 
     // READ
     // 페이지 단위로 조회
@@ -49,32 +48,5 @@ public class CommunityArticleService {
         if (optionalCommunity.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         // 삭제
         communityArticleRepository.deleteById(articleId);
-    }
-
-    // 댓글 삭제
-    public void deleteComment(Long articleId, Long commentId) {
-        // 게시글 찾기
-        Optional<CommunityArticleEntity> optionalCommunity = communityArticleRepository.findById(articleId);
-        if (optionalCommunity.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        // 댓글 찾기
-        Optional<CommunityCommentEntity> optionalCommunityComment = communityCommentRepository.findById(commentId);
-        if (optionalCommunityComment.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        // 삭제
-        communityCommentRepository.deleteById(commentId);
-    }
-
-    // 대댓글 삭제 -- 수정필요
-    public void deleteReComment(Long articleId, Long commentId, Long reCommentId) {
-        // 게시글 찾기
-        Optional<CommunityArticleEntity> optionalCommunity = communityArticleRepository.findById(articleId);
-        if (optionalCommunity.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        // 댓글 찾기
-        Optional<CommunityCommentEntity> optionalCommunityComment = communityCommentRepository.findById(commentId);
-        if (optionalCommunityComment.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        // 대댓글 찾기
-        Optional<CommunityCommentEntity> optionalCommunityReComment = communityCommentRepository.findById(reCommentId);
-        if (optionalCommunityReComment.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        // 삭제
-        communityCommentRepository.deleteById(reCommentId);
     }
 }

@@ -11,7 +11,7 @@ import team.closetalk.community.service.CommunityArticleService;
 @RequestMapping("/community")
 @RequiredArgsConstructor
 public class CommunityArticleController {
-    private final CommunityArticleService communityService;
+    private final CommunityArticleService communityArticleService;
 
     /* 게시글 기능 */
 
@@ -27,10 +27,10 @@ public class CommunityArticleController {
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "limit", defaultValue = "20") Integer limit
     ) {
-        Page<CommunityArticleDto> communityPage = communityService.readCommunityPaged(page, limit);
+        Page<CommunityArticleDto> communityPage = communityArticleService.readCommunityPaged(page, limit);
         model.addAttribute("communityPage", communityPage);
 
-        return communityService.readCommunityPaged(page, limit);
+        return communityArticleService.readCommunityPaged(page, limit);
     }
 
     // 게시글 상세 조회
@@ -38,7 +38,7 @@ public class CommunityArticleController {
     public CommunityArticleDto readOne(
             @PathVariable Long articleId
     ) {
-        return communityService.readArticleOne(articleId);
+        return communityArticleService.readArticleOne(articleId);
     }
 
     // 게시글 삭제
@@ -46,27 +46,6 @@ public class CommunityArticleController {
     public void deleteArticle(
             @PathVariable Long articleId
     ) {
-        communityService.deleteArticle(articleId);
-    }
-
-    /* 댓글 기능 */
-
-    // 댓글 삭제
-    @DeleteMapping("/{articleId}/{commentId}")
-    public void deleteComment(
-            @PathVariable Long articleId,
-            @PathVariable Long commentId
-    ) {
-        communityService.deleteComment(articleId, commentId);
-    }
-
-    // 대댓글 삭제 -- 수정 필요
-    @DeleteMapping("/{articleId}/{commentId}/{reCommentId}")
-    public void deleteComment(
-            @PathVariable Long articleId,
-            @PathVariable Long commentId,
-            @PathVariable Long reCommentId
-    ) {
-        communityService.deleteReComment(articleId, commentId, reCommentId);
+        communityArticleService.deleteArticle(articleId);
     }
 }
