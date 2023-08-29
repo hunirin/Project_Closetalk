@@ -30,17 +30,16 @@ spring:
 
 
 -- INSERT USERS( login_id = 암호화 되지 않은 password 입니다.)
--- 이미지 경로 수정
 INSERT INTO users (id, login_id, password,  nickname, email, profile_image_url, created_at)
-VALUES (1,'user01', '$2a$10$683FGWMTZkLKSfjRAstivenYNj9Jrz5N7UTLxLDLfRQ54a1bILHuG', 'userNo.1', 'user01@closetalk.com', '/static/images/profile/default_profile.png', '2023-08-17 17:54:33');
+VALUES (1,'user01', '$2a$10$683FGWMTZkLKSfjRAstivenYNj9Jrz5N7UTLxLDLfRQ54a1bILHuG', 'userNo.1', 'user01@closetalk.com', '/src/main/resources/static/images/profile/default_profile.png', '2023-08-17 17:54:33');
 INSERT INTO users (id, login_id, password,  nickname, email, profile_image_url, created_at)
-VALUES (2,'user02', '$2a$10$fogJdUbb478vgoFMw6SiheyB.tILLROmEBCE5qYo7KvTfigix56dq', 'NextUser', 'user02@closetalk.com', '/static/images/profile/default_profile.png', '2023-08-17 17:13:44');
+VALUES (2,'user02', '$2a$10$fogJdUbb478vgoFMw6SiheyB.tILLROmEBCE5qYo7KvTfigix56dq', 'NextUser', 'user02@closetalk.com', '/src/main/resources/static/images/profile/default_profile.png', '2023-08-17 17:13:44');
 INSERT INTO users (id, login_id, password,  nickname, email, profile_image_url, created_at)
-VALUES (3,'user03', '$2a$10$vJIDksp34bWZ7KzCbKp73esekbDK0LjUPWnrdMDCSXSEyd29.ffBK', '블랙맘바를삼켜', 'user03@closetalk.com', '/static/images/profile/default_profile.png', '2023-08-17 22:10:06');
+VALUES (3,'user03', '$2a$10$vJIDksp34bWZ7KzCbKp73esekbDK0LjUPWnrdMDCSXSEyd29.ffBK', '블랙맘바를삼켜', 'user03@closetalk.com', '/src/main/resources/static/images/profile/default_profile.png', '2023-08-17 22:10:06');
 INSERT INTO users (id, login_id, password,  nickname, email, profile_image_url, created_at)
-VALUES (4,'user04', '$2a$10$gg3hLcEPfC8aWWLnzbrWb.3k0dURlZDsJ8ogj.B0oU8RVXTzDPeRG', '힘내어떡해이겨내', 'user04@closetalk.com', '/static/images/profile/default_profile.png', '2023-08-18 00:11:03');
+VALUES (4,'user04', '$2a$10$gg3hLcEPfC8aWWLnzbrWb.3k0dURlZDsJ8ogj.B0oU8RVXTzDPeRG', '힘내어떡해이겨내', 'user04@closetalk.com', '/src/main/resources/static/images/profile/default_profile.png', '2023-08-18 00:11:03');
 INSERT INTO users (id, login_id, password,  nickname, email, profile_image_url, created_at)
-VALUES (5,'user05', '$2a$10$vyqR/N0.Ph.0A.Jvn5Kqv.3HcRbjHamlKL4KRRxdlBhazPZ/2I6Q6', '우주최강햄스터', 'user05@closetalk.com', '/static/images/profile/default_profile.png', '2023-08-18 03:11:22');
+VALUES (5,'user05', '$2a$10$vyqR/N0.Ph.0A.Jvn5Kqv.3HcRbjHamlKL4KRRxdlBhazPZ/2I6Q6', '우주최강햄스터', 'user05@closetalk.com', '/src/main/resources/static/images/profile/default_profile.png', '2023-08-18 03:11:22');
 
 -- INSERT CLOSET
 INSERT INTO closet (closet_name, is_hidden, users_id) VALUES ('My closet 1', false, (SELECT id FROM users LIMIT 1 OFFSET 0));
@@ -55,8 +54,7 @@ INSERT INTO closet_item (brand, category, item_image_url, item_name, price, desc
 VALUES ('보세', 'OUTER', '/dlalwl2_zz.png', '흑청자켓', 77000, '', '2023-08-16 11:23:32', NOW(), (SELECT id FROM closet LIMIT 1 OFFSET 1));
 
 -- INSERT OOTD_ARTICLE
--- 첫글 입력 데이터 수정
-insert into ootd_article (id, users, content, hashtag, created_at, thumbnail) VALUES (1, 1, '첫번째 글', '#ootd', '2023-08-16 11:23:32', '/static/images/ootd/1/1.jpg');
+insert into ootd_article (id, content, thumbnail) VALUES (1, '첫번째 글', '/static/images/ootd/1/1.jpg');
 insert into ootd_article (id, content, thumbnail) VALUES (2, '두번째 글', '/static/images/ootd/2/2.jpg');
 insert into ootd_article (id, content, thumbnail) VALUES (3, '세번째 글', '/static/images/ootd/3/3.jpg');
 insert into ootd_article (id, content, thumbnail) VALUES (4, '네번째 글', '/static/images/ootd/4/4.jpg');
@@ -88,40 +86,36 @@ insert into ootd_article (id, content, thumbnail) VALUES (29, 'test 글', '/stat
 insert into ootd_article (id, content, thumbnail) VALUES (30, 'test 글', '/static/images/ootd/30/30.jpg');
 
 -- INSERT OOTD_ARTICLE_IMAGES
--- 입력 데이터 추가
 insert into ootd_article_images (id, ootd_article_id, image_url) values (1, 1, '/static/images/ootd/1/1.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (2, 1, '/static/images/ootd/1/1-2.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (3, 2, '/static/images/ootd/2/2.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (4, 2, '/static/images/ootd/2/2-2.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (5, 2, '/static/images/ootd/2/2-3.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (6, 3, '/static/images/ootd/3/3.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (7, 4, '/static/images/ootd/4/4.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (8, 5, '/static/images/ootd/5/5.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (9, 6, '/static/images/ootd/6/6.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (10, 7, '/static/images/ootd/7/7.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (11, 8, '/static/images/ootd/8/8.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (12, 9, '/static/images/ootd/9/9.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (13, 10, '/static/images/ootd/10/10.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (14, 11, '/static/images/ootd/11/11.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (15, 12, '/static/images/ootd/12/12.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (16, 13, '/static/images/ootd/13/13.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (17, 14, '/static/images/ootd/14/14.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (18, 15, '/static/images/ootd/15/15.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (19, 16, '/static/images/ootd/16/16.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (20, 17, '/static/images/ootd/17/17.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (21, 18, '/static/images/ootd/18/18.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (22, 19, '/static/images/ootd/19/19.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (23, 20, '/static/images/ootd/20/20.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (24, 21, '/static/images/ootd/21/21.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (25, 22, '/static/images/ootd/22/22.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (26, 23, '/static/images/ootd/23/23.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (27, 24, '/static/images/ootd/24/24.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (28, 25, '/static/images/ootd/25/25.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (29, 26, '/static/images/ootd/26/26.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (30, 27, '/static/images/ootd/27/27.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (31, 28, '/static/images/ootd/28/28.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (32, 29, '/static/images/ootd/29/29.jpg');
-insert into ootd_article_images (id, ootd_article_id, image_url) values (33, 30, '/static/images/ootd/30/30.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (2, 2, '/static/images/ootd/2/2.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (3, 3, '/static/images/ootd/3/3.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (4, 4, '/static/images/ootd/4/4.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (5, 5, '/static/images/ootd/5/5.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (6, 6, '/static/images/ootd/6/6.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (7, 7, '/static/images/ootd/7/7.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (8, 8, '/static/images/ootd/8/8.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (9, 9, '/static/images/ootd/9/9.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (10, 10, '/static/images/ootd/10/10.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (11, 11, '/static/images/ootd/11/11.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (12, 12, '/static/images/ootd/12/12.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (13, 13, '/static/images/ootd/13/13.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (14, 14, '/static/images/ootd/14/14.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (15, 15, '/static/images/ootd/15/15.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (16, 16, '/static/images/ootd/16/16.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (17, 17, '/static/images/ootd/17/17.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (18, 18, '/static/images/ootd/18/18.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (19, 19, '/static/images/ootd/19/19.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (20, 20, '/static/images/ootd/20/20.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (21, 21, '/static/images/ootd/21/21.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (22, 22, '/static/images/ootd/22/22.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (23, 23, '/static/images/ootd/23/23.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (24, 24, '/static/images/ootd/24/24.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (25, 25, '/static/images/ootd/25/25.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (26, 26, '/static/images/ootd/26/26.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (27, 27, '/static/images/ootd/27/27.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (28, 28, '/static/images/ootd/28/28.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (29, 29, '/static/images/ootd/29/29.jpg');
+insert into ootd_article_images (id, ootd_article_id, image_url) values (30, 30, '/static/images/ootd/30/30.jpg');
 
 -- INSERT OOTD_COMMENT
 -- INSERT OOTD_LIKE..?
