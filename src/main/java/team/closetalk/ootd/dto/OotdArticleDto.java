@@ -7,6 +7,7 @@ import team.closetalk.ootd.entity.OotdArticleImagesEntity;
 import team.closetalk.user.entity.UserEntity;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,14 +16,15 @@ public class OotdArticleDto {
     private Long id;
 
     private String nickname;
+    private String profile;
 
     private String content;
     private String hashtag;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private LocalDateTime createdAt;
+    private String createdAt;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private LocalDateTime modifiedAt;
+    private String modifiedAt;
 
     // 게시물 대표 이미지
     private String thumbnail;
@@ -55,8 +57,11 @@ public class OotdArticleDto {
         OotdArticleDto dto = new OotdArticleDto();
         dto.setId(entity.getId());
         dto.setNickname(entity.getUserId().getNickname());
+        dto.setProfile(entity.getUserId().getProfileImageUrl());
         dto.setContent(entity.getContent());
         dto.setHashtag(entity.getHashtag());
+        dto.setCreatedAt(entity.getCreatedAt()
+                .format(DateTimeFormatter.ofPattern("yyyy.MM.dd")));
         // 이미지 전체 불러오기
         List<OotdArticleImagesEntity> ootdImages = entity.getOotdImages();
         if (ootdImages != null && !ootdImages.isEmpty()) {
