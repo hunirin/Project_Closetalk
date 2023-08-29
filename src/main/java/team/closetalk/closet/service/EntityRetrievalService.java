@@ -41,7 +41,7 @@ public class EntityRetrievalService {
     }
 
     // LoginId == authentication.getName() -> UserEntity 찾기
-    UserEntity getUserEntity(String loginId) {
+    public UserEntity getUserEntity(String loginId) {
         return userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> {
                     log.error("존재하지 않는 User : {}", loginId);
