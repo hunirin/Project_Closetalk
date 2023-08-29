@@ -24,36 +24,128 @@
         <div class="board_top">
           <div class="board_top_info">
             <div class="board_top_userinfo">
-              <!-- 프로필 이미지 -->
-              <p class="user_nick_name">nickname</p>
-            </div>
-            <div class="board_top_boardinfo">
-              <p>2023.08.28</p>
+              <img th:src="${ootdArticle.profile}">
+              <p class="user_nickname" th:text="${ootdArticle.nickname}">nickname</p>
             </div>
           </div>
         </div>
 
-        <div class="board_content">
-          <!-- 이미지 슬라이드로 불러오기 -->
-          <div>contentcontentcontent</div>
+        <div class="board_image">
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" id="swiper-slide" th:each="image : ${ootdArticle.ootdImages}">
+                      <!-- 이미지 슬라이드로 불러오기 -->
+                      <img th:src="@{${image.getImageUrl()}}" style="height: 100%; width: 100%">
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+
+        <div class="board_middle">
+          <div class="board_middle_boardinfo">
+            <p th:text="${ootdArticle.createdAt}">2023.08.28</p>
+          </div>
+          <div class="board_middle_btn">
+<!--            <div class="board_middle_btn_unlike"><i class="fa-regular fa-heart"></i></div>-->
+            <div class="board_middle_btn_like" id="heart-icon"><i class="fa-solid fa-heart"></i></div>
+            <div class="board_middle_btn_URL" id="copy-link"><i class="fa-solid fa-link"></i></div>
+          </div>
+          <div class="board_bottom_content"></div>
         </div>
 
         <div class="board_bottom">
-          <div class="board_bottom_btn">
-            <div class="board_bottom_btn_like">좋아요</div>
-            <
+          <div class="board_bottom_content">
+            <div th:text="${ootdArticle.content}">content</div>
+          </div>
+          <div class="board_bottom_hashtag">
+            <p th:text="${ootdArticle.hashtag}">#ootd</p>
+          </div>
+          <div class="board_bottom_comment">
+            <img src="/static/images/profile/profile2.jpg" class="comment_profile_img">
+            <div class="board_bottom_comment_user">
+              <p class="user_nickname">nickname2</p>
+              <p class="user_content">commentcommentcommentcomment</p>
+              <p class="comment_time">2023.08.28</p>
+            </div>
+          </div>
+          <div class="board_bottom_sub_comment">
+            <img src="/static/images/profile/profile.jpg" class="comment_profile_img">
+            <div class="board_bottom_comment_user">
+              <p class="user_nickname">nickname1</p>
+              <p class="user_content">
+                <span class="comment_sub_content">nickname2</span>
+                commentcommentcommentcomment
+              </p>
+              <p class="comment_time">2023.08.28</p>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="pop-up-btn">
-      <i id="up-btn" class="fa-solid fa-square-caret-up fa-2x"></i>
-      <i id="plus-btn" class="fa-solid fa-square-plus fa-2x"></i>
-      <i id="down-btn" class="fa-solid fa-square-caret-down fa-2x"></i>
-    </div>
+        <div class="board_bottom_insert_comment">
+          <div class="comment_in">
+<!--            <p class="not_login_comment">로그인 후 댓글쓰기가 가능합니다.</p>-->
+            <textarea type="text" class="comment_input" placeholder="댓글을 작성 해 주세요." maxlength="255"></textarea>
+            <button class="comment_submit_btn">등록</button>
+          </div>
 
-    <footer th:insert="~{footer :: footer}"></footer>
+
+        </div>
+
+        <div class="board_bottom_btn">
+          <button class="board_bottom_btn_edit">수정</button>
+          <button class="board_bottom_btn_delete">삭제</button>
+          <button class="board_bottom_btn_list">목록</button>
+        </div>
+     </div>
+    </div>
+    <footer th:insert="~{footer :: footer}"></footer>>
+
+      <!-- 배너 스와이프 API -->
+      <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+      <script>
+          var swiper = new Swiper(".mySwiper", {
+              pagination: {
+                  el: ".swiper-pagination",
+              },
+          });
+      </script>
+      <!-- heart 클릭 시 변형하는 JS -->
+      <script>
+      document.getElementById('heart-icon').addEventListener('click', function() {
+      var heartIcon = this.querySelector('i');
+      if (heartIcon.classList.contains('fa-solid')) {
+      heartIcon.classList.remove('fa-solid');
+      heartIcon.classList.add('fa-regular');
+      } else {
+      heartIcon.classList.remove('fa-regular');
+      heartIcon.classList.add('fa-solid');
+      }
+      });
+      </script>
+      <!-- link 클릭 시 링크 복사하는 JS -->
+      <script>
+          document.getElementById('copy-link').addEventListener('click', function() {
+              var link = window.location.href; // Get the current page's URL
+              var tempInput = document.createElement("input");
+              tempInput.value = link;
+              document.body.appendChild(tempInput);
+              tempInput.select();
+              document.execCommand("copy");
+              document.body.removeChild(tempInput);
+
+              // Show a notification
+              var notification = document.createElement("div");
+              notification.textContent = "링크가 복사되었습니다!";
+              notification.classList.add("copy-notification");
+              document.body.appendChild(notification);
+
+              // Remove the notification after a certain time (e.g., 3 seconds)
+              setTimeout(function() {
+                  document.body.removeChild(notification);
+              }, 3000);
+          });
+      </script>
   </form>
 </section>
 </body>
