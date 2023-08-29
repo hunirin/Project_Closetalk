@@ -42,8 +42,8 @@ public class CommunityArticleService {
     }
 
     // 게시글 수정
-    public CommunityArticleDto updateCommunityArticle(Long id, CommunityArticleDto dto, Authentication authentication) {
-        Optional<CommunityArticleEntity> optionalCommunityArticle = communityArticleRepository.findById(id);
+    public CommunityArticleDto updateCommunityArticle(Long articleId, CommunityArticleDto dto, String nickname) {
+        Optional<CommunityArticleEntity> optionalCommunityArticle = communityArticleRepository.findById(articleId);
         if (optionalCommunityArticle.isPresent()) {
             CommunityArticleEntity communityArticle = optionalCommunityArticle.get();
             communityArticle.setTitle(dto.getTitle());
@@ -51,17 +51,30 @@ public class CommunityArticleService {
             communityArticle.setModifiedAt(dto.getModifiedAt());
             communityArticleRepository.save(communityArticle);
             return CommunityArticleDto.fromEntity(communityArticle);
-        }
-        else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
     // DELETE
     // 게시글 삭제
     public void deleteArticle(Long articleId, Authentication authentication) {
-        // 게시글 찾기
-        Optional<CommunityArticleEntity> optionalCommunity = communityArticleRepository.findById(articleId);
-        if (optionalCommunity.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        // 삭제
-        communityArticleRepository.deleteById(articleId);
+        if (authentication != null && authentication.isAuthenticated()) {
+            String nickname = authentication.getName();
+
+            // 게시글 찾기
+            Optional<CommunityArticleEntity> optionalCommunity = communityArticleRepository.findById(articleId);
+            if (optionalCommunity.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+            CommunityArticleEntity communityArticle = optionalCommunity.get();
+
+            // 작성자와 다를 경우 삭제 실패
+            if (!communityArticle.getId().equals(nickname)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+            // 삭제
+            communityArticleRepository.deleteById(articleId);
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
     }
 }
