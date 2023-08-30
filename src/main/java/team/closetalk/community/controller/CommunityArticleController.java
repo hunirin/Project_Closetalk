@@ -3,12 +3,15 @@ package team.closetalk.community.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import team.closetalk.community.dto.CommunityArticleDto;
+import team.closetalk.community.dto.CommunityArticleListDto;
 import team.closetalk.community.service.CommunityArticleService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @RestController
@@ -17,23 +20,12 @@ import java.time.ZoneId;
 public class CommunityArticleController {
     private final CommunityArticleService communityArticleService;
 
-    /* 게시글 기능 */
-
-    @GetMapping("/main")
-    public String mainPage() {
-        return "community/main";
-    }
-
     // 게시글 목록 조회
     @GetMapping("/list")
-    public Page<CommunityArticleDto> readAll(
-            Model model,
+    public Page<CommunityArticleListDto> readAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "limit", defaultValue = "20") Integer limit
     ) {
-        Page<CommunityArticleDto> communityPage = communityArticleService.readCommunityPaged(page, limit);
-        model.addAttribute("communityPage", communityPage);
-
         return communityArticleService.readCommunityPaged(page, limit);
     }
 
@@ -52,11 +44,6 @@ public class CommunityArticleController {
             @RequestBody CommunityArticleDto dto,
             Authentication authentication
     ) {
-        dto.setModifiedAt(LocalDate.now(ZoneId.of("Asia/Seoul")));
-//        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-//        String nickname = customUserDetails.getNickname();
-//        Long userId = customUserDetails.getId();
-
         return communityArticleService.updateCommunityArticle(articleId, authentication, dto);
     }
 
