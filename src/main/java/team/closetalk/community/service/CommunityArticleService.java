@@ -1,6 +1,7 @@
 package team.closetalk.community.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,17 +12,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.community.dto.CommunityArticleDto;
 import team.closetalk.community.entity.CommunityArticleEntity;
-import team.closetalk.community.entity.CommunityCommentEntity;
 import team.closetalk.community.repository.CommunityArticleRepository;
-import team.closetalk.community.repository.CommunityCommentRepository;
+import team.closetalk.user.entity.UserEntity;
+import team.closetalk.user.repository.UserRepository;
 
 import java.util.Optional;
 
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class CommunityArticleService {
     private final CommunityArticleRepository communityArticleRepository;
+    private final UserRepository userRepository;
 
     // READ
     // 페이지 단위로 조회
@@ -42,39 +45,43 @@ public class CommunityArticleService {
     }
 
     // 게시글 수정
-    public CommunityArticleDto updateCommunityArticle(Long articleId, CommunityArticleDto dto, String nickname) {
-        Optional<CommunityArticleEntity> optionalCommunityArticle = communityArticleRepository.findById(articleId);
-        if (optionalCommunityArticle.isPresent()) {
-            CommunityArticleEntity communityArticle = optionalCommunityArticle.get();
-            communityArticle.setTitle(dto.getTitle());
-            communityArticle.setContent(dto.getContent());
-            communityArticle.setModifiedAt(dto.getModifiedAt());
-            communityArticleRepository.save(communityArticle);
-            return CommunityArticleDto.fromEntity(communityArticle);
-        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    public CommunityArticleDto updateCommunityArticle(Long articleId, Authentication authentication, CommunityArticleDto dto) {
+        UserEntity user = userRepository.findByLoginId(authentication.getName())
+                .orElseThrow(() -> {
+                    log.error("수정에 실패하였습니다.");
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND);
+                });
+
+        CommunityArticleEntity communityArticle = communityArticleRepository.findByIdAndUserId(articleId, user.getId()).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if (communityArticle.getUser().getId() != user.getId()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        communityArticle.setTitle(dto.getTitle());
+        communityArticle.setContent(dto.getContent());
+        communityArticle.setModifiedAt(dto.getModifiedAt());
+        communityArticleRepository.save(communityArticle);
+
+        return CommunityArticleDto.toUpdate(communityArticle);
     }
 
     // DELETE
     // 게시글 삭제
     public void deleteArticle(Long articleId, Authentication authentication) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            String nickname = authentication.getName();
+        UserEntity user = userRepository.findByLoginId(authentication.getName())
+                .orElseThrow(() -> {
+                    log.error("삭제에 실패하였습니다.");
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND);
+                });
+        CommunityArticleEntity communityArticle = communityArticleRepository.findByIdAndUserId(articleId, user.getId()).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-            // 게시글 찾기
-            Optional<CommunityArticleEntity> optionalCommunity = communityArticleRepository.findById(articleId);
-            if (optionalCommunity.isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-            }
-            CommunityArticleEntity communityArticle = optionalCommunity.get();
-
-            // 작성자와 다를 경우 삭제 실패
-            if (!communityArticle.getId().equals(nickname)) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-            }
-            // 삭제
-            communityArticleRepository.deleteById(articleId);
-        } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        if (communityArticle.getUser().getId() != user.getId()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
+
+        communityArticleRepository.deleteById(articleId);
     }
 }

@@ -7,10 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import team.closetalk.community.dto.CommunityArticleDto;
 import team.closetalk.community.service.CommunityArticleService;
-import team.closetalk.user.dto.CustomUserDetails;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @RestController
@@ -55,11 +53,11 @@ public class CommunityArticleController {
             Authentication authentication
     ) {
         dto.setModifiedAt(LocalDate.now(ZoneId.of("Asia/Seoul")));
+//        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+//        String nickname = customUserDetails.getNickname();
+//        Long userId = customUserDetails.getId();
 
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        String nickname = customUserDetails.getNickname();
-
-        return communityArticleService.updateCommunityArticle(articleId, dto, nickname);
+        return communityArticleService.updateCommunityArticle(articleId, authentication, dto);
     }
 
     // 게시글 삭제
