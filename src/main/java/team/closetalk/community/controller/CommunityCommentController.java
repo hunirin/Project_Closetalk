@@ -3,7 +3,7 @@ package team.closetalk.community.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import team.closetalk.community.dto.CommunityCommentListDto;
+import team.closetalk.community.dto.CommunityCommentDto;
 import team.closetalk.community.service.CommunityCommentService;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class CommunityCommentController {
 
     // 댓글 조회
     @PostMapping("/{articleId}/comment")
-    public List<CommunityCommentListDto> commentList(@PathVariable Long articleId) {
+    public List<CommunityCommentDto> commentList(@PathVariable Long articleId) {
         return communityCommentService.readCommentList(articleId);
     }
 

@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.closet.service.EntityRetrievalService;
-import team.closetalk.community.dto.CommunityCommentListDto;
+import team.closetalk.community.dto.CommunityCommentDto;
 import team.closetalk.community.dto.CommunityCommentReplyDto;
 import team.closetalk.community.entity.CommunityArticleEntity;
 import team.closetalk.community.entity.CommunityCommentEntity;
@@ -26,13 +26,13 @@ public class CommunityCommentService {
     private final CommunityCommentRepository communityCommentRepository;
     private final EntityRetrievalService entityRetrievalService;
 
-    public List<CommunityCommentListDto> readCommentList(Long articleId) {
+    public List<CommunityCommentDto> readCommentList(Long articleId) {
         // 해당 게시물의 모든 댓글 불러오기(CommentId == null -> 대댓글이 아님)
         List<CommunityCommentEntity> commentEntities =
                 communityCommentRepository.findAllByCommunityArticle_IdAndCommentId(articleId, null);
 
         // commentList -> 반환을 위한 전체 댓글 목록 생성
-        List<CommunityCommentListDto> commentList = new ArrayList<>();
+        List<CommunityCommentDto> commentList = new ArrayList<>();
         // 해당 게시물의 모든 댓글 중 대댓글을 찾는 반복문
         for (CommunityCommentEntity commentEntity : commentEntities) {
             // commentEntities -> 이미 해당 게시물인 것을 확인
@@ -47,7 +47,7 @@ public class CommunityCommentService {
                 replyList.add(replyDto);
             }
             // (해당 댓글, 해당 댓글의 대댓글 Dto 리스트)를 처음에 반환을 위해 만들었던 전체 댓글 목록에 추가
-            commentList.add(CommunityCommentListDto.toCommentDto(commentEntity, replyList));
+            commentList.add(CommunityCommentDto.toCommentDto(commentEntity, replyList));
         }
         log.info("[{}]번 게시물의 댓글 목록 조회", articleId);
         return commentList;

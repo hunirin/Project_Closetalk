@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import team.closetalk.user.entity.UserEntity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Getter
@@ -20,14 +20,14 @@ public class CommunityCommentEntity {
     @Column(nullable = false)
     private String content;
     @Column(name = "created_at")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     @Column(name = "modified_at")
-    private LocalDate modifiedAt;
+    private LocalDateTime modifiedAt;
     @Column(name = "deleted_at")
-    private LocalDate deletedAt;
+    private LocalDateTime deletedAt;
 
     @ManyToOne
-    @JoinColumn(name = "users_id")
+    @JoinColumn(name = "user_id")
     private UserEntity userId;
 
     @ManyToOne
@@ -46,19 +46,19 @@ public class CommunityCommentEntity {
         this.userId = user;
         this.communityArticle = article;
         this.commentId = comment;
-        this.createdAt = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        this.createdAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
 
     // 댓글 삭제(Soft Delete)
     public CommunityCommentEntity deleteEntity() {
-        this.deletedAt = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        this.deletedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         return this;
     }
 
     // 댓글 수정
     public CommunityCommentEntity updateEntity(String content) {
         this.content = content;
-        this.modifiedAt = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        this.modifiedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         return this;
     }
 }
