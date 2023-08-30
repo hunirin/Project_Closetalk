@@ -6,17 +6,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.community.dto.CommunityArticleDto;
+import team.closetalk.community.dto.CommunityArticleImagesDto;
+import team.closetalk.community.dto.CommunityArticleListDto;
+import team.closetalk.community.dto.CommunityCommentDto;
 import team.closetalk.community.entity.CommunityArticleEntity;
+import team.closetalk.community.entity.CommunityArticleImagesEntity;
+import team.closetalk.community.repository.CommunityArticleImagesRepository;
 import team.closetalk.community.repository.CommunityArticleRepository;
 import team.closetalk.user.entity.UserEntity;
 import team.closetalk.user.repository.UserRepository;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -24,50 +33,64 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CommunityArticleService {
     private final CommunityArticleRepository communityArticleRepository;
+    private final CommunityArticleImagesRepository communityArticleImagesRepository;
+    private final CommunityCommentService communityCommentService;
     private final UserRepository userRepository;
 
-    // READ
-    // 페이지 단위로 조회
-    public Page<CommunityArticleDto> readCommunityPaged(Integer pageNum, Integer pageSize) {
+    // 커뮤니티 전체 게시물 조회(페이지 단위로 조회)
+    public Page<CommunityArticleListDto> readCommunityPaged(Integer pageNum, Integer pageSize) {
         Pageable pageable = PageRequest.of(
                 pageNum, pageSize, Sort.by("id").ascending());
-        Page<CommunityArticleEntity> communityEntityPage = communityArticleRepository.findAll(pageable);
-        return communityEntityPage.map(CommunityArticleDto::fromEntity);
+        Specification<CommunityArticleEntity> spec = (root, query, cb) -> {
+            return cb.isNull(root.get("deletedAt")); // deletedAt이 null인 경우에만 가져오도록 조건 설정
+        };
+
+        Page<CommunityArticleEntity> communityEntityPage =
+                communityArticleRepository.findAll(spec, pageable);
+        return communityEntityPage.map(CommunityArticleListDto::fromEntity);
     }
 
     // 상세 페이지 조회
-    public CommunityArticleDto readArticleOne(Long id) {
-        Optional<CommunityArticleEntity> optionalArticle = communityArticleRepository.findById(id);
+    public CommunityArticleDto readArticleOne(Long articleId) {
+        CommunityArticleEntity article = communityArticleRepository.findById(articleId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        if (optionalArticle.isPresent()) {
-            return CommunityArticleDto.fromEntity2(optionalArticle.get());
-        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        if (article.getDeletedAt() != null) {
+            log.error("삭제된 게시물입니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        communityArticleRepository.save(article.increaseHit()); // 조회수 증가
+        List<CommunityCommentDto> commentDtoList =
+                communityCommentService.readCommentList(article.getId());
+        List<CommunityArticleImagesEntity> imagesEntityList =
+                communityArticleImagesRepository.findAllByCommunityArticle_Id(article.getId());
+        List<CommunityArticleImagesDto> imagesDtoList =
+                imagesEntityList.stream().map(CommunityArticleImagesDto::fromEntity).toList();
+
+        return CommunityArticleDto.detailFromEntity(article, commentDtoList, imagesDtoList);
     }
 
     // 게시글 수정
-    public CommunityArticleDto updateCommunityArticle(Long articleId, Authentication authentication, CommunityArticleDto dto) {
+    public CommunityArticleDto updateCommunityArticle(Long articleId,
+                                                      Authentication authentication,
+                                                      CommunityArticleDto dto) {
         UserEntity user = userRepository.findByLoginId(authentication.getName())
                 .orElseThrow(() -> {
                     log.error("수정에 실패하였습니다.");
                     return new ResponseStatusException(HttpStatus.NOT_FOUND);
                 });
 
-        CommunityArticleEntity communityArticle = communityArticleRepository.findByIdAndUserId(articleId, user.getId()).
+        CommunityArticleEntity article = communityArticleRepository.findByIdAndUserId_Id(articleId, user.getId()).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        if (communityArticle.getUser().getId() != user.getId()) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
+        article.setTitle(dto.getTitle());
+        article.setContent(dto.getContent());
+        article.setModifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+        communityArticleRepository.save(article);
 
-        communityArticle.setTitle(dto.getTitle());
-        communityArticle.setContent(dto.getContent());
-        communityArticle.setModifiedAt(dto.getModifiedAt());
-        communityArticleRepository.save(communityArticle);
-
-        return CommunityArticleDto.toUpdate(communityArticle);
+        return readArticleOne(articleId);
     }
 
-    // DELETE
     // 게시글 삭제
     public void deleteArticle(Long articleId, Authentication authentication) {
         UserEntity user = userRepository.findByLoginId(authentication.getName())
@@ -75,13 +98,13 @@ public class CommunityArticleService {
                     log.error("삭제에 실패하였습니다.");
                     return new ResponseStatusException(HttpStatus.NOT_FOUND);
                 });
-        CommunityArticleEntity communityArticle = communityArticleRepository.findByIdAndUserId(articleId, user.getId()).
+        CommunityArticleEntity communityArticle = communityArticleRepository.findByIdAndUserId_Id(articleId, user.getId()).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        if (communityArticle.getUser().getId() != user.getId()) {
+        if (!Objects.equals(communityArticle.getUserId().getId(), user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
-        communityArticleRepository.deleteById(articleId);
+        communityArticleRepository.save(communityArticle.deleteArticle());
     }
 }
