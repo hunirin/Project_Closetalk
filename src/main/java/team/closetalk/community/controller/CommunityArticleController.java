@@ -21,7 +21,7 @@ public class CommunityArticleController {
     private final CommunityArticleService communityArticleService;
 
     // 게시글 목록 조회
-    @GetMapping("/list")
+    @GetMapping
     public Page<CommunityArticleListDto> readAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "limit", defaultValue = "20") Integer limit
