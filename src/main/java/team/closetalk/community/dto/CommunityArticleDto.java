@@ -60,6 +60,7 @@ public class CommunityArticleDto {
     public static CommunityArticleDto fromEntity2(CommunityArticleEntity entity) {
         CommunityArticleDto dto = new CommunityArticleDto();
         dto.setId(entity.getId());
+        dto.setCategory(entity.getCategory());
         dto.setTitle(entity.getTitle());
         dto.setContent(entity.getContent());
         dto.setCreatedAt(entity.getCreatedAt());
@@ -73,6 +74,16 @@ public class CommunityArticleDto {
         if (comments != null && !comments.isEmpty()) {
             dto.setCommunityComments(comments.stream().map(CommunityCommentDto::fromEntity).collect(Collectors.toList()));
         }
+        return dto;
+    }
+
+    public static CommunityArticleDto toUpdate(CommunityArticleEntity entity) {
+        CommunityArticleDto dto = new CommunityArticleDto();
+        dto.setId(entity.getId());
+        dto.setCategory(entity.getCategory());
+        dto.setTitle(entity.getTitle());
+        dto.setContent(entity.getContent());
+        dto.setModifiedAt(entity.getModifiedAt());
         return dto;
     }
 }

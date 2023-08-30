@@ -3,6 +3,7 @@ package team.closetalk.community.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import team.closetalk.user.entity.UserEntity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,4 +30,8 @@ public class CommunityArticleEntity {
 
     @OneToMany(mappedBy = "communityArticle")
     private List<CommunityCommentEntity> communityComments = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 }

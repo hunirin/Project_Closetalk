@@ -2,10 +2,14 @@ package team.closetalk.community.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import team.closetalk.community.dto.CommunityArticleDto;
 import team.closetalk.community.service.CommunityArticleService;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 @RestController
 @RequestMapping("/community")
@@ -41,11 +45,27 @@ public class CommunityArticleController {
         return communityArticleService.readArticleOne(articleId);
     }
 
+    // 게시글 수정
+    @PutMapping("/{articleId}")
+    public CommunityArticleDto update(
+            @PathVariable Long articleId,
+            @RequestBody CommunityArticleDto dto,
+            Authentication authentication
+    ) {
+        dto.setModifiedAt(LocalDate.now(ZoneId.of("Asia/Seoul")));
+//        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+//        String nickname = customUserDetails.getNickname();
+//        Long userId = customUserDetails.getId();
+
+        return communityArticleService.updateCommunityArticle(articleId, authentication, dto);
+    }
+
     // 게시글 삭제
     @DeleteMapping("/{articleId}")
     public void deleteArticle(
-            @PathVariable Long articleId
+            @PathVariable Long articleId,
+            Authentication authentication
     ) {
-        communityArticleService.deleteArticle(articleId);
+        communityArticleService.deleteArticle(articleId, authentication);
     }
 }
