@@ -13,4 +13,8 @@ public interface CommunityArticleRepository extends JpaRepository<CommunityArtic
     Optional<CommunityArticleEntity> findByIdAndUserId_Id(Long articleId, Long userId);
     Page<CommunityArticleEntity> findAllByDeletedAtIsNull(Pageable pageable);
     Page<CommunityArticleEntity> findAllByCategoryAndDeletedAtIsNull(CommunityCategoryEnum category, Pageable pageable);
+
+    Page<CommunityArticleEntity> findAllByTitleContainingOrContentContaining(String TitleKeyword, String ContentKeyword, Pageable pageable);
+    Page<CommunityArticleEntity> findAllByTitleContaining(String TitleKeyword, Pageable pageable);
+//    Page<CommunityArticleEntity> findAllByNicknameContaining(String NicknameKeyword, Pageable pageable);
 }
