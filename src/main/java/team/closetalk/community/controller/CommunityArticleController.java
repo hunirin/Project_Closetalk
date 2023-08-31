@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import team.closetalk.community.dto.CommunityArticleDto;
 import team.closetalk.community.dto.CommunityArticleListDto;
+import team.closetalk.community.enumeration.CommunityCategoryEnum;
 import team.closetalk.community.service.CommunityArticleService;
 
 import java.time.LocalDate;
@@ -28,7 +29,15 @@ public class CommunityArticleController {
     ) {
         return communityArticleService.readCommunityPaged(page, limit);
     }
-
+    // 카테고리별 게시글 목록 조회
+    @GetMapping("/category")
+    public Page<CommunityArticleListDto> readListByCategory(
+            @RequestParam(value = "category", required = false) CommunityCategoryEnum category,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "20") Integer limit
+    ) {
+        return communityArticleService.readCommunityByCategory(category, page, limit);
+    }
     // 게시글 상세 조회
     @GetMapping("/{articleId}")
     public CommunityArticleDto readOne(

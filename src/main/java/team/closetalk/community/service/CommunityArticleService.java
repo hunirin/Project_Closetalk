@@ -17,6 +17,7 @@ import team.closetalk.community.dto.CommunityArticleListDto;
 import team.closetalk.community.dto.CommunityCommentDto;
 import team.closetalk.community.entity.CommunityArticleEntity;
 import team.closetalk.community.entity.CommunityArticleImagesEntity;
+import team.closetalk.community.enumeration.CommunityCategoryEnum;
 import team.closetalk.community.repository.CommunityArticleImagesRepository;
 import team.closetalk.community.repository.CommunityArticleRepository;
 import team.closetalk.user.entity.UserEntity;
@@ -41,12 +42,20 @@ public class CommunityArticleService {
     public Page<CommunityArticleListDto> readCommunityPaged(Integer pageNum, Integer pageSize) {
         Pageable pageable = PageRequest.of(
                 pageNum, pageSize, Sort.by("id").ascending());
-        Specification<CommunityArticleEntity> spec = (root, query, cb) -> {
-            return cb.isNull(root.get("deletedAt")); // deletedAt이 null인 경우에만 가져오도록 조건 설정
-        };
 
         Page<CommunityArticleEntity> communityEntityPage =
-                communityArticleRepository.findAll(spec, pageable);
+                communityArticleRepository.findAllByDeletedAtIsNull(pageable);
+        return communityEntityPage.map(CommunityArticleListDto::fromEntity);
+    }
+
+    // 카테고리별 게시물 조회(페이지 단위로 조회)
+    public Page<CommunityArticleListDto> readCommunityByCategory(CommunityCategoryEnum category,
+                                                                 Integer pageNum, Integer pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNum, pageSize, Sort.by("id").ascending());
+
+        Page<CommunityArticleEntity> communityEntityPage =
+                communityArticleRepository.findAllByCategoryAndDeletedAtIsNull(category, pageable);
         return communityEntityPage.map(CommunityArticleListDto::fromEntity);
     }
 

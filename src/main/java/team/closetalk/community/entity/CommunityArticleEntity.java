@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Value;
 import org.hibernate.annotations.ColumnDefault;
+import team.closetalk.community.enumeration.CommunityCategoryEnum;
 import team.closetalk.user.entity.UserEntity;
 
 import java.time.LocalDateTime;
@@ -22,7 +23,8 @@ public class CommunityArticleEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String category;    // 카테고리
+    @Enumerated(EnumType.STRING)
+    private CommunityCategoryEnum category;    // 카테고리
     @Column(nullable = false)
     private String title;       // 제목
     @Column(nullable = false)
@@ -41,7 +43,7 @@ public class CommunityArticleEntity {
     @JoinColumn(name = "user_id")
     private UserEntity userId;
 
-    public CommunityArticleEntity(String category, String title,
+    public CommunityArticleEntity(CommunityCategoryEnum category, String title,
                                   String content, UserEntity user) {
         this.category = category;
         this.title = title;
