@@ -48,6 +48,37 @@ public class CommunityArticleService {
         return communityEntityPage.map(CommunityArticleListDto::fromEntity);
     }
 
+    // 커뮤니티 게시물 전체 검색
+    public Page<CommunityArticleListDto> searchCommunityPaged(String titleKeyword, String contentKeyword, Integer pageNum, Integer pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNum, pageSize, Sort.by("id").ascending());
+
+        Page<CommunityArticleEntity> communityEntityPage =
+                communityArticleRepository.findAllByTitleContainingOrContentContaining(titleKeyword, contentKeyword, pageable);
+
+        return communityEntityPage.map(CommunityArticleListDto::fromEntity);
+    }
+
+    // 커뮤니티 게시물 제목 검색
+//    public Page<CommunityArticleListDto> searchTitleCommunityPaged(String titleKeyword, Integer pageNum, Integer pageSize) {
+//        Pageable pageable = PageRequest.of(
+//                pageNum, pageSize, Sort.by("id").ascending());
+//
+//        Page<CommunityArticleEntity> communityEntityPage =
+//                communityArticleRepository.findAllByTitleContaining(titleKeyword, pageable);
+//        return communityEntityPage.map(CommunityArticleListDto::fromEntity);
+//    }
+
+    // 커뮤니티 게시물 닉네임 검색
+//    public Page<CommunityArticleListDto> searchNicknameCommunityPaged(String nicknameKeyword, Integer pageNum, Integer pageSize) {
+//        Pageable pageable = PageRequest.of(
+//                pageNum, pageSize, Sort.by("id").ascending());
+//
+//        Page<CommunityArticleEntity> communityEntityPage =
+//                communityArticleRepository.findAllByNicknameContaining(nicknameKeyword, pageable);
+//        return communityEntityPage.map(CommunityArticleListDto::fromEntity);
+//    }
+
     // 카테고리별 게시물 조회(페이지 단위로 조회)
     public Page<CommunityArticleListDto> readCommunityByCategory(CommunityCategoryEnum category,
                                                                  Integer pageNum, Integer pageSize) {
