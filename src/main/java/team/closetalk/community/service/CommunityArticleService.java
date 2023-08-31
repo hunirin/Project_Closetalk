@@ -17,6 +17,7 @@ import team.closetalk.community.dto.CommunityArticleListDto;
 import team.closetalk.community.dto.CommunityCommentDto;
 import team.closetalk.community.entity.CommunityArticleEntity;
 import team.closetalk.community.entity.CommunityArticleImagesEntity;
+import team.closetalk.community.enumeration.CommunityCategoryEnum;
 import team.closetalk.community.repository.CommunityArticleImagesRepository;
 import team.closetalk.community.repository.CommunityArticleRepository;
 import team.closetalk.user.entity.UserEntity;
@@ -50,6 +51,16 @@ public class CommunityArticleService {
         return communityEntityPage.map(CommunityArticleListDto::fromEntity);
     }
 
+    // 카테고리별 게시물 조회(페이지 단위로 조회)
+    public Page<CommunityArticleListDto> readCommunityByCategory(CommunityCategoryEnum category, Integer pageNum, Integer pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNum, pageSize, Sort.by("id").ascending());
+
+        Page<CommunityArticleEntity> communityEntityPage =
+                communityArticleRepository.findByCategory(category, pageable);
+
+        return communityEntityPage.map(CommunityArticleListDto::fromEntity);
+    }
     // 상세 페이지 조회
     public CommunityArticleDto readArticleOne(Long articleId) {
         CommunityArticleEntity article = communityArticleRepository.findById(articleId)
