@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import team.closetalk.community.entity.CommunityArticleEntity;
+import team.closetalk.community.enumeration.CommunityCategoryEnum;
 
 import java.time.format.DateTimeFormatter;
 
@@ -14,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class CommunityArticleListDto {
     private Long id;
-    private String category;    // 카테고리
+    private CommunityCategoryEnum category;    // 카테고리
     private String title;       // 제목
     private Long hits;          // 조회수
     private String thumbnail;   // 대표이미지
