@@ -39,7 +39,7 @@ public class OotdArticleDto {
     //메소드 네이밍 수정할 것.
 
     // 게시물 전체 조회
-    public static OotdArticleDto readOotdAll(OotdArticleEntity entity) {
+    public static OotdArticleDto fromEntityForList(OotdArticleEntity entity) {
         OotdArticleDto dto = new OotdArticleDto();
         dto.setId(entity.getId());
         dto.setContent(entity.getContent());
@@ -63,7 +63,7 @@ public class OotdArticleDto {
     }
 
     // 게시물 상세 조회
-    public static OotdArticleDto readOotdOne(OotdArticleEntity entity) {
+    public static OotdArticleDto fromEntity(OotdArticleEntity entity) {
         OotdArticleDto dto = new OotdArticleDto();
         dto.setId(entity.getId());
         dto.setNickname(entity.getUserEntity().getNickname());
