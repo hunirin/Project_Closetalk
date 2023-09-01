@@ -6,7 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import team.closetalk.ootd.dto.OotdArticleDto;
+import team.closetalk.ootd.dto.OotdCommentDto;
 import team.closetalk.ootd.service.OotdArticleService;
+import team.closetalk.ootd.service.OotdCommentService;
+
+import java.util.List;
 
 
 @Controller
@@ -14,6 +18,7 @@ import team.closetalk.ootd.service.OotdArticleService;
 @RequiredArgsConstructor
 public class OotdArticleController {
     private final OotdArticleService ootdArticleService;
+    private final OotdCommentService ootdCommentService;
 
     @GetMapping
     public String mainPage() {
@@ -47,6 +52,9 @@ public class OotdArticleController {
     ) {
         OotdArticleDto ootdArticle = ootdArticleService.readOotdOne(articleId);
         model.addAttribute("ootdArticle", ootdArticle);
+        // 댓글 조회
+        List<OotdCommentDto> ootdCommentList = ootdCommentService.readCommentList(articleId);
+        model.addAttribute("ootdCommentList", ootdCommentList);
         return "ootd/ootdArticle";
     }
 }

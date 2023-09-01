@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:sec="http://www.w3.org/1999/xhtml">
-<head>
   <html lang="ko" xmlns:th="http://www.thymeleaf.org" >
   <head>
     <meta charset="UTF-8">
@@ -64,7 +62,40 @@
           </div>
         </div>
 
-        <div th:insert="~{ootd/ootdComment :: comment}"></div>
+<!--        <div th:insert="~{ootd/ootdComment :: comment}"></div>-->
+        <div class="board_bottom_comment" >
+            <div class="board_bottom_commentList" th:each="commentList : ${ootdCommentList}">
+                <div class="commentList_item">
+                    <img th:src="@{${commentList.profile}}" class="comment_profile_img">
+                    <div class="board_bottom_comment_user">
+                        <p class="user_nickname" th:text="${commentList.nickname}">nickname2</p>
+                        <p class="user_content" th:text="${commentList.content}">comment</p>
+                        <p class="comment_time" th:text="${commentList.createdAt}">2023.08.28</p>
+                        <p class="comment_reply">답글달기</p>
+                    </div>
+                </div>
+                <div class="board_bottom_sub_comment" th:each="replyList : ${commentList.replies}">
+                    <img th:src="${replyList.profile}" class="comment_profile_img">
+                    <div class="board_bottom_comment_user">
+                        <p class="user_nickname" th:text="${replyList.nickname}">nickname1</p>
+                        <p class="user_content" th:text="${replyList.content}">
+                            <span class="comment_sub_content" th:text="${commentList.nickname}">nickname2</span>
+                            commentcommentcommentcomment
+                        </p>
+                        <p class="comment_time" th:text="${replyList.createdAt}">2023.08.28</p>
+                        <p class="comment_reply">답글달기</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="board_bottom_insert_comment">
+            <div class="comment_in">
+                <!--            <p class="not_login_comment">로그인 후 댓글쓰기가 가능합니다.</p>-->
+                <textarea type="text" class="comment_input" placeholder="댓글을 작성 해 주세요." maxlength="255"></textarea>
+                <button class="comment_submit_btn">등록</button>
+            </div>
+        </div>
 
         <div class="board_bottom_btn">
           <button class="board_bottom_btn_edit">수정</button>
@@ -73,6 +104,7 @@
         </div>
      </div>
     </div>
+
     <footer th:insert="~{footer :: footer}"></footer>
 
       <!-- 배너 스와이프 API -->
