@@ -28,7 +28,7 @@ public class OotdController {
 
      // 메인페이지 무한 스크롤 조회
     @GetMapping("/list")
-    public String readOotdMain(
+    public String readOotList(
             Model model,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "limit", defaultValue = "12") Integer limit

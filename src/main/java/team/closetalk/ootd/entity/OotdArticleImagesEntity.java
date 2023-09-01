@@ -16,6 +16,6 @@ public class OotdArticleImagesEntity {
     private String imageUrl;
 
     @ManyToOne
-    @JoinColumn(name = "ootdArticle_id")
+    @JoinColumn(name = "ootd_article_id")
     private OotdArticleEntity ootdArticle;
 }

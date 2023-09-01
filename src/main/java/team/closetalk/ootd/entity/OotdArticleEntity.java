@@ -27,11 +27,11 @@ public class OotdArticleEntity {
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
 
-    @OneToMany(mappedBy = "ootdArticle")
+    @OneToMany(mappedBy = "article_id")
     private List<OotdArticleImagesEntity> ootdImages = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "users")
-    private UserEntity userId;
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
 
 }
