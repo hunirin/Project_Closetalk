@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class OotdService {
+public class OotdArticleService {
     private final OotdArticleRepository ootdArticleRepository;
 
 

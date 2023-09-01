@@ -11,7 +11,7 @@ public class IssueBannerDto {
     // 이슈 목록
     // 첫번째 이미지를 thumbnail에 저장
     // service 단계에서 저장 해주면 굳이 안쓰는게 나음
-    public static IssueArticleDto BannerEntity(IssueArticleEntity entity) {
+    public static IssueArticleDto fromEntity(IssueArticleEntity entity) {
         IssueArticleDto dto = new IssueArticleDto();
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
