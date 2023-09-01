@@ -1,6 +1,7 @@
 package team.closetalk.user.dto;
 
 import lombok.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +27,10 @@ public class CustomUserDetails implements UserDetails {
     private Date createdAt;
 
     private MultipartFile profileImage;
+
+    public static CustomUserDetails fromAuthentication(Authentication authentication){
+        return (CustomUserDetails) authentication.getPrincipal();
+    }
 
     public static CustomUserDetails fromEntity(UserEntity entity){
         return CustomUserDetails.builder()
@@ -53,6 +58,7 @@ public class CustomUserDetails implements UserDetails {
         return entity;
     }
 
+    //계정이 갖는 권한 목록을 리턴 : 우리에게 인증 사용자 권한은 USER EDITOR ADMIN 세가지가 있음. 셋 중 하나 리턴해주면 됨. -> Enum클래스 만들어놓은 것 리턴해주면 될 듯?
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
