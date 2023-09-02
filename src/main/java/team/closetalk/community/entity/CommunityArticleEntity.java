@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 import org.hibernate.annotations.ColumnDefault;
 import team.closetalk.community.enumeration.Category;
 import team.closetalk.user.entity.UserEntity;
@@ -15,7 +14,7 @@ import java.time.ZoneId;
 
 @Data
 @Entity
-@Table(name = "communityArticle")
+@Table(name = "community_article")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommunityArticleEntity {
     @Id
