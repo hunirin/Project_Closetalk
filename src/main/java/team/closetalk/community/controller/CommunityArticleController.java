@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import team.closetalk.community.dto.CommunityArticleDto;
 import team.closetalk.community.dto.CommunityArticleListDto;
+import team.closetalk.community.dto.CommunityCreateArticleDto;
 import team.closetalk.community.enumeration.Category;
 import team.closetalk.community.service.CommunityArticleService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/community")
@@ -64,10 +66,15 @@ public class CommunityArticleController {
 
     // 게시글 생성
     @PostMapping("/create")
-    public CommunityArticleDto createArticle(@RequestBody CommunityArticleDto dto,
-                                             @RequestParam("images") List<MultipartFile> imageList,
+    public CommunityArticleDto createArticle(@RequestPart(value = "data") CommunityCreateArticleDto dto,
+                                             @RequestPart(value = "imageUrl",
+                                                     required = false) List<MultipartFile> imageUrlList,
                                              Authentication authentication
                                              ) {
-        return communityArticleService.createArticle(dto, imageList, authentication);
+        Optional<List<MultipartFile>> optionalImageUrlList = Optional.ofNullable(imageUrlList);
+        if (optionalImageUrlList.isPresent())
+            return communityArticleService.createArticleWithImages(dto, imageUrlList, authentication);
+         else
+             return communityArticleService.createArticle(dto, authentication);
     }
 }
