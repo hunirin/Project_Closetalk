@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import team.closetalk.community.dto.CommunityArticleDto;
 import team.closetalk.community.dto.CommunityArticleListDto;
 import team.closetalk.community.enumeration.Category;
 import team.closetalk.community.service.CommunityArticleService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/community")
@@ -62,8 +65,9 @@ public class CommunityArticleController {
     // 게시글 생성
     @PostMapping("/create")
     public CommunityArticleDto createArticle(@RequestBody CommunityArticleDto dto,
+                                             @RequestParam("images") List<MultipartFile> imageList,
                                              Authentication authentication
                                              ) {
-        return communityArticleService.createArticle(dto, authentication);
+        return communityArticleService.createArticle(dto, imageList, authentication);
     }
 }
