@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import team.closetalk.ootd.entity.OotdArticleEntity;
 import team.closetalk.ootd.entity.OotdArticleImagesEntity;
-import team.closetalk.user.entity.UserEntity;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,8 +54,8 @@ public class OotdArticleDto {
     public static OotdArticleDto readOotdOne(OotdArticleEntity entity) {
         OotdArticleDto dto = new OotdArticleDto();
         dto.setId(entity.getId());
-        dto.setNickname(entity.getUserId().getNickname());
-        dto.setProfile(entity.getUserId().getProfileImageUrl());
+        dto.setNickname(entity.getUserEntity().getNickname());
+        dto.setProfile(entity.getUserEntity().getProfileImageUrl());
         dto.setContent(entity.getContent());
         dto.setHashtag(entity.getHashtag());
         dto.setCreatedAt(entity.getCreatedAt()

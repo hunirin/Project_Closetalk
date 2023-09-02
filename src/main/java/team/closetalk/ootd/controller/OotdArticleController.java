@@ -6,14 +6,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import team.closetalk.ootd.dto.OotdArticleDto;
-import team.closetalk.ootd.service.OotdService;
+import team.closetalk.ootd.dto.OotdCommentDto;
+import team.closetalk.ootd.service.OotdArticleService;
+import team.closetalk.ootd.service.OotdCommentService;
+
+import java.util.List;
 
 
 @Controller
 @RequestMapping("/ootd")
 @RequiredArgsConstructor
-public class OotdController {
-    private final OotdService ootdService;
+public class OotdArticleController {
+    private final OotdArticleService ootdArticleService;
+    private final OotdCommentService ootdCommentService;
 
     @GetMapping
     public String mainPage() {
@@ -33,19 +38,23 @@ public class OotdController {
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "limit", defaultValue = "12") Integer limit
     ) {
-        Page<OotdArticleDto> ootdPage = ootdService.readOotdPaged(page, limit);
+        Page<OotdArticleDto> ootdPage = ootdArticleService.readOotdPaged(page, limit);
         model.addAttribute("ootdPage", ootdPage);
 
         return "ootd/ootdMain";
     }
 
+    // 게시글 상세 조회
     @GetMapping("/{articleId}")
     public String readOotdOne(
             Model model,
             @PathVariable Long articleId
     ) {
-        OotdArticleDto ootdArticle = ootdService.readOotdOne(articleId);
+        OotdArticleDto ootdArticle = ootdArticleService.readOotdOne(articleId);
         model.addAttribute("ootdArticle", ootdArticle);
+        // 댓글 조회
+        List<OotdCommentDto> ootdCommentList = ootdCommentService.readCommentList(articleId);
+        model.addAttribute("ootdCommentList", ootdCommentList);
         return "ootd/ootdArticle";
     }
 }

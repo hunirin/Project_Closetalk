@@ -31,114 +31,6 @@
     /*    border-color: #eeeeee;*/
     /*}*/
 
-    #root {
-        max-width: 768px;
-        height: auto;
-        width: 300vw;
-        position: relative;
-        margin: 100px auto auto;
-        font-size: 20px;
-        display: block;
-    }
-
-    .board_top {
-        border-top: 1px solid #4d5154;
-        padding: 20px 30px;
-    }
-
-    .board_top_info {
-        align-items: center;
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .board_top_userinfo>img {
-        border-radius: 50%;
-        height: 40px;
-        margin-right: 10px;
-        object-fit: cover;
-        width: 40px;
-        vertical-align: middle;
-        display: inline-block;
-    }
-
-    .board_top_userinfo>.user_nickname {
-        font-size: 20px;
-        font-weight: bold;
-        display: inline-block;
-    }
-
-    /*.swiper {*/
-    /*    width: 100%;*/
-    /*    height: 100%;*/
-    /*    margin-top: 100px;*/
-    /*}*/
-
-    /*.swiper-slide {*/
-    /*    display: block;*/
-    /*    width: 768px;*/
-    /*    height: 450px;*/
-    /*}*/
-
-    /*.img {*/
-    /*    width: 100%;*/
-    /*    object-fit: fill;*/
-    /*    position: static;*/
-    /*}*/
-
-    .board_middle {
-        /*border-bottom: 1px solid #4d5154;*/
-    }
-
-    .board_middle_boardinfo {
-        margin-top: 12px;
-        display: inline-block;
-    }
-
-    .board_middle_btn {
-        margin-top: 15px;
-        float: right;
-        display: inline-block;
-    }
-
-    .board_middle_btn_like {
-        cursor: pointer;
-        font-size: 25px;
-        display: inline-block;
-    }
-
-    .board_middle_btn_URL {
-        cursor: pointer;
-        font-size: 25px;
-        display: inline-block;
-    }
-
-    .copy-notification {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: blueviolet;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 5px;
-        opacity: 0.9;
-        transition: opacity 0.5s ease;
-    }
-
-    .board_bottom {
-        margin-top: 20px;
-    }
-
-    .board_bottom_content {
-        font-size: 25px;
-    }
-
-    .board_bottom_hashtag {
-        margin-top: 10px;
-        border-bottom: 1px solid #4d5154;
-    }
-
     .board_bottom_comment {
         padding: 20px 30px 15px;
         align-items: start;
@@ -146,7 +38,7 @@
         height: auto;
         width: 300vw;
         position: relative;
-        margin: 20px auto auto;
+        margin: 100px auto auto;
         font-size: 20px;
         display: block;
     }
@@ -256,53 +148,6 @@
         font-weight: bold;
         height: 60px;
         width: 100px;
-        float: right;
-    }
-
-    .board_bottom_btn {
-        align-items: center;
-        border-top: 1px solid #4d5154;
-        margin-bottom: 20px;
-    }
-
-    .board_bottom_btn_edit {
-        display: inline-block;
-        vertical-align: middle;
-        border: 1px solid #000;
-        border-radius: 5px;
-        color: #000;
-        font-size: 16px;
-        font-weight: bold;
-        height: 40px;
-        width: 100px;
-        margin-top: 20px;
-        margin-right: 10px;
-    }
-
-    .board_bottom_btn_delete {
-        display: inline-block;
-        vertical-align: middle;
-        border: 1px solid #000;
-        border-radius: 5px;
-        color: #000;
-        font-size: 16px;
-        font-weight: bold;
-        height: 40px;
-        width: 100px;
-        margin-top: 20px;
-    }
-
-    .board_bottom_btn_list {
-        display: inline-block;
-        vertical-align: middle;
-        border: 1px solid #000;
-        border-radius: 5px;
-        color: #000;
-        font-size: 16px;
-        font-weight: bold;
-        height: 40px;
-        width: 100px;
-        margin-top: 20px;
         float: right;
     }
 }
