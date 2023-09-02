@@ -6,22 +6,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import team.closetalk.closet.service.EntityRetrievalService;
 import team.closetalk.community.dto.CommunityArticleDto;
 import team.closetalk.community.dto.CommunityArticleImagesDto;
 import team.closetalk.community.dto.CommunityArticleListDto;
 import team.closetalk.community.dto.CommunityCommentDto;
 import team.closetalk.community.entity.CommunityArticleEntity;
 import team.closetalk.community.entity.CommunityArticleImagesEntity;
-import team.closetalk.community.enumeration.CommunityCategoryEnum;
+import team.closetalk.community.enumeration.Category;
 import team.closetalk.community.repository.CommunityArticleImagesRepository;
 import team.closetalk.community.repository.CommunityArticleRepository;
 import team.closetalk.user.entity.UserEntity;
-import team.closetalk.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -35,8 +34,8 @@ import java.util.Objects;
 public class CommunityArticleService {
     private final CommunityArticleRepository communityArticleRepository;
     private final CommunityArticleImagesRepository communityArticleImagesRepository;
+    private final EntityRetrievalService entityRetrievalService;
     private final CommunityCommentService communityCommentService;
-    private final UserRepository userRepository;
 
     // 커뮤니티 전체 게시물 조회(페이지 단위로 조회)
     public Page<CommunityArticleListDto> readCommunityPaged(Integer pageNum, Integer pageSize) {
@@ -49,8 +48,8 @@ public class CommunityArticleService {
     }
 
     // 카테고리별 게시물 조회(페이지 단위로 조회)
-    public Page<CommunityArticleListDto> readCommunityByCategory(CommunityCategoryEnum category,
-                                                                 Integer pageNum, Integer pageSize) {
+    public Page<CommunityArticleListDto> readCommunityPagedByCategory(Category category,
+                                                                      Integer pageNum, Integer pageSize) {
         Pageable pageable = PageRequest.of(
                 pageNum, pageSize, Sort.by("id").ascending());
 
@@ -60,7 +59,7 @@ public class CommunityArticleService {
     }
 
     // 상세 페이지 조회
-    public CommunityArticleDto readArticleOne(Long articleId) {
+    public CommunityArticleDto readArticle(Long articleId) {
         CommunityArticleEntity article = communityArticleRepository.findById(articleId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -80,14 +79,10 @@ public class CommunityArticleService {
     }
 
     // 게시글 수정
-    public CommunityArticleDto updateCommunityArticle(Long articleId,
+    public CommunityArticleDto updateArticle(Long articleId,
                                                       Authentication authentication,
                                                       CommunityArticleDto dto) {
-        UserEntity user = userRepository.findByLoginId(authentication.getName())
-                .orElseThrow(() -> {
-                    log.error("수정에 실패하였습니다.");
-                    return new ResponseStatusException(HttpStatus.NOT_FOUND);
-                });
+        UserEntity user = getUserEntity(authentication.getName());
 
         CommunityArticleEntity article = communityArticleRepository.findByIdAndUserId_Id(articleId, user.getId()).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -97,23 +92,34 @@ public class CommunityArticleService {
         article.setModifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         communityArticleRepository.save(article);
 
-        return readArticleOne(articleId);
+        return readArticle(articleId);
     }
 
     // 게시글 삭제
     public void deleteArticle(Long articleId, Authentication authentication) {
-        UserEntity user = userRepository.findByLoginId(authentication.getName())
-                .orElseThrow(() -> {
-                    log.error("삭제에 실패하였습니다.");
-                    return new ResponseStatusException(HttpStatus.NOT_FOUND);
-                });
-        CommunityArticleEntity communityArticle = communityArticleRepository.findByIdAndUserId_Id(articleId, user.getId()).
+        UserEntity user = getUserEntity(authentication.getName());
+        CommunityArticleEntity article = communityArticleRepository.findByIdAndUserId_Id(articleId, user.getId()).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        if (!Objects.equals(communityArticle.getUserId().getId(), user.getId())) {
+        if (!Objects.equals(article.getUserId().getId(), user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
-        communityArticleRepository.save(communityArticle.deleteArticle());
+        communityArticleRepository.save(article.deleteArticle());
+    }
+
+    // 게시물 생성
+    public CommunityArticleDto createArticle(CommunityArticleDto dto,
+                                             Authentication authentication) {
+        UserEntity user = getUserEntity(authentication.getName());
+        CommunityArticleEntity article =
+                new CommunityArticleEntity(dto.getCategory(), dto.getTitle(), dto.getContent(), user);
+        communityArticleRepository.save(article);
+        return readArticle(article.getId());
+    }
+
+    // LoginId == authentication.getName() -> UserEntity 찾기
+    public UserEntity getUserEntity(String loginId) {
+        return entityRetrievalService.getUserEntity(loginId);
     }
 }

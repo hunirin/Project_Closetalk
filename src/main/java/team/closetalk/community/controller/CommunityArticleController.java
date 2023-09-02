@@ -3,17 +3,11 @@ package team.closetalk.community.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import team.closetalk.community.dto.CommunityArticleDto;
 import team.closetalk.community.dto.CommunityArticleListDto;
-import team.closetalk.community.enumeration.CommunityCategoryEnum;
+import team.closetalk.community.enumeration.Category;
 import team.closetalk.community.service.CommunityArticleService;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @RestController
 @RequestMapping("/community")
@@ -23,7 +17,7 @@ public class CommunityArticleController {
 
     // 게시글 목록 조회
     @GetMapping
-    public Page<CommunityArticleListDto> readAll(
+    public Page<CommunityArticleListDto> readArticleList(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "limit", defaultValue = "20") Integer limit
     ) {
@@ -31,29 +25,29 @@ public class CommunityArticleController {
     }
     // 카테고리별 게시글 목록 조회
     @GetMapping("/category")
-    public Page<CommunityArticleListDto> readListByCategory(
-            @RequestParam(value = "category", required = false) CommunityCategoryEnum category,
+    public Page<CommunityArticleListDto> readArticleListByCategory(
+            @RequestParam(value = "category", required = false) Category category,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "limit", defaultValue = "20") Integer limit
     ) {
-        return communityArticleService.readCommunityByCategory(category, page, limit);
+        return communityArticleService.readCommunityPagedByCategory(category, page, limit);
     }
     // 게시글 상세 조회
     @GetMapping("/{articleId}")
-    public CommunityArticleDto readOne(
+    public CommunityArticleDto readArticle(
             @PathVariable Long articleId
     ) {
-        return communityArticleService.readArticleOne(articleId);
+        return communityArticleService.readArticle(articleId);
     }
 
     // 게시글 수정
     @PutMapping("/{articleId}")
-    public CommunityArticleDto update(
+    public CommunityArticleDto updateArticle(
             @PathVariable Long articleId,
             @RequestBody CommunityArticleDto dto,
             Authentication authentication
     ) {
-        return communityArticleService.updateCommunityArticle(articleId, authentication, dto);
+        return communityArticleService.updateArticle(articleId, authentication, dto);
     }
 
     // 게시글 삭제
@@ -63,5 +57,13 @@ public class CommunityArticleController {
             Authentication authentication
     ) {
         communityArticleService.deleteArticle(articleId, authentication);
+    }
+
+    // 게시글 생성
+    @PostMapping("/create")
+    public CommunityArticleDto createArticle(@RequestBody CommunityArticleDto dto,
+                                             Authentication authentication
+                                             ) {
+        return communityArticleService.createArticle(dto, authentication);
     }
 }
