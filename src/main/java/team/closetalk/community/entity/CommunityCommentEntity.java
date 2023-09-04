@@ -12,7 +12,7 @@ import java.time.ZoneId;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "communityComment")
+@Table(name = "community_comment")
 public class CommunityCommentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,7 @@ public class CommunityCommentEntity {
     private UserEntity userId;
 
     @ManyToOne
-    @JoinColumn(name = "communityArticle")
+    @JoinColumn(name = "community_article")
     private CommunityArticleEntity communityArticle;
 
     @ManyToOne
