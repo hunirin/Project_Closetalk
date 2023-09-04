@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import team.closetalk.community.entity.CommunityCommentEntity;
 
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @Builder
 public class CommunityCommentReplyDto {
@@ -20,13 +22,15 @@ public class CommunityCommentReplyDto {
             return CommunityCommentReplyDto.builder()
                     .userName(comment.getUserId().getNickname())
                     .content(comment.getContent())
-                    .createdAt(comment.getCreatedAt() + " (수정됨)")
+                    .createdAt(comment.getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + " (수정됨)")
                     .build();
         } else {
             return CommunityCommentReplyDto.builder()
                     .userName(comment.getUserId().getNickname())
                     .content(comment.getContent())
-                    .createdAt(String.valueOf(comment.getCreatedAt()))
+                    .createdAt(comment.getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
                     .build();
         }
     }

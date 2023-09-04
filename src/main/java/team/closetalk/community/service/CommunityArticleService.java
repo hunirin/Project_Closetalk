@@ -9,12 +9,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.closet.service.EntityRetrievalService;
-import team.closetalk.community.dto.CommunityArticleDto;
-import team.closetalk.community.dto.CommunityArticleImagesDto;
-import team.closetalk.community.dto.CommunityArticleListDto;
-import team.closetalk.community.dto.CommunityCommentDto;
+import team.closetalk.community.dto.*;
 import team.closetalk.community.entity.CommunityArticleEntity;
 import team.closetalk.community.entity.CommunityArticleImagesEntity;
 import team.closetalk.community.enumeration.Category;
@@ -36,6 +34,7 @@ public class CommunityArticleService {
     private final CommunityArticleImagesRepository communityArticleImagesRepository;
     private final EntityRetrievalService entityRetrievalService;
     private final CommunityCommentService communityCommentService;
+    private final CommunityArticleSaveImageService imageService;
 
     // 커뮤니티 전체 게시물 조회(페이지 단위로 조회)
     public Page<CommunityArticleListDto> readCommunityPaged(Integer pageNum, Integer pageSize) {
@@ -140,12 +139,23 @@ public class CommunityArticleService {
     }
 
     // 게시물 생성
-    public CommunityArticleDto createArticle(CommunityArticleDto dto,
+    public CommunityArticleDto createArticle(CommunityCreateArticleDto dto,
                                              Authentication authentication) {
         UserEntity user = getUserEntity(authentication.getName());
         CommunityArticleEntity article =
                 new CommunityArticleEntity(dto.getCategory(), dto.getTitle(), dto.getContent(), user);
         communityArticleRepository.save(article);
+        return readArticle(article.getId());
+    }
+
+    public CommunityArticleDto createArticleWithImages(CommunityCreateArticleDto dto,
+                                             List<MultipartFile> imageUrlList,
+                                             Authentication authentication) {
+        UserEntity user = getUserEntity(authentication.getName());
+        CommunityArticleEntity article =
+                new CommunityArticleEntity(dto.getCategory(), dto.getTitle(), dto.getContent(), user);
+        communityArticleRepository.save(article);
+        imageService.saveArticleImage(article, imageUrlList);
         return readArticle(article.getId());
     }
 
