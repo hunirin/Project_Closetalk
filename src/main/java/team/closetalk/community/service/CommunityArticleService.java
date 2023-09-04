@@ -11,17 +11,28 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import team.closetalk.closet.dto.ClosetItemDto;
+import team.closetalk.closet.entity.ClosetItemEntity;
+import team.closetalk.closet.repository.ClosetItemRepository;
 import team.closetalk.closet.service.EntityRetrievalService;
 import team.closetalk.community.dto.*;
+import team.closetalk.community.dto.article.response.CommunityArticleDto;
+import team.closetalk.community.dto.article.response.CommunityArticleImagesDto;
+import team.closetalk.community.dto.article.response.CommunityArticleListDto;
+import team.closetalk.community.dto.article.request.CommunityCreateArticleDto;
+import team.closetalk.community.entity.composite.ArticleClosetItemId;
+import team.closetalk.community.entity.composite.CommunityArticleClosetItems;
 import team.closetalk.community.entity.CommunityArticleEntity;
 import team.closetalk.community.entity.CommunityArticleImagesEntity;
 import team.closetalk.community.enumeration.Category;
+import team.closetalk.community.repository.ArticleAndClosetItemRepository;
 import team.closetalk.community.repository.CommunityArticleImagesRepository;
 import team.closetalk.community.repository.CommunityArticleRepository;
 import team.closetalk.user.entity.UserEntity;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,6 +43,8 @@ import java.util.Objects;
 public class CommunityArticleService {
     private final CommunityArticleRepository communityArticleRepository;
     private final CommunityArticleImagesRepository communityArticleImagesRepository;
+    private final ClosetItemRepository closetItemRepository;
+    private final ArticleAndClosetItemRepository articleAndClosetItemRepository;
     private final EntityRetrievalService entityRetrievalService;
     private final CommunityCommentService communityCommentService;
     private final CommunityArticleSaveImageService imageService;
@@ -73,14 +86,24 @@ public class CommunityArticleService {
                 communityArticleImagesRepository.findAllByCommunityArticle_Id(article.getId());
         List<CommunityArticleImagesDto> imagesDtoList =
                 imagesEntityList.stream().map(CommunityArticleImagesDto::fromEntity).toList();
+        List<CommunityArticleClosetItems> closetItemIdList =
+                articleAndClosetItemRepository.findAllByCommunityArticleId(article);
+        List<ClosetItemDto> closetItemDtoList = new ArrayList<>();
+        for (CommunityArticleClosetItems closetItemId : closetItemIdList) {
+            Long closetItemNumber = closetItemId.getId().getClosetItemId();
+            ClosetItemDto closetItemDto =
+                    ClosetItemDto.toClosetItemDto(closetItemRepository.findById(closetItemNumber)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+            closetItemDtoList.add(closetItemDto);
+        }
 
-        return CommunityArticleDto.detailFromEntity(article, commentDtoList, imagesDtoList);
+        return CommunityArticleDto.detailFromEntity(article, commentDtoList, imagesDtoList, closetItemDtoList);
     }
 
     // 게시글 수정
     public CommunityArticleDto updateArticle(Long articleId,
-                                                      Authentication authentication,
-                                                      CommunityArticleDto dto) {
+                                             Authentication authentication,
+                                             CommunityArticleDto dto) {
         UserEntity user = getUserEntity(authentication.getName());
 
         CommunityArticleEntity article = communityArticleRepository.findByIdAndUserId_Id(articleId, user.getId()).
@@ -117,13 +140,42 @@ public class CommunityArticleService {
         return readArticle(article.getId());
     }
 
+    // 게시물 생성(이미지 포함)
     public CommunityArticleDto createArticleWithImages(CommunityCreateArticleDto dto,
-                                             List<MultipartFile> imageUrlList,
-                                             Authentication authentication) {
+                                                       List<MultipartFile> imageUrlList,
+                                                       Authentication authentication) {
         UserEntity user = getUserEntity(authentication.getName());
         CommunityArticleEntity article =
                 new CommunityArticleEntity(dto.getCategory(), dto.getTitle(), dto.getContent(), user);
         communityArticleRepository.save(article);
+        imageService.saveArticleImage(article, imageUrlList);
+        return readArticle(article.getId());
+    }
+
+    // 게시물 생성(옷장 포함)
+    public CommunityArticleDto createArticleWithCloset(CommunityCreateArticleDto dto,
+                                                       List<MultipartFile> imageUrlList,
+                                                       Authentication authentication) {
+        UserEntity user = getUserEntity(authentication.getName());
+        CommunityArticleEntity article =
+                new CommunityArticleEntity(dto.getCategory(), dto.getTitle(), dto.getContent(), user);
+        communityArticleRepository.save(article);
+
+        List<Long> closetItemNumList = dto.getSelectClosetItemNumList();
+
+        for (Long closetItemNum : closetItemNumList) {
+            ClosetItemEntity closetItem = closetItemRepository.findById(closetItemNum)
+                    .orElseThrow(() -> {
+                        log.error("해당 아이템을 찾을 수 없습니다.");
+                        return new ResponseStatusException(HttpStatus.NOT_FOUND);
+                    });
+            ArticleClosetItemId articleClosetItemId =
+                    new ArticleClosetItemId(article.getId(), closetItemNum);
+            CommunityArticleClosetItems communityArticleClosetItems =
+                    new CommunityArticleClosetItems(articleClosetItemId, article, closetItem);
+            articleAndClosetItemRepository.save(communityArticleClosetItems);
+        }
+
         imageService.saveArticleImage(article, imageUrlList);
         return readArticle(article.getId());
     }

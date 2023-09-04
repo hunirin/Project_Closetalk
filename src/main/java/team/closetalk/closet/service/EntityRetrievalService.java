@@ -21,7 +21,7 @@ public class EntityRetrievalService {
     private final UserRepository userRepository;
 
     // closetId로 해당 ClosetEntity 찾기
-    ClosetEntity getClosetEntity(String closetName, String nickname) {
+    public ClosetEntity getClosetEntity(String closetName, String nickname) {
         try {
             return closetRepository.findByClosetNameAndUserId_Nickname(closetName, nickname);
         } catch (Exception e) {
@@ -31,7 +31,7 @@ public class EntityRetrievalService {
     }
 
     // itemId로 해당 ClosetItemEntity 찾기
-    ClosetItemEntity getClosetItemEntity(Long itemId, String nickname) {
+    public ClosetItemEntity getClosetItemEntity(Long itemId, String nickname) {
         try {
             return closetItemRepository.findByIdAndClosetId_UserId_Nickname(itemId, nickname);
         } catch (Exception e) {

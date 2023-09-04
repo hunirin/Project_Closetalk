@@ -1,9 +1,11 @@
-package team.closetalk.community.dto;
+package team.closetalk.community.dto.article.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import team.closetalk.closet.dto.ClosetItemDto;
+import team.closetalk.community.dto.CommunityCommentDto;
 import team.closetalk.community.entity.CommunityArticleEntity;
 import team.closetalk.community.enumeration.Category;
 
@@ -22,13 +24,15 @@ public class CommunityArticleDto {
     private Long hits;          // 조회수
     private String createdAt;    // 작성 날짜
 
+    private List<ClosetItemDto> closetItems;
     private List<CommunityArticleImagesDto> communityImages;
     private List<CommunityCommentDto> communityComments;
 
     // 게시글 상세 조회
     public static CommunityArticleDto detailFromEntity(CommunityArticleEntity entity,
                                                        List<CommunityCommentDto> commentDtoList,
-                                                       List<CommunityArticleImagesDto> imageDtoList) {
+                                                       List<CommunityArticleImagesDto> imageDtoList,
+                                                       List<ClosetItemDto> closetItemDtoList) {
         CommunityArticleDto dto = new CommunityArticleDto();
         dto.setId(entity.getId());
         dto.setCategory(entity.getCategory());
@@ -37,6 +41,7 @@ public class CommunityArticleDto {
         dto.setHits(entity.getHits());
         dto.setCommunityComments(commentDtoList);
         dto.setCommunityImages(imageDtoList);
+        dto.setClosetItems(closetItemDtoList);
 
         if (entity.getModifiedAt() == null) // 수정 시 created_at 변경
             dto.setCreatedAt(entity.getCreatedAt()
