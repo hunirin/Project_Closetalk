@@ -1,7 +1,6 @@
 package team.closetalk.community.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import team.closetalk.user.entity.UserEntity;
@@ -9,7 +8,7 @@ import team.closetalk.user.entity.UserEntity;
 @Entity
 @Data
 @Table(name = "community_like")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class CommunityLikeEntity {
 
     @Id
