@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface CommunityArticleRepository extends JpaRepository<CommunityArticleEntity, Long> {
     Optional<CommunityArticleEntity> findByIdAndUserId_Id(Long articleId, Long userId);
+    Optional<CommunityArticleEntity> findById(Long articleId);
     Page<CommunityArticleEntity> findAllByDeletedAtIsNull(Pageable pageable);
     Page<CommunityArticleEntity> findAllByCategoryAndDeletedAtIsNull(Category category, Pageable pageable);
 }
