@@ -25,7 +25,6 @@ public class ClosetItemEntity {
     private String brand;
     @Column(nullable = false)
     private String category;
-//    @Column(nullable = false)
     private String itemImageUrl;
 
     // 선택
@@ -94,23 +93,6 @@ public class ClosetItemEntity {
             // form-data parameter 없으면 기존의 값으로 대체
             return defaultValue;
         }
-    }
-
-    private static String getValue(Map<String, String> itemParams, String key, String defaultValue) {
-        return itemParams.getOrDefault(key, defaultValue);
-    }
-
-    private static Long getLongValue(Map<String, String> itemParams, String key, Long defaultValue) {
-        String value = itemParams.get(key);
-        if (value != null && !value.isEmpty()) {
-            try {
-                return Long.parseLong(value);
-            } catch (NumberFormatException e) {
-                // 숫자로 변환할 수 없는 경우, 기본값 또는 오류 처리
-                return defaultValue;
-            }
-        }
-        return defaultValue;
     }
 
 }
