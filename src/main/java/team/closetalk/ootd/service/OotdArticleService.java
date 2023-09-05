@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -75,13 +76,14 @@ public class OotdArticleService {
 
     public Long createOotdArticle(Authentication authentication, OotdArticleDto ootdArticleDto, List<MultipartFile> imageList) {
         //작성자 정보 가져오기
-//        CustomUserDetails loginUser = (CustomUserDetails) authentication.getPrincipal();
         UserEntity userEntity = userRepository.findByLoginId(CustomUserDetails.fromAuthentication(authentication).getLoginId()).get();
 
         //OOTD ARTICLE 저장
-        OotdArticleEntity ootdEntity = ootdArticleDto.newEntity();
-        ootdEntity.setUserEntity(userEntity);
-        OotdArticleEntity savedOotdArticle = ootdArticleRepository.save(ootdEntity);
+        OotdArticleEntity ootdArticleEntity = ootdArticleDto.newEntity();
+        ootdArticleEntity.setUserEntity(userEntity);
+        OotdArticleEntity savedOotdArticle = ootdArticleRepository.save(ootdArticleEntity);
+        ootdArticleEntity.setCreatedAt(LocalDateTime.now());
+        ootdArticleEntity.setModifiedAt(LocalDateTime.now());
 
         //OOTD ARTICLE IMAGE 저장
         String articleId = savedOotdArticle.getId().toString();
@@ -129,6 +131,7 @@ public class OotdArticleService {
 
         ootdArticleEntity.setContent(dto.getContent());
         ootdArticleEntity.setHashtag(dto.getHashtag());
+        ootdArticleEntity.setModifiedAt(LocalDateTime.now());
         ootdArticleRepository.save(ootdArticleEntity);
 
         return OotdArticleDto.fromEntity(ootdArticleEntity);
