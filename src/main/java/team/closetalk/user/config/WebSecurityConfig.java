@@ -37,6 +37,7 @@ public class WebSecurityConfig {
                                         , "/ootd/list"
                                         , "/ootd/banner"
                                         , "/ootd/{articleId}"
+                                        , "/ootd/{articleId}/comment"
                                         , "/ootd/rest/**"
                                         , "/static/**"
                                         , "/loginPage"

@@ -34,7 +34,7 @@ import java.util.UUID;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class OotdService {
+public class OotdArticleService {
     private final OotdArticleRepository ootdArticleRepository;
     private final OotdArticleImagesRepository ootdArticleImagesRepository;
     private final UserRepository userRepository;
