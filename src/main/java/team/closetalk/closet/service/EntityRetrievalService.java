@@ -21,7 +21,7 @@ public class EntityRetrievalService {
     private final UserRepository userRepository;
 
     // closetId로 해당 ClosetEntity 찾기
-    ClosetEntity getClosetEntity(String closetName, String nickname) {
+    public ClosetEntity getClosetEntity(String closetName, String nickname) {
         try {
             return closetRepository.findByClosetNameAndUserId_Nickname(closetName, nickname);
         } catch (Exception e) {

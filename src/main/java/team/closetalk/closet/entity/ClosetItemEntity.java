@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Map;
 
-@Getter
+@Data
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "closet_item")
@@ -25,7 +25,7 @@ public class ClosetItemEntity {
     private String brand;
     @Column(nullable = false)
     private String category;
-    @Column(name = "item_image_url", nullable = false)
+//    @Column(nullable = false)
     private String itemImageUrl;
 
     // 선택
@@ -38,8 +38,30 @@ public class ClosetItemEntity {
     @JoinColumn(name = "closet_id")
     private ClosetEntity closetId;
 
+
+    public ClosetItemEntity(
+            String brand,
+            String category,
+            String itemImageUrl,
+            String itemName,
+            Long price,
+            String description,
+            ClosetEntity closetId
+    ) {
+        this.createdAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+
+        // 필수 및 선택 항목 변경
+        this.brand = brand;
+        this.category = category;
+        this.itemImageUrl = itemImageUrl;
+        this.itemName = itemName;
+        this.price = price;
+        this.description = description;
+
+        this.closetId = closetId;
+    }
+
     // 아이템 수정
-    @Builder
     public ClosetItemEntity updateEntity(Map<String, String> itemParams, ClosetEntity closetId) {
         this.modifiedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 
@@ -73,4 +95,22 @@ public class ClosetItemEntity {
             return defaultValue;
         }
     }
+
+    private static String getValue(Map<String, String> itemParams, String key, String defaultValue) {
+        return itemParams.getOrDefault(key, defaultValue);
+    }
+
+    private static Long getLongValue(Map<String, String> itemParams, String key, Long defaultValue) {
+        String value = itemParams.get(key);
+        if (value != null && !value.isEmpty()) {
+            try {
+                return Long.parseLong(value);
+            } catch (NumberFormatException e) {
+                // 숫자로 변환할 수 없는 경우, 기본값 또는 오류 처리
+                return defaultValue;
+            }
+        }
+        return defaultValue;
+    }
+
 }
