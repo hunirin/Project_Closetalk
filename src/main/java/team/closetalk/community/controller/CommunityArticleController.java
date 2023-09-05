@@ -69,22 +69,7 @@ public class CommunityArticleController {
     public CommunityArticleDto createArticle(@RequestPart(value = "data") CommunityCreateArticleDto dto,
                                              @RequestPart(value = "imageUrl",
                                                      required = false) List<MultipartFile> imageUrlList,
-                                             Authentication authentication
-                                             ) {
-        Optional<List<MultipartFile>> optionalImageUrlList = Optional.ofNullable(imageUrlList);
-        if (optionalImageUrlList.isPresent())
-            return communityArticleService.createArticleWithImages(dto, imageUrlList, authentication);
-         else
-             return communityArticleService.createArticle(dto, authentication);
-    }
-
-    // 게시글 생성 (CLOSET)
-    @PostMapping("/create/closet")
-    public CommunityArticleDto createArticleWithCloset(@RequestPart(value = "data") CommunityCreateArticleDto dto,
-                                                       @RequestPart(value = "imageUrl",
-                                                               required = false) List<MultipartFile> imageUrlList,
-                                                       Authentication authentication
-    ) {
-            return communityArticleService.createArticleWithCloset(dto, imageUrlList, authentication);
+                                             Authentication authentication) {
+        return communityArticleService.createArticle(dto, imageUrlList, authentication);
     }
 }

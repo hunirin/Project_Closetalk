@@ -1,14 +1,13 @@
 package team.closetalk.community.service;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import team.closetalk.community.dto.CommunityArticleListDto;
+import team.closetalk.community.dto.article.response.CommunityArticleListDto;
 import team.closetalk.community.entity.CommunityArticleEntity;
 import team.closetalk.community.repository.CommunitySearchRepository;
 
@@ -25,7 +24,7 @@ public class CommunitySearchService {
                 pageNum, pageSize, Sort.by("id").ascending());
 
         Page<CommunityArticleEntity> communityEntityPage =
-                communitySearchRepository.findAllByTitleContainingOrContentContainingOrNicknameContaining(titleKeyword, contentKeyword, nicknameKeyword, pageable);
+                communitySearchRepository.findAllByTitleContainingOrContentContainingOrUserId_NicknameContaining(titleKeyword, contentKeyword, nicknameKeyword, pageable);
 
         return communityEntityPage.map(CommunityArticleListDto::fromEntity);
     }
@@ -46,7 +45,7 @@ public class CommunitySearchService {
                     pageNum, pageSize, Sort.by("id").ascending());
 
             Page<CommunityArticleEntity> communityEntityPage =
-                    communitySearchRepository.findAllByNicknameContaining(nicknameKeyword, pageable);
+                    communitySearchRepository.findAllByUserId_NicknameContaining(nicknameKeyword, pageable);
             return communityEntityPage.map(CommunityArticleListDto::fromEntity);
     }
 }

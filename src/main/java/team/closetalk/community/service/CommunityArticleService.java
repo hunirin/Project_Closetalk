@@ -47,7 +47,7 @@ public class CommunityArticleService {
     private final ArticleAndClosetItemRepository articleAndClosetItemRepository;
     private final EntityRetrievalService entityRetrievalService;
     private final CommunityCommentService communityCommentService;
-    private final CommunityArticleSaveImageService imageService;
+    private final CommunityArticleSaveImageService saveImageService;
 
     // 커뮤니티 전체 게시물 조회(페이지 단위로 조회)
     public Page<CommunityArticleListDto> readCommunityPaged(Integer pageNum, Integer pageSize) {
@@ -83,7 +83,7 @@ public class CommunityArticleService {
         List<CommunityCommentDto> commentDtoList =
                 communityCommentService.readCommentList(article.getId());
         List<CommunityArticleImagesEntity> imagesEntityList =
-                communityArticleImagesRepository.findAllByCommunityArticle_Id(article.getId());
+                communityArticleImagesRepository.findAllByCommunityArticleId_Id(article.getId());
         List<CommunityArticleImagesDto> imagesDtoList =
                 imagesEntityList.stream().map(CommunityArticleImagesDto::fromEntity).toList();
         List<CommunityArticleClosetItems> closetItemIdList =
@@ -130,53 +130,21 @@ public class CommunityArticleService {
         communityArticleRepository.save(article.deleteArticle());
     }
 
-    // 게시물 생성
+    // 게시물 생성(이미지 포함)
     public CommunityArticleDto createArticle(CommunityCreateArticleDto dto,
+                                             List<MultipartFile> imageUrlList,
                                              Authentication authentication) {
         UserEntity user = getUserEntity(authentication.getName());
         CommunityArticleEntity article =
                 new CommunityArticleEntity(dto.getCategory(), dto.getTitle(), dto.getContent(), user);
         communityArticleRepository.save(article);
-        return readArticle(article.getId());
-    }
-
-    // 게시물 생성(이미지 포함)
-    public CommunityArticleDto createArticleWithImages(CommunityCreateArticleDto dto,
-                                                       List<MultipartFile> imageUrlList,
-                                                       Authentication authentication) {
-        UserEntity user = getUserEntity(authentication.getName());
-        CommunityArticleEntity article =
-                new CommunityArticleEntity(dto.getCategory(), dto.getTitle(), dto.getContent(), user);
-        communityArticleRepository.save(article);
-        imageService.saveArticleImage(article, imageUrlList);
-        return readArticle(article.getId());
-    }
-
-    // 게시물 생성(옷장 포함)
-    public CommunityArticleDto createArticleWithCloset(CommunityCreateArticleDto dto,
-                                                       List<MultipartFile> imageUrlList,
-                                                       Authentication authentication) {
-        UserEntity user = getUserEntity(authentication.getName());
-        CommunityArticleEntity article =
-                new CommunityArticleEntity(dto.getCategory(), dto.getTitle(), dto.getContent(), user);
-        communityArticleRepository.save(article);
-
-        List<Long> closetItemNumList = dto.getSelectClosetItemNumList();
-
-        for (Long closetItemNum : closetItemNumList) {
-            ClosetItemEntity closetItem = closetItemRepository.findById(closetItemNum)
-                    .orElseThrow(() -> {
-                        log.error("해당 아이템을 찾을 수 없습니다.");
-                        return new ResponseStatusException(HttpStatus.NOT_FOUND);
-                    });
-            ArticleClosetItemId articleClosetItemId =
-                    new ArticleClosetItemId(article.getId(), closetItemNum);
-            CommunityArticleClosetItems communityArticleClosetItems =
-                    new CommunityArticleClosetItems(articleClosetItemId, article, closetItem);
-            articleAndClosetItemRepository.save(communityArticleClosetItems);
+        if (dto.getSelectClosetItemNumList() != null) saveImageService.saveArticleWithCloset(dto, article);
+        if (imageUrlList != null) {
+            saveImageService.saveArticleImage(article, imageUrlList);
+            CommunityArticleImagesEntity imagesEntityList =
+                    communityArticleImagesRepository.findAllByCommunityArticleId_Id(article.getId()).get(0);
+            communityArticleRepository.save(article.saveThumbnail(imagesEntityList.getImageUrl()));
         }
-
-        imageService.saveArticleImage(article, imageUrlList);
         return readArticle(article.getId());
     }
 

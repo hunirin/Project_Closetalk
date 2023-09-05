@@ -31,8 +31,8 @@ public class CommunityCommentEntity {
     private UserEntity userId;
 
     @ManyToOne
-    @JoinColumn(name = "community_article")
-    private CommunityArticleEntity communityArticle;
+    @JoinColumn(name = "community_article_id")
+    private CommunityArticleEntity communityArticleId;
 
     @ManyToOne
     @JoinColumn(name = "comment_id")
@@ -44,7 +44,7 @@ public class CommunityCommentEntity {
                                   CommunityCommentEntity comment) {
         this.content = content;
         this.userId = user;
-        this.communityArticle = article;
+        this.communityArticleId = article;
         this.commentId = comment;
         this.createdAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
