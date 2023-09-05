@@ -27,7 +27,7 @@ public class OotdArticleEntity {
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
 
-    @OneToMany(mappedBy = "article_id")
+    @OneToMany(mappedBy = "ootdArticle")
     private List<OotdArticleImagesEntity> ootdImages = new ArrayList<>();
 
     @ManyToOne
