@@ -11,6 +11,8 @@ import team.closetalk.user.entity.UserEntity;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -41,6 +43,9 @@ public class CommunityArticleEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity userId;
+
+    @OneToMany(mappedBy = "articleId")
+    private List<CommunityLikeEntity> likes = new ArrayList<>();
 
     public CommunityArticleEntity(Category category, String title,
                                   String content, UserEntity user) {
