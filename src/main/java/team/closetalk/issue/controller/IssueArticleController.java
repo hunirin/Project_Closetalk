@@ -54,7 +54,7 @@ public class IssueArticleController {
     @GetMapping
     public Page<IssueArticleListDto> readArticleList(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
-            @RequestParam(value = "limit", defaultValue = "0") Integer limit
+            @RequestParam(value = "limit", defaultValue = "10") Integer limit
     ) {
         return issueArticleService.readIssuePaged(page,limit);
     }
