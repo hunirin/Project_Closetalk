@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @Builder
 public class CommunityCommentReplyDto {
-    private String userName;
+    private String nickname;
     private String content;
     private String createdAt;    // 작성 날짜
 
@@ -20,14 +20,14 @@ public class CommunityCommentReplyDto {
                     .build();
         } else if (comment.getModifiedAt() != null) {
             return CommunityCommentReplyDto.builder()
-                    .userName(comment.getUserId().getNickname())
+                    .nickname(comment.getUserId().getNickname())
                     .content(comment.getContent())
                     .createdAt(comment.getCreatedAt()
                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + " (수정됨)")
                     .build();
         } else {
             return CommunityCommentReplyDto.builder()
-                    .userName(comment.getUserId().getNickname())
+                    .nickname(comment.getUserId().getNickname())
                     .content(comment.getContent())
                     .createdAt(comment.getCreatedAt()
                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))

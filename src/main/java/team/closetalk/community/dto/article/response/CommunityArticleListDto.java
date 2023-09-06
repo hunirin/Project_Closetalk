@@ -15,12 +15,13 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class CommunityArticleListDto {
     private Long id;
-    private Category category;    // 카테고리
+    private Category category;  // 카테고리
     private String title;       // 제목
     private Long hits;          // 조회수
-    private Long likeCount;     // 좋아요 수
+    private Long likes;     // 좋아요 수
     private String thumbnail;   // 대표이미지
-    private String createdAt;    // 작성 날짜
+    private String createdAt;   // 작성 날짜
+    private String nickname;    // 작성자
 
     // 게시글 목록 조회
     public static CommunityArticleListDto fromEntity(CommunityArticleEntity entity) {
@@ -30,14 +31,15 @@ public class CommunityArticleListDto {
                 .category(entity.getCategory())
                 .title(entity.getTitle())
                 .hits(entity.getHits())
-                .likeCount(entity.getLikeCount())
+                .likes(entity.getLikeCount())
                 .thumbnail(entity.getThumbnail())
                 .createdAt(entity.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))) // 임시
+                .nickname(entity.getUserId().getNickname())
                 .build();
     }
 
     // 좋아요 수 조회
     public void setLikeCount(Long likeCount) {
-        this.likeCount = likeCount;
+        this.likes = likeCount;
     }
 }

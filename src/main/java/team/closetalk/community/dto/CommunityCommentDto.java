@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Builder
 public class CommunityCommentDto {
-    private String userName;
+    private String nickname;
     private String content;
     private String createdAt;    // 작성 날짜
     private List<CommunityCommentReplyDto> replies;
@@ -23,7 +23,7 @@ public class CommunityCommentDto {
                     .build();
         } else if (comment.getModifiedAt() != null) {
             return CommunityCommentDto.builder()
-                    .userName(comment.getUserId().getNickname())
+                    .nickname(comment.getUserId().getNickname())
                     .content(comment.getContent())
                     .createdAt(comment.getCreatedAt()
                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + " (수정됨)")
@@ -31,7 +31,7 @@ public class CommunityCommentDto {
                     .build();
         } else {
             return CommunityCommentDto.builder()
-                    .userName(comment.getUserId().getNickname())
+                    .nickname(comment.getUserId().getNickname())
                     .content(comment.getContent())
                     .createdAt(comment.getCreatedAt()
                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))

@@ -18,12 +18,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommunityArticleDto {
     private Long id;
-    private Category category;    // 카테고리
+    private Category category;  // 카테고리
     private String title;       // 제목
     private String content;     // 내용
     private Long hits;          // 조회수
-    private Long likeCount;     // 좋아요 수
-    private String createdAt;    // 작성 날짜
+    private Long likes;     // 좋아요 수
+    private String createdAt;   // 작성 날짜
+    private String nickname;    // 작성자
 
     private List<ClosetItemDto> closetItems;
     private List<CommunityArticleImagesDto> communityImages;
@@ -41,10 +42,11 @@ public class CommunityArticleDto {
         dto.setTitle(entity.getTitle());
         dto.setContent(entity.getContent());
         dto.setHits(entity.getHits());
-        dto.setLikeCount(entity.getLikeCount());
+        dto.setLikes(entity.getLikeCount());
         dto.setCommunityComments(commentDtoList);
         dto.setCommunityImages(imageDtoList);
         dto.setClosetItems(closetItemDtoList);
+        dto.setNickname(entity.getUserId().getNickname());
 
         if (entity.getModifiedAt() == null) // 수정 시 created_at 변경
             dto.setCreatedAt(entity.getCreatedAt()
