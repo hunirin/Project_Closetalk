@@ -16,11 +16,11 @@ public class CommunityArticleImagesEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_article_id")
-    private CommunityArticleEntity communityArticle;
+    private CommunityArticleEntity communityArticleId;
 
     public CommunityArticleImagesEntity(CommunityArticleEntity article,
                                         String imageFilePath) {
-        this.communityArticle = article;
+        this.communityArticleId = article;
         this.imageUrl = imageFilePath;
     }
 }
