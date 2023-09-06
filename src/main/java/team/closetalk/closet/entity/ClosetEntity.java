@@ -11,7 +11,7 @@ import team.closetalk.user.entity.UserEntity;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "closet", uniqueConstraints = @UniqueConstraint(
-        columnNames = {"users_id", "closet_name"}))
+        columnNames = {"user_id", "closet_name"}))
 public class ClosetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class ClosetEntity {
     private Boolean isHidden;
 
     @ManyToOne
-    @JoinColumn(name = "users_id")
+    @JoinColumn(name = "user_id")
     private UserEntity userId;
 
     // 새로운 옷장 생성

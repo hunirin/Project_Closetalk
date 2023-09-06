@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.closet.dto.ClosetItemDto;
 import team.closetalk.closet.entity.ClosetEntity;
@@ -13,6 +14,12 @@ import team.closetalk.closet.repository.ClosetItemRepository;
 import team.closetalk.closet.repository.ClosetRepository;
 import team.closetalk.user.entity.UserEntity;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Slf4j
@@ -41,8 +48,67 @@ public class ClosetItemService {
         }
     }
 
-    // 2. 아이템 수정
-    public void modifyClosetItem(Long itemId, Map<String, String> itemParams,
+    // 2. 아이템 등록
+    public void createClosetItem(String closetName, ClosetItemEntity entity, MultipartFile itemImageUrl, Authentication authentication) {
+        String nickname = getUserEntity(authentication.getName()).getNickname();
+        ClosetEntity closetEntity = getClosetEntity(closetName, nickname);
+
+        if(!closetRepository.existsByClosetNameAndUserId_Nickname(closetName, nickname)) {
+            log.error("존재하지 않는 closet_name : {}", closetName);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        } else {
+            if (itemImageUrl != null && !itemImageUrl.isEmpty()) {
+
+                // 이미지 저장
+                String imageDir = String.format("src/main/resources/static/images/closetItem/%s/%s/", nickname, closetName);
+                try { // 읽고 쓰는데서 발생할 수 있는 예외 처리
+                    Files.createDirectories(Path.of(imageDir));
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+
+                // 저장되는 시간을 파일명으로
+                LocalDateTime currentTime = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+                String currentTimeStr = currentTime.format(formatter);
+
+                // 확장자를 포함한 이미지 이름
+                String originalFilename = itemImageUrl.getOriginalFilename();
+                String[] fileNameSplit = originalFilename.split("\\.");
+                String extension = fileNameSplit[fileNameSplit.length - 1];
+                String itemImageFilename = currentTimeStr + extension;
+                // 폴더와 이미지 이름을 포함한 파일 경로
+                String itemImagePath = imageDir + itemImageFilename; // 파일 경로
+                log.info(itemImagePath);
+                // MultipartFile을 저장
+                try {
+                    itemImageUrl.transferTo(Path.of(itemImagePath));
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+
+                ClosetItemEntity closetItem
+                        = new ClosetItemEntity(
+                        entity.getBrand(),
+                        entity.getCategory(),
+                        itemImagePath,
+                        entity.getItemName(),
+                        entity.getPrice(),
+                        entity.getDescription(),
+                        closetEntity);
+
+               closetItemRepository.save(closetItem);
+            } else {
+                log.error("itemImageUrl is null or empty");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "itemImageUrl is null or empty");
+            }
+        }
+    }
+
+    // 3. 아이템 수정
+    public void updateClosetItem(Long itemId, Map<String, String> itemParams,
                                  Authentication authentication) {
         String nickname = getUserEntity(authentication.getName()).getNickname();
         ClosetItemEntity item = getClosetItemEntity(itemId, nickname);
@@ -59,7 +125,7 @@ public class ClosetItemService {
         }
     }
 
-    // 3. 아이템 삭제
+    // 4. 아이템 삭제
     public void deleteClosetItem(Long itemId, Authentication authentication) {
         String nickname = getUserEntity(authentication.getName()).getNickname();
         ClosetEntity closetEntity = getClosetItemEntity(itemId, nickname).getClosetId();
