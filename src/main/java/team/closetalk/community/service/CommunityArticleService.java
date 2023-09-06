@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.closet.dto.ClosetItemDto;
-import team.closetalk.closet.entity.ClosetItemEntity;
 import team.closetalk.closet.repository.ClosetItemRepository;
 import team.closetalk.closet.service.EntityRetrievalService;
 import team.closetalk.community.dto.*;
@@ -20,7 +19,6 @@ import team.closetalk.community.dto.article.response.CommunityArticleDto;
 import team.closetalk.community.dto.article.response.CommunityArticleImagesDto;
 import team.closetalk.community.dto.article.response.CommunityArticleListDto;
 import team.closetalk.community.dto.article.request.CommunityCreateArticleDto;
-import team.closetalk.community.entity.composite.ArticleClosetItemId;
 import team.closetalk.community.entity.composite.CommunityArticleClosetItems;
 import team.closetalk.community.entity.CommunityArticleEntity;
 import team.closetalk.community.entity.CommunityArticleImagesEntity;
@@ -28,6 +26,7 @@ import team.closetalk.community.enumeration.Category;
 import team.closetalk.community.repository.ArticleAndClosetItemRepository;
 import team.closetalk.community.repository.CommunityArticleImagesRepository;
 import team.closetalk.community.repository.CommunityArticleRepository;
+import team.closetalk.community.repository.CommunityLikeRepository;
 import team.closetalk.user.entity.UserEntity;
 
 import java.time.LocalDateTime;
@@ -48,6 +47,7 @@ public class CommunityArticleService {
     private final EntityRetrievalService entityRetrievalService;
     private final CommunityCommentService communityCommentService;
     private final CommunityArticleSaveImageService saveImageService;
+    private final CommunityLikeRepository communityLikeRepository;
 
     // 커뮤니티 전체 게시물 조회(페이지 단위로 조회)
     public Page<CommunityArticleListDto> readCommunityPaged(Integer pageNum, Integer pageSize) {
@@ -56,7 +56,16 @@ public class CommunityArticleService {
 
         Page<CommunityArticleEntity> communityEntityPage =
                 communityArticleRepository.findAllByDeletedAtIsNull(pageable);
-        return communityEntityPage.map(CommunityArticleListDto::fromEntity);
+
+        Page<CommunityArticleListDto> articleListDtoPage = communityEntityPage.map(CommunityArticleListDto::fromEntity);
+
+        // 각 게시물의 좋아요 수 조회
+        articleListDtoPage.forEach(dto -> {
+            Long likeCount = countLike(dto.getId());
+            dto.setLikeCount(likeCount);
+        });
+
+        return articleListDtoPage;
     }
 
     // 카테고리별 게시물 조회(페이지 단위로 조회)
@@ -151,5 +160,10 @@ public class CommunityArticleService {
     // LoginId == authentication.getName() -> UserEntity 찾기
     public UserEntity getUserEntity(String loginId) {
         return entityRetrievalService.getUserEntity(loginId);
+    }
+
+    // 게시글 좋아요 수 체크
+    private Long countLike(Long articleId) {
+        return communityLikeRepository.countByArticleIdId(articleId);
     }
 }

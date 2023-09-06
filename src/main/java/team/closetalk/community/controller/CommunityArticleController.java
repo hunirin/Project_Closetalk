@@ -10,15 +10,16 @@ import team.closetalk.community.dto.article.response.CommunityArticleListDto;
 import team.closetalk.community.dto.article.request.CommunityCreateArticleDto;
 import team.closetalk.community.enumeration.Category;
 import team.closetalk.community.service.CommunityArticleService;
+import team.closetalk.community.service.CommunityLikeService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/community")
 @RequiredArgsConstructor
 public class CommunityArticleController {
     private final CommunityArticleService communityArticleService;
+    private final CommunityLikeService communityLikeService;
 
     // 게시글 목록 조회
     @GetMapping
@@ -71,5 +72,11 @@ public class CommunityArticleController {
                                                      required = false) List<MultipartFile> imageUrlList,
                                              Authentication authentication) {
         return communityArticleService.createArticle(dto, imageUrlList, authentication);
+    }
+
+    // 게시글 좋아요
+    @PostMapping("/like/{articleId}")
+    public String likeCommunityArticle(@PathVariable Long articleId, Authentication authentication) {
+        return communityLikeService.likeCommunityArticle(articleId, authentication);
     }
 }

@@ -11,6 +11,8 @@ import team.closetalk.user.entity.UserEntity;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -28,8 +30,12 @@ public class CommunityArticleEntity {
     private String title;       // 제목
     @Column(nullable = false)
     private String content;     // 내용
+    @Column(nullable = false)
+    private String nickname;    // 작성자
     @ColumnDefault(value = "0")
     private Long hits;          // 조회수
+    @ColumnDefault(value = "0")
+    private Long likeCount;     // 좋아요 수
     private String thumbnail;   // 대표이미지
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -42,6 +48,9 @@ public class CommunityArticleEntity {
     @JoinColumn(name = "user_id")
     private UserEntity userId;
 
+    @OneToMany(mappedBy = "articleId")
+    private List<CommunityLikeEntity> likes = new ArrayList<>();
+
     public CommunityArticleEntity(Category category, String title,
                                   String content, UserEntity user) {
         this.category = category;
@@ -50,6 +59,7 @@ public class CommunityArticleEntity {
         this.createdAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         this.userId = user;
         this.hits = 0L;
+        this.likeCount = 0L;
     }
 
     // 조회수 증가
@@ -58,6 +68,15 @@ public class CommunityArticleEntity {
         return this;
     }
 
+    // 좋아요 수 증가
+    public void increaseLikeCount() {
+        this.likeCount = likeCount + 1;
+    }
+
+    // 좋아요 수 감소
+    public void decreaseLikeCount() {
+        this.likeCount = likeCount - 1;
+    }
     // 게시글 삭제
     public CommunityArticleEntity deleteArticle() {
         this.deletedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));

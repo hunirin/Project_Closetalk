@@ -22,6 +22,7 @@ public class CommunityArticleDto {
     private String title;       // 제목
     private String content;     // 내용
     private Long hits;          // 조회수
+    private Long likeCount;     // 좋아요 수
     private String createdAt;    // 작성 날짜
 
     private List<ClosetItemDto> closetItems;
@@ -32,13 +33,15 @@ public class CommunityArticleDto {
     public static CommunityArticleDto detailFromEntity(CommunityArticleEntity entity,
                                                        List<CommunityCommentDto> commentDtoList,
                                                        List<CommunityArticleImagesDto> imageDtoList,
-                                                       List<ClosetItemDto> closetItemDtoList) {
+                                                       List<ClosetItemDto> closetItemDtoList
+                                                       ) {
         CommunityArticleDto dto = new CommunityArticleDto();
         dto.setId(entity.getId());
         dto.setCategory(entity.getCategory());
         dto.setTitle(entity.getTitle());
         dto.setContent(entity.getContent());
         dto.setHits(entity.getHits());
+        dto.setLikeCount(entity.getLikeCount());
         dto.setCommunityComments(commentDtoList);
         dto.setCommunityImages(imageDtoList);
         dto.setClosetItems(closetItemDtoList);
