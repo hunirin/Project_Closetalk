@@ -90,20 +90,17 @@ public class IssueArticleService {
         return uploadedIssueArticles;
     }
 
-    public IssueArticleDto readIssueArticle(Long id) {
-        Optional<IssueArticleEntity> optionalIssueArticle = issueArticleRepository.findById(id);
+    public IssueArticleDto readArticle(Long articleId) {
+        IssueArticleEntity article = issueArticleRepository.findById(articleId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        if (optionalIssueArticle.isPresent()) {
-            IssueArticleEntity entity = optionalIssueArticle.get();
-
-            // 조회수 증가
-            entity.setHits(entity.getHits() + 1);
-            issueArticleRepository.save(entity);
-
-            return IssueArticleDto.fromEntity(optionalIssueArticle.get());
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        if (article.getDeletedAt() != null) {
+            log.error("삭제된 게시물입니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+        // 조회수 증가
+        issueArticleRepository.save(article.increaseHit());
+        return IssueArticleDto.fromEntity(article);
     }
 
     public Page<IssueArticleListDto> readIssuePaged(Integer pageNum, Integer pageSize) {
