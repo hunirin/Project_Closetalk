@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import team.closetalk.user.dto.CustomUserDetails;
 
 import java.security.Key;
+import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.Date;
 
@@ -20,14 +21,22 @@ public class JwtUtils {
     private final Key signingKey;
     private final JwtParser jwtParser;
 
+    private static final byte[] JWT_SECRET = generateRandomKey(32);
+
     //시크릿키 주입?
-    public JwtUtils(@Value("${jwt.secret}") String jwtSecret) {
-        this.signingKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    public JwtUtils() {
+        this.signingKey = Keys.hmacShaKeyFor(JWT_SECRET);
 
         this.jwtParser = Jwts
                 .parserBuilder()
                 .setSigningKey(this.signingKey)
                 .build();
+    }
+    private static byte[] generateRandomKey(int keyLength) {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] key = new byte[keyLength];
+        secureRandom.nextBytes(key);
+        return key;
     }
 
     //Jwt 파싱

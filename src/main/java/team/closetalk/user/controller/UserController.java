@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,8 @@ import team.closetalk.user.service.EmailSendService;
 import team.closetalk.user.service.UserService;
 import team.closetalk.user.utils.JwtUtils;
 
+import java.io.IOException;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -26,6 +29,19 @@ public class UserController {
     private final JwtUtils jwtUtils;
 
     private final EmailSendService emailSendService;
+
+    //C
+    //이메일 인증 처리
+    @ResponseBody
+    @PostMapping(value = "/sendEmail")
+    public ResponseEntity<EmailAuthDto> sendAuthEmail(@RequestBody String email){
+        String code = emailSendService.makeEmailAuth(email.substring(1,email.length()-1));
+
+        EmailAuthDto emailAuthDto = new EmailAuthDto();
+        emailAuthDto.setAuthCode(code);
+
+        return ResponseEntity.status(HttpStatus.OK).body(emailAuthDto);
+    }
 
     //회원가입
     @PostMapping(value = "/register"
@@ -59,33 +75,8 @@ public class UserController {
 
     }
 
-    @PostMapping("/login")
-    public JwtTokenDto loginUser(@RequestParam("loginId") String loginId
-                            , @RequestParam("password") String password
-    ){
-        //반환된 값은 아이디 유무, 소셜여부까지 확인된 것(우선 없는 것만 통과)
-        CustomUserDetails responseUser = userService.loadUserByUsername(loginId);
-        if (!passwordEncoder.matches(password, responseUser.getPassword())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-
-        JwtTokenDto response = new JwtTokenDto();
-        response.setToken(jwtUtils.generateToken(responseUser));
-
-        return response;
-
-    }
-
-    //이메일 인증 처리
-    @ResponseBody
-    @PostMapping(value = "/sendEmail")
-    public ResponseEntity<EmailAuthDto> sendAuthEmail(@RequestBody String email){
-        String code = emailSendService.makeEmailAuth(email.substring(1,email.length()-1));
-
-        EmailAuthDto emailAuthDto = new EmailAuthDto();
-        emailAuthDto.setAuthCode(code);
-
-        return ResponseEntity.status(HttpStatus.OK).body(emailAuthDto);
-    }
-
+    //R
+    //로그인
     // Header -> Response token
     @PostMapping("/login-token")
     public ResponseEntity<?> loginUserToJwt(@RequestParam("loginId") String loginId,
@@ -105,4 +96,36 @@ public class UserController {
                 .body("Login successful");
     }
 
+    //회원정보 가져오기
+    @GetMapping
+    public CustomUserDetails readUserOne(Authentication authentication){
+        return userService.loadUserByUsername(CustomUserDetails.fromAuthentication(authentication).getLoginId());
+    }
+
+
+    //회원정보 수정
+    @PutMapping
+    public String updateUserOne(Authentication authentication, @RequestBody CustomUserDetails customUserDetails){
+        customUserDetails.setLoginId(CustomUserDetails.fromAuthentication(authentication).getLoginId());
+        customUserDetails.setPassword(passwordEncoder.encode(customUserDetails.getPassword()));
+        userService.updateUser(customUserDetails);
+
+        return "Update user information successful";
+    }
+
+    //프로필 이미지 변경
+    @PutMapping("/profile-image")
+    public String updateProfileImage(Authentication authentication, @RequestParam("profile-image") MultipartFile profileImage) throws IOException {
+        userService.updateProfileImage(authentication, profileImage);
+        return "Update profile image successful";
+    }
+
+
+    //회원 탈퇴
+    @DeleteMapping
+    public String deleteUserOne(Authentication authentication){
+        userService.deleteUser(CustomUserDetails.fromAuthentication(authentication).getLoginId());
+        //로그아웃처리
+        return "Delete user successful";
+    }
 }

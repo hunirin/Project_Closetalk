@@ -1,8 +1,10 @@
 package team.closetalk.user.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -28,6 +30,7 @@ import java.util.regex.Pattern;
 public class UserService implements UserDetailsManager {
     private final UserRepository userRepository;
 
+    private final String PROFILE_IMAGE_DIRECTORY_THYMELEAF = "/static/images/profile/";
     private final String PROFILE_IMAGE_DIRECTORY = "src/main/resources/static/images/profile/";
     private final String PROFILE_IMAGE_DEFAULT = "default_profile.png";
 
@@ -39,7 +42,7 @@ public class UserService implements UserDetailsManager {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        String imagePath = PROFILE_IMAGE_DIRECTORY + PROFILE_IMAGE_DEFAULT;
+        String imagePath = PROFILE_IMAGE_DIRECTORY_THYMELEAF + PROFILE_IMAGE_DEFAULT;
 
         //이미지를 등록한 경우 imagePath 변경 및 이미지 파일 저장
         if(profileImage != null && !profileImage.isEmpty()){
@@ -48,9 +51,10 @@ public class UserService implements UserDetailsManager {
             String extension = originalFilenameSplit[originalFilenameSplit.length - 1];
 
             //이미지 저장
-            imagePath = PROFILE_IMAGE_DIRECTORY + loginId + "." + extension;
+            imagePath = PROFILE_IMAGE_DIRECTORY_THYMELEAF + loginId + "." + extension;
             try {
-                profileImage.transferTo(Path.of(imagePath));
+                profileImage.transferTo(Path.of(PROFILE_IMAGE_DIRECTORY + loginId + "." + extension));
+
             } catch(IOException e){
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -118,6 +122,7 @@ public class UserService implements UserDetailsManager {
         Optional<UserEntity> optionalUser = userRepository.findByLoginId(loginId);
 
         if(optionalUser.isEmpty()) throw new UsernameNotFoundException(loginId);
+        if(optionalUser.get().getIsDeleted()) throw new UsernameNotFoundException(loginId);
 
         return CustomUserDetails.fromEntity(optionalUser.get());
     }
@@ -125,12 +130,54 @@ public class UserService implements UserDetailsManager {
 
     @Override
     public void updateUser(UserDetails user) {
+        CustomUserDetails customUserDetails = (CustomUserDetails) user;
 
+        Optional<UserEntity> optionalUser = userRepository.findByLoginId(customUserDetails.getLoginId());
+        if(optionalUser.isEmpty()) throw new UsernameNotFoundException(customUserDetails.getLoginId());
+
+        UserEntity userEntity = optionalUser.get();
+        userEntity.setPassword(customUserDetails.getPassword());
+        userEntity.setNickname(customUserDetails.getNickname());
+
+        userRepository.save(userEntity);
+    }
+
+    public void updateProfileImage(Authentication authentication, MultipartFile profileImage) throws IOException {
+        String loginId = CustomUserDetails.fromAuthentication(authentication).getLoginId();
+
+        Optional<UserEntity> optionalUser = userRepository.findByLoginId(loginId);
+        if(optionalUser.isEmpty()) throw new UsernameNotFoundException(loginId);
+
+        UserEntity userEntity = optionalUser.get();
+        if(deleteProfileImageFile(userEntity.getProfileImageUrl())){
+            String imagePath = saveProfileImage(profileImage, loginId);
+            userEntity.setProfileImageUrl(imagePath);
+
+            userRepository.save(userEntity);
+
+        } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+
+    private boolean deleteProfileImageFile(String profileImageUrl) throws IOException {
+        if(profileImageUrl.contains("default_profile.png")) return true;
+
+        return Files.deleteIfExists(Path.of("src/main/resources" + profileImageUrl));
     }
 
     @Override
+    @Transactional
     public void deleteUser(String username) {
+        Optional<UserEntity> optionalUser = userRepository.findByLoginId(username);
+        if(optionalUser.isEmpty()) throw new UsernameNotFoundException(username);
 
+        String profileImageUrl = userRepository.findByLoginId(username).get().getProfileImageUrl();
+        try{
+            deleteProfileImageFile(profileImageUrl);
+        } catch (Exception e){
+            log.error(e.getMessage());
+        }
+        optionalUser.get().setIsDeleted(true);
+        userRepository.save(optionalUser.get());
     }
 
     @Override
