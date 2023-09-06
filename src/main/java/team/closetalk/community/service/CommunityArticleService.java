@@ -18,12 +18,14 @@ import team.closetalk.community.entity.CommunityArticleImagesEntity;
 import team.closetalk.community.enumeration.Category;
 import team.closetalk.community.repository.CommunityArticleImagesRepository;
 import team.closetalk.community.repository.CommunityArticleRepository;
+import team.closetalk.community.repository.CommunityLikeRepository;
 import team.closetalk.user.entity.UserEntity;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -35,6 +37,7 @@ public class CommunityArticleService {
     private final EntityRetrievalService entityRetrievalService;
     private final CommunityCommentService communityCommentService;
     private final CommunityArticleSaveImageService imageService;
+    private final CommunityLikeRepository communityLikeRepository;
 
     // 커뮤니티 전체 게시물 조회(페이지 단위로 조회)
     public Page<CommunityArticleListDto> readCommunityPaged(Integer pageNum, Integer pageSize) {
@@ -43,7 +46,16 @@ public class CommunityArticleService {
 
         Page<CommunityArticleEntity> communityEntityPage =
                 communityArticleRepository.findAllByDeletedAtIsNull(pageable);
-        return communityEntityPage.map(CommunityArticleListDto::fromEntity);
+
+        Page<CommunityArticleListDto> articleListDtoPage = communityEntityPage.map(CommunityArticleListDto::fromEntity);
+
+        // 각 게시물의 좋아요 수 조회
+        articleListDtoPage.forEach(dto -> {
+            Long likeCount = countLike(dto.getId());
+            dto.setLikeCount(likeCount);
+        });
+
+        return articleListDtoPage;
     }
 
     // 카테고리별 게시물 조회(페이지 단위로 조회)
@@ -73,8 +85,9 @@ public class CommunityArticleService {
                 communityArticleImagesRepository.findAllByCommunityArticle_Id(article.getId());
         List<CommunityArticleImagesDto> imagesDtoList =
                 imagesEntityList.stream().map(CommunityArticleImagesDto::fromEntity).toList();
+        Long likeCount = countLike(articleId);
 
-        return CommunityArticleDto.detailFromEntity(article, commentDtoList, imagesDtoList);
+        return CommunityArticleDto.detailFromEntity(article, commentDtoList, imagesDtoList, likeCount);
     }
 
     // 게시글 수정
@@ -131,5 +144,10 @@ public class CommunityArticleService {
     // LoginId == authentication.getName() -> UserEntity 찾기
     public UserEntity getUserEntity(String loginId) {
         return entityRetrievalService.getUserEntity(loginId);
+    }
+
+    // 게시글 좋아요 수 체크
+    private Long countLike(Long articleId) {
+        return communityLikeRepository.countByArticleIdId(articleId);
     }
 }
