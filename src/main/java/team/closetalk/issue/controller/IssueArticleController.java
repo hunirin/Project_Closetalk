@@ -26,15 +26,6 @@ import java.util.List;
 public class IssueArticleController {
     private final IssueArticleService issueArticleService;
 
-    // POST /issue/create
-    @PostMapping("/create")
-    @ResponseBody
-    public IssueArticleDto create(
-            @RequestBody IssueArticleDto dto
-    ) {
-        issueArticleService.createIssueArticle(dto);
-        return dto;
-    }
 
     // 이미지 업로드
     @PostMapping(
@@ -68,11 +59,12 @@ public class IssueArticleController {
         return issueArticleService.readIssuePaged(page,limit);
     }
 
-    // GET /issue/{id}
-    @GetMapping("/{id}")
-    @ResponseBody
-    public IssueArticleDto read(@PathVariable("id") Long id) {
-        return issueArticleService.readIssueArticle(id);
+    // 이슈 게시글 상세 조회
+    @GetMapping("/{articleId}")
+    public IssueArticleDto readArticle(
+            @PathVariable Long articleId
+    ) {
+        return issueArticleService.readArticle(articleId);
     }
 
     // PUT /issue/{id}
