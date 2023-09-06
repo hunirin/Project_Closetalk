@@ -63,4 +63,10 @@ public class CommunityArticleEntity {
         this.deletedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         return this;
     }
+
+    // 썸네일 저장
+    public CommunityArticleEntity saveThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+        return this;
+    }
 }

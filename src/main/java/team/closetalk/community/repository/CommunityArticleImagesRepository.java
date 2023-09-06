@@ -6,5 +6,5 @@ import team.closetalk.community.entity.CommunityArticleImagesEntity;
 import java.util.List;
 
 public interface CommunityArticleImagesRepository extends JpaRepository<CommunityArticleImagesEntity, Long> {
-    List<CommunityArticleImagesEntity> findAllByCommunityArticle_Id(Long articleId);
+    List<CommunityArticleImagesEntity> findAllByCommunityArticleId_Id(Long articleId);
 }
