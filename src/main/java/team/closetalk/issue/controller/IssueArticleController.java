@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +51,7 @@ public class IssueArticleController {
         responseDto.setMessage("이미지가 추가되었습니다.");
         return responseDto;
     }
-    // 이슈 게시글 전체 조회
+    // 게시글 전체 조회
     @GetMapping
     public Page<IssueArticleListDto> readArticleList(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -59,7 +60,7 @@ public class IssueArticleController {
         return issueArticleService.readIssuePaged(page,limit);
     }
 
-    // 이슈 게시글 상세 조회
+    // 게시글 상세 조회
     @GetMapping("/{articleId}")
     public IssueArticleDto readArticle(
             @PathVariable Long articleId
@@ -67,21 +68,22 @@ public class IssueArticleController {
         return issueArticleService.readArticle(articleId);
     }
 
-    // PUT /issue/{id}
-    @PutMapping("/{id}")
-    @ResponseBody
-    public IssueArticleDto update(
-            @PathVariable("id") Long id,
-            @RequestBody IssueArticleDto dto
+    // 게시글 수정
+    @PutMapping("/{articleId}")
+    public IssueArticleDto updateArticle(
+            @PathVariable("articleId") Long aritcleId,
+            @RequestBody IssueArticleDto dto,
+            Authentication authentication
     ) {
-        return issueArticleService.updateIssueArticle(id, dto);
+        return issueArticleService.updateArticle(aritcleId, authentication, dto);
     }
 
-    // DELETE /issue/{id}
-    @DeleteMapping("/{id}")
-    @ResponseBody
-    public void delete(
-            @PathVariable("id") Long id) {
-        issueArticleService.deleteIssueArticle(id);
+    // 게시글 삭제
+    @DeleteMapping("/{articleId}")
+    public void deleteArticle(
+            @PathVariable("articleId") Long articleId,
+            Authentication authentication
+    ) {
+        issueArticleService.deleteArticle(articleId, authentication);
     }
 }

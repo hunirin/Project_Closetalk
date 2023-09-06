@@ -5,7 +5,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import team.closetalk.issue.entity.IssueArticleEntity;
 
-public interface IssueArticleRepository extends JpaRepository<IssueArticleEntity, Long> {
+import java.util.Optional;
 
+public interface IssueArticleRepository extends JpaRepository<IssueArticleEntity, Long> {
     Page<IssueArticleEntity> findAllByDeletedAtIsNull(Pageable pageable);
+
+    Optional<IssueArticleEntity> findByIdAndUserId_Id(Long articleId, Long userId);
 }
