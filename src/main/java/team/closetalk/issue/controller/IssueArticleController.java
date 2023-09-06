@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import team.closetalk.issue.dto.IssueArticleDto;
+import team.closetalk.issue.dto.IssueArticleListDto;
 import team.closetalk.issue.dto.ResponseDto;
 import team.closetalk.issue.service.IssueArticleService;
 
@@ -19,12 +20,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
-@Slf4j
-@Controller
+@RestController
 @RequestMapping("/issue")
 @RequiredArgsConstructor
 public class IssueArticleController {
-    private final IssueArticleService service;
+    private final IssueArticleService issueArticleService;
 
     // POST /issue/create
     @PostMapping("/create")
@@ -32,8 +32,7 @@ public class IssueArticleController {
     public IssueArticleDto create(
             @RequestBody IssueArticleDto dto
     ) {
-        service.createIssueArticle(dto);
-        dto.setCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+        issueArticleService.createIssueArticle(dto);
         return dto;
     }
 
@@ -60,24 +59,20 @@ public class IssueArticleController {
         responseDto.setMessage("이미지가 추가되었습니다.");
         return responseDto;
     }
-
-//    @GetMapping("/main")
-//    public String getIssues() {
-//        return "issue";
-//    }
-
-    // GET /issue
+    // 이슈 게시글 전체 조회
     @GetMapping
-    @ResponseBody
-    public Page<IssueArticleDto> readAll() {
-        return service.readIssueArticleAll(0, 8);
+    public Page<IssueArticleListDto> readArticleList(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "0") Integer limit
+    ) {
+        return issueArticleService.readIssuePaged(page,limit);
     }
 
     // GET /issue/{id}
     @GetMapping("/{id}")
     @ResponseBody
     public IssueArticleDto read(@PathVariable("id") Long id) {
-        return service.readIssueArticle(id);
+        return issueArticleService.readIssueArticle(id);
     }
 
     // PUT /issue/{id}
@@ -87,8 +82,7 @@ public class IssueArticleController {
             @PathVariable("id") Long id,
             @RequestBody IssueArticleDto dto
     ) {
-        dto.setModifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
-        return service.updateIssueArticle(id, dto);
+        return issueArticleService.updateIssueArticle(id, dto);
     }
 
     // DELETE /issue/{id}
@@ -96,14 +90,6 @@ public class IssueArticleController {
     @ResponseBody
     public void delete(
             @PathVariable("id") Long id) {
-        service.deleteIssueArticle(id);
-    }
-
-    // 수정 필요
-    @GetMapping("/issueMain")
-    public String getIssues(Model model) {
-        Page<IssueArticleDto> issueArticlePage = service.readIssueArticleAll(0, 8);
-        model.addAttribute("issueList", issueArticlePage.getContent());
-        return "issueMain";
+        issueArticleService.deleteIssueArticle(id);
     }
 }

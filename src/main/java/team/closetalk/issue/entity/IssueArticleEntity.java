@@ -37,6 +37,8 @@ public class IssueArticleEntity {
     private LocalDateTime createdAt;
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "issueArticle")
     private List<IssueArticleImageEntity> issueImages = new ArrayList<>();
@@ -58,6 +60,11 @@ public class IssueArticleEntity {
     // 조회수 증가
     public IssueArticleEntity increaseHit() {
         this.hits = hits + 1;
+        return this;
+    }
+
+    public IssueArticleEntity deleteArticle() {
+        this.deletedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         return this;
     }
 }

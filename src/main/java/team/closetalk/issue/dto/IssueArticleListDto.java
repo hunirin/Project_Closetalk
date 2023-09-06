@@ -23,9 +23,9 @@ public class IssueArticleListDto {
     private String nickname;    // 작성자
 
     // 게시글 전체 조회
-    public static CommunityArticleListDto fromEntity(IssueArticleEntity entity) {
+    public static IssueArticleListDto fromEntity(IssueArticleEntity entity) {
 
-        return CommunityArticleListDto.builder()
+        return IssueArticleListDto.builder()
                 .id(entity.getId())
                 .category(entity.getCategory())
                 .title(entity.getTitle())

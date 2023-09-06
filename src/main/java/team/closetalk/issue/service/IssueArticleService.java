@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.issue.dto.IssueArticleDto;
+import team.closetalk.issue.dto.IssueArticleListDto;
 import team.closetalk.issue.dto.IssueBannerDto;
 import team.closetalk.issue.entity.IssueArticleEntity;
 import team.closetalk.issue.entity.IssueArticleImageEntity;
@@ -31,15 +32,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class IssueArticleService {
     private final IssueArticleRepository issueArticleRepository;
-
-    public IssueArticleDto createIssueArticle(IssueArticleDto dto) {
-        IssueArticleEntity newIssueArticle = new IssueArticleEntity();
-        newIssueArticle.setTitle(dto.getTitle());
-        newIssueArticle.setContent(dto.getContent());
-        newIssueArticle.setHits(dto.getHits());
-        newIssueArticle.setCreatedAt(dto.getCreatedAt());
-        return IssueArticleDto.fromEntity(issueArticleRepository.save(newIssueArticle));
-    }
 
     // 이슈 이미지 업로드 -- 수정필요
     // 1. thumbnail에 첫번째 사진 저장하기
@@ -114,18 +106,14 @@ public class IssueArticleService {
         }
     }
 
-    public Page<IssueArticleDto> readIssueArticleAll(
-            @RequestParam(value = "page", defaultValue = "1") Integer pageNumber,
-            @RequestParam(value = "limit", defaultValue = "8") Integer pageSize
-    ) {
-        Pageable pageable = PageRequest.of(0, 8);
-//        Page<IssueArticleDto> issueArticlePage = new ArrayList<>();
-        Page<IssueArticleEntity> issueArticleEntityPage = issueArticleRepository.findAll(pageable);
-        List<IssueArticleDto> issueArticleDtoList = new ArrayList<>();
-        for (IssueArticleEntity entity : issueArticleEntityPage) {
-            issueArticleDtoList.add(IssueArticleDto.fromEntity(entity));
-        }
-        return issueArticleEntityPage.map(IssueArticleDto::fromEntity);
+    public Page<IssueArticleListDto> readIssuePaged(Integer pageNum, Integer pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNum, pageSize, Sort.by("id").ascending());
+
+        Page<IssueArticleEntity> issueArticleEntityPage =
+                issueArticleRepository.findAllByDeletedAtIsNull(pageable);
+
+        return issueArticleEntityPage.map(IssueArticleListDto::fromEntity);
     }
 
     public IssueArticleDto updateIssueArticle(Long id, IssueArticleDto dto) {
@@ -135,8 +123,6 @@ public class IssueArticleService {
             issueArticle.setTitle(dto.getTitle());
             issueArticle.setContent(dto.getContent());
             issueArticle.setHits(dto.getHits());
-//            issueArticle.setImageUrl(dto.getImageUrl());
-            issueArticle.setModifiedAt(dto.getModifiedAt());
             issueArticleRepository.save(issueArticle);
             return IssueArticleDto.fromEntity(issueArticle);
         }
