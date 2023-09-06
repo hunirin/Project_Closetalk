@@ -20,6 +20,7 @@ public class CommunityArticleDto {
     private String title;       // 제목
     private String content;     // 내용
     private Long hits;          // 조회수
+    private Long likeCount;     // 좋아요 수
     private String createdAt;    // 작성 날짜
 
     private List<CommunityArticleImagesDto> communityImages;
@@ -28,13 +29,16 @@ public class CommunityArticleDto {
     // 게시글 상세 조회
     public static CommunityArticleDto detailFromEntity(CommunityArticleEntity entity,
                                                        List<CommunityCommentDto> commentDtoList,
-                                                       List<CommunityArticleImagesDto> imageDtoList) {
+                                                       List<CommunityArticleImagesDto> imageDtoList,
+                                                       Long likeCount
+                                                       ) {
         CommunityArticleDto dto = new CommunityArticleDto();
         dto.setId(entity.getId());
         dto.setCategory(entity.getCategory());
         dto.setTitle(entity.getTitle());
         dto.setContent(entity.getContent());
         dto.setHits(entity.getHits());
+        dto.setLikeCount(likeCount);
         dto.setCommunityComments(commentDtoList);
         dto.setCommunityImages(imageDtoList);
 
@@ -44,6 +48,7 @@ public class CommunityArticleDto {
         else
             dto.setCreatedAt(entity.getCreatedAt()
                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + " (수정됨)");
+
         return dto;
     }
 }
