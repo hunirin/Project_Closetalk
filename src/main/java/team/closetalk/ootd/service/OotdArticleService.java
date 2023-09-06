@@ -91,6 +91,7 @@ public class OotdArticleService {
             String imagePath = saveOotdImageFile(imageList.get(i), articleId);
             OotdArticleImagesEntity imageEntity = new OotdArticleImagesEntity();
             imageEntity.setImageUrl(imagePath);
+            imageEntity.setOotdArticle(ootdArticleEntity);
             ootdArticleImagesRepository.save(imageEntity);
             if(i == 0) { //OOTD ARTICLE 썸네일 경로 저장
                 savedOotdArticle.setThumbnail(imagePath);
