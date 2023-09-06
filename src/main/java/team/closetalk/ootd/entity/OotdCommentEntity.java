@@ -28,7 +28,7 @@ public class OotdCommentEntity {
     private LocalDate deletedAt;
 
     @ManyToOne
-    @JoinColumn(name = "users_id")
+    @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
     @ManyToOne
