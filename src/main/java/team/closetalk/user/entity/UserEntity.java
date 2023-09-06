@@ -40,5 +40,8 @@ public class UserEntity {
     @ColumnDefault(value = "'USER'")
     private String userRole;
     private Date createdAt;
+    @ColumnDefault(value = "false")
+    private Boolean isDeleted;
+
 
 }
