@@ -11,7 +11,7 @@ import team.closetalk.community.dto.article.response.CommunityArticleListDto;
 import team.closetalk.mypage.service.LikedArticleService;
 
 @RestController
-@RequestMapping("/mypage")
+@RequestMapping("/myPage")
 @RequiredArgsConstructor
 public class LikeArticleController {
     private final LikedArticleService likedArticleService;
