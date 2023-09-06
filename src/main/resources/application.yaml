@@ -20,7 +20,7 @@ spring:
 
   mvc:
     static-path-pattern: "/static/**"
-    hiddenmethod:
+    hidden-method:
       filter:
         enabled: true
 
