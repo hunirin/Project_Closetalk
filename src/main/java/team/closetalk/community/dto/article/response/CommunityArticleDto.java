@@ -1,9 +1,11 @@
-package team.closetalk.community.dto;
+package team.closetalk.community.dto.article.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import team.closetalk.closet.dto.ClosetItemDto;
+import team.closetalk.community.dto.CommunityCommentDto;
 import team.closetalk.community.entity.CommunityArticleEntity;
 import team.closetalk.community.enumeration.Category;
 
@@ -23,6 +25,7 @@ public class CommunityArticleDto {
     private Long likeCount;     // 좋아요 수
     private String createdAt;    // 작성 날짜
 
+    private List<ClosetItemDto> closetItems;
     private List<CommunityArticleImagesDto> communityImages;
     private List<CommunityCommentDto> communityComments;
 
@@ -30,6 +33,7 @@ public class CommunityArticleDto {
     public static CommunityArticleDto detailFromEntity(CommunityArticleEntity entity,
                                                        List<CommunityCommentDto> commentDtoList,
                                                        List<CommunityArticleImagesDto> imageDtoList,
+                                                       List<ClosetItemDto> closetItemDtoList,
                                                        Long likeCount
                                                        ) {
         CommunityArticleDto dto = new CommunityArticleDto();
@@ -41,6 +45,7 @@ public class CommunityArticleDto {
         dto.setLikeCount(likeCount);
         dto.setCommunityComments(commentDtoList);
         dto.setCommunityImages(imageDtoList);
+        dto.setClosetItems(closetItemDtoList);
 
         if (entity.getModifiedAt() == null) // 수정 시 created_at 변경
             dto.setCreatedAt(entity.getCreatedAt()
@@ -48,7 +53,6 @@ public class CommunityArticleDto {
         else
             dto.setCreatedAt(entity.getCreatedAt()
                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + " (수정됨)");
-
         return dto;
     }
 }

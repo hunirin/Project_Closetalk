@@ -1,4 +1,4 @@
-package team.closetalk.community.dto;
+package team.closetalk.community.dto.article.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
