@@ -29,7 +29,7 @@ public class CommunityCommentService {
     public List<CommunityCommentDto> readCommentList(Long articleId) {
         // 해당 게시물의 모든 댓글 불러오기(CommentId == null -> 대댓글이 아님)
         List<CommunityCommentEntity> commentEntities =
-                communityCommentRepository.findAllByCommunityArticle_IdAndCommentId(articleId, null);
+                communityCommentRepository.findAllByCommunityArticleId_IdAndCommentId(articleId, null);
 
         // commentList -> 반환을 위한 전체 댓글 목록 생성
         List<CommunityCommentDto> commentList = new ArrayList<>();
@@ -81,7 +81,7 @@ public class CommunityCommentService {
         UserEntity user = getUserEntity(authentication.getName());
 
         // 해당 게시물의 댓글인지 and 댓글 삭제 시도하는 사용자가 해당 댓글 작성자인지
-        if (comment.getCommunityArticle().equals(article) && comment.getUserId().equals(user)) {
+        if (comment.getCommunityArticleId().equals(article) && comment.getUserId().equals(user)) {
             communityCommentRepository.save(comment.updateEntity(content));
             log.info("게시물 [{}]의 [{}]번 댓글 수정 완료", article.getTitle(), commentId);
         } else {
@@ -97,7 +97,7 @@ public class CommunityCommentService {
         UserEntity user = getUserEntity(authentication.getName());
 
         // 해당 게시물의 댓글인지 and 댓글 삭제 시도하는 사용자가 해당 댓글 작성자인지
-        if (comment.getCommunityArticle().equals(article) && comment.getUserId().equals(user)) {
+        if (comment.getCommunityArticleId().equals(article) && comment.getUserId().equals(user)) {
             communityCommentRepository.save(comment.deleteEntity());
             log.info("게시물 [{}]의 [{}]번 댓글 삭제 완료", article.getTitle(), commentId);
         } else {

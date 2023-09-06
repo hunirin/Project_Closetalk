@@ -5,9 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import team.closetalk.community.dto.CommunityArticleDto;
-import team.closetalk.community.dto.CommunityArticleListDto;
-import team.closetalk.community.dto.CommunityCreateArticleDto;
+import team.closetalk.community.dto.article.response.CommunityArticleDto;
+import team.closetalk.community.dto.article.response.CommunityArticleListDto;
+import team.closetalk.community.dto.article.request.CommunityCreateArticleDto;
 import team.closetalk.community.enumeration.Category;
 import team.closetalk.community.service.CommunityArticleService;
 
@@ -64,17 +64,12 @@ public class CommunityArticleController {
         communityArticleService.deleteArticle(articleId, authentication);
     }
 
-    // 게시글 생성
+    // 게시글 생성 (COMMUNITY)
     @PostMapping("/create")
     public CommunityArticleDto createArticle(@RequestPart(value = "data") CommunityCreateArticleDto dto,
                                              @RequestPart(value = "imageUrl",
                                                      required = false) List<MultipartFile> imageUrlList,
-                                             Authentication authentication
-                                             ) {
-        Optional<List<MultipartFile>> optionalImageUrlList = Optional.ofNullable(imageUrlList);
-        if (optionalImageUrlList.isPresent())
-            return communityArticleService.createArticleWithImages(dto, imageUrlList, authentication);
-         else
-             return communityArticleService.createArticle(dto, authentication);
+                                             Authentication authentication) {
+        return communityArticleService.createArticle(dto, imageUrlList, authentication);
     }
 }

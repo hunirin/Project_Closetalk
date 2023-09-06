@@ -1,10 +1,9 @@
-package team.closetalk.community.dto;
+package team.closetalk.community.dto.article.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 import team.closetalk.community.enumeration.Category;
 
 import java.util.List;
@@ -18,5 +17,5 @@ public class CommunityCreateArticleDto {
     private String title;       // 제목
     private String content;     // 내용
 
-    private List<MultipartFile> communityImages;
+    private List<Long> selectClosetItemNumList;
 }

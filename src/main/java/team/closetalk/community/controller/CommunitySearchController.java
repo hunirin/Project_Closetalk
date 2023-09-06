@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import team.closetalk.community.dto.CommunityArticleListDto;
+import team.closetalk.community.dto.article.response.CommunityArticleListDto;
 import team.closetalk.community.service.CommunitySearchService;
 
 @RestController

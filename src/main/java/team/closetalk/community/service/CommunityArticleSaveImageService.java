@@ -6,8 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import team.closetalk.closet.entity.ClosetItemEntity;
+import team.closetalk.closet.repository.ClosetItemRepository;
+import team.closetalk.community.dto.article.request.CommunityCreateArticleDto;
 import team.closetalk.community.entity.CommunityArticleEntity;
 import team.closetalk.community.entity.CommunityArticleImagesEntity;
+import team.closetalk.community.entity.composite.ArticleClosetItemId;
+import team.closetalk.community.entity.composite.CommunityArticleClosetItems;
+import team.closetalk.community.repository.ArticleAndClosetItemRepository;
 import team.closetalk.community.repository.CommunityArticleImagesRepository;
 
 import java.io.IOException;
@@ -20,7 +26,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommunityArticleSaveImageService {
     private final CommunityArticleImagesRepository imagesRepository;
+    private final ClosetItemRepository closetItemRepository;
+    private final ArticleAndClosetItemRepository articleAndClosetItemRepository;
 
+    // 이미지 저장
     public void saveArticleImage(CommunityArticleEntity article,
                                     List<MultipartFile> articleImages){
         //이미지 저장 디렉토리 생성
@@ -44,6 +53,24 @@ public class CommunityArticleSaveImageService {
             }
 
             imagesRepository.save(new CommunityArticleImagesEntity(article ,imageFilePath));
+        }
+    }
+
+    // 옷장 아이템 저장
+    public void saveArticleWithCloset(CommunityCreateArticleDto dto, CommunityArticleEntity article) {
+        List<Long> closetItemNumList = dto.getSelectClosetItemNumList();
+
+        for (Long closetItemNum : closetItemNumList) {
+            ClosetItemEntity closetItem = closetItemRepository.findById(closetItemNum)
+                    .orElseThrow(() -> {
+                        log.error("해당 아이템을 찾을 수 없습니다.");
+                        return new ResponseStatusException(HttpStatus.NOT_FOUND);
+                    });
+            ArticleClosetItemId articleClosetItemId =
+                    new ArticleClosetItemId(article.getId(), closetItemNum);
+            CommunityArticleClosetItems communityArticleClosetItems =
+                    new CommunityArticleClosetItems(articleClosetItemId, article, closetItem);
+            articleAndClosetItemRepository.save(communityArticleClosetItems);
         }
     }
 }

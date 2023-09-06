@@ -6,6 +6,6 @@ import team.closetalk.community.entity.CommunityCommentEntity;
 import java.util.List;
 
 public interface CommunityCommentRepository extends JpaRepository<CommunityCommentEntity, Long> {
-    List<CommunityCommentEntity> findAllByCommunityArticle_IdAndCommentId(Long articleId, CommunityCommentEntity comment);
+    List<CommunityCommentEntity> findAllByCommunityArticleId_IdAndCommentId(Long articleId, CommunityCommentEntity comment);
     List<CommunityCommentEntity> findAllByCommentId_Id(Long commentId);
 }
