@@ -9,7 +9,7 @@ import team.closetalk.community.entity.CommunityArticleEntity;
 
 @Data
 @Entity
-@Table(name = "community_article_closet_items")
+@Table(name = "closetalk_item")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommunityArticleClosetItems {
     @EmbeddedId
