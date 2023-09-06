@@ -1,33 +1,64 @@
 package team.closetalk.community.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import team.closetalk.user.entity.UserEntity;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
-@Data
+@Getter
 @Entity
-@Table(name = "communityComment")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "community_comment")
 public class CommunityCommentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String content;             // 내용
-
-    private LocalDate createdAt;    // 작성 날짜
-    private LocalDate modifiedAt;   // 수정 날짜
+    @Column(nullable = false)
+    private String content;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+    @Column(name = "modified_at")
+    private LocalDateTime modifiedAt;
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     @ManyToOne
-    @JoinColumn(name = "communityArticle_id")
-    private CommunityArticleEntity communityArticle;
+    @JoinColumn(name = "user_id")
+    private UserEntity userId;
 
     @ManyToOne
-    @JoinColumn(name = "parentComment_id")  // 이름 변경
-    private CommunityCommentEntity parentComment;  // 자기 자신과의 관계
+    @JoinColumn(name = "community_article_id")
+    private CommunityArticleEntity communityArticleId;
 
-    @OneToMany(mappedBy = "parentComment")  // mappedBy 수정
-    private List<CommunityCommentEntity> childComments = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "comment_id")
+    private CommunityCommentEntity commentId;
+
+    // 댓글 생성
+    public CommunityCommentEntity(String content, UserEntity user,
+                                  CommunityArticleEntity article,
+                                  CommunityCommentEntity comment) {
+        this.content = content;
+        this.userId = user;
+        this.communityArticleId = article;
+        this.commentId = comment;
+        this.createdAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+    }
+
+    // 댓글 삭제(Soft Delete)
+    public CommunityCommentEntity deleteEntity() {
+        this.deletedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        return this;
+    }
+
+    // 댓글 수정
+    public CommunityCommentEntity updateEntity(String content) {
+        this.content = content;
+        this.modifiedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        return this;
+    }
 }

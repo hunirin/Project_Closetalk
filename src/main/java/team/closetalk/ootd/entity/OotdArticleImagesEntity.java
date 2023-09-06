@@ -12,9 +12,10 @@ public class OotdArticleImagesEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "image_url")
     private String imageUrl;
 
     @ManyToOne
-    @JoinColumn(name = "ootdArticle_id")
+    @JoinColumn(name = "ootd_article_id")
     private OotdArticleEntity ootdArticle;
 }

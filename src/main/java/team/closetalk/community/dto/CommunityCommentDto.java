@@ -1,44 +1,42 @@
 package team.closetalk.community.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import team.closetalk.community.entity.CommunityArticleEntity;
+import lombok.Getter;
 import team.closetalk.community.entity.CommunityCommentEntity;
 
-import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
-@Data
+@Getter
 @Builder
-@AllArgsConstructor
-@RequiredArgsConstructor
 public class CommunityCommentDto {
-    private Long id;
+    private String nickname;
+    private String content;
+    private String createdAt;    // 작성 날짜
+    private List<CommunityCommentReplyDto> replies;
 
-    private String content;             // 내용
-
-    private LocalDate createdAt;    // 작성 날짜
-    private LocalDate modifiedAt;   // 수정 날짜
-
-    private CommunityArticleEntity articleId;
-    private CommunityCommentEntity commentId;
-
-    // 댓글 생성
-    public CommunityCommentDto newEntity() {
-        return CommunityCommentDto.builder()
-                .content(content)
-                .articleId(articleId)
-                .commentId(commentId)
-                .createdAt(LocalDate.now())
-                .build();
-    }
-
-    // 댓글 조회
-    public static CommunityCommentDto fromEntity(CommunityCommentEntity entity) {
-        return CommunityCommentDto.builder()
-                .content(entity.getContent())
-                .createdAt(entity.getCreatedAt())
-                .build();
+    public static CommunityCommentDto toCommentDto(CommunityCommentEntity comment,
+                                                   List<CommunityCommentReplyDto> replies) {
+        if (comment.getDeletedAt() != null) {
+            return CommunityCommentDto.builder()
+                    .content("삭제된 댓글입니다.")
+                    .build();
+        } else if (comment.getModifiedAt() != null) {
+            return CommunityCommentDto.builder()
+                    .nickname(comment.getUserId().getNickname())
+                    .content(comment.getContent())
+                    .createdAt(comment.getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + " (수정됨)")
+                    .replies(replies)
+                    .build();
+        } else {
+            return CommunityCommentDto.builder()
+                    .nickname(comment.getUserId().getNickname())
+                    .content(comment.getContent())
+                    .createdAt(comment.getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
+                    .replies(replies)
+                    .build();
+        }
     }
 }

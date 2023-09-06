@@ -36,10 +36,14 @@ public class WebSecurityConfig {
                                         , "/ootd/header"
                                         , "/ootd/list"
                                         , "/ootd/banner"
+                                        , "/ootd/{articleId}"
+                                        , "/ootd/{articleId}/comment"
+                                        , "/ootd/rest/**"
                                         , "/static/**"
                                         , "/loginPage"
                                         , "/issue"
                                         , "/issue/{id}"
+                                        , "/community/**"
                                 ).permitAll()
                                 .anyRequest()
                                 .authenticated()

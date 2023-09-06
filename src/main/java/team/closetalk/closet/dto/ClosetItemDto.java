@@ -5,9 +5,12 @@ import team.closetalk.closet.entity.ClosetItemEntity;
 
 import java.time.LocalDateTime;
 
-@Getter
+@Data
 @Builder
+@AllArgsConstructor
 public class ClosetItemDto {
+
+    private Long id;
     private LocalDateTime createdAt;
 
     private String brand;
@@ -18,6 +21,7 @@ public class ClosetItemDto {
     private Long price;
     private String description;
     private String closetName;
+
 
     // ClosetItemEntity -> ClosetItemDto
     public static ClosetItemDto toClosetItemDto(ClosetItemEntity item) {
