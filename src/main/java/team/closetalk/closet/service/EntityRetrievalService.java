@@ -31,7 +31,7 @@ public class EntityRetrievalService {
     }
 
     // itemId로 해당 ClosetItemEntity 찾기
-    ClosetItemEntity getClosetItemEntity(Long itemId, String nickname) {
+    public ClosetItemEntity getClosetItemEntity(Long itemId, String nickname) {
         try {
             return closetItemRepository.findByIdAndClosetId_UserId_Nickname(itemId, nickname);
         } catch (Exception e) {
