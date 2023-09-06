@@ -34,6 +34,8 @@ public class CommunityArticleEntity {
     private String nickname;    // 작성자
     @ColumnDefault(value = "0")
     private Long hits;          // 조회수
+    @ColumnDefault(value = "0")
+    private Long likeCount;     // 좋아요 수
     private String thumbnail;   // 대표이미지
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -57,6 +59,7 @@ public class CommunityArticleEntity {
         this.createdAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         this.userId = user;
         this.hits = 0L;
+        this.likeCount = 0L;
     }
 
     // 조회수 증가
