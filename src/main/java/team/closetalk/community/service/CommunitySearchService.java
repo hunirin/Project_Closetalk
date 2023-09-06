@@ -15,16 +15,15 @@ import team.closetalk.community.repository.CommunitySearchRepository;
 @Service
 @RequiredArgsConstructor
 public class CommunitySearchService {
-
-    CommunitySearchRepository communitySearchRepository;
+    private final CommunitySearchRepository communitySearchRepository;
 
     // 커뮤니티 게시물 전체 검색
-    public Page<CommunityArticleListDto> searchCommunityPaged(String titleKeyword, String contentKeyword, String nicknameKeyword, Integer pageNum, Integer pageSize) {
+    public Page<CommunityArticleListDto> searchCommunityPaged(String contentKeyword, Integer pageNum, Integer pageSize) {
         Pageable pageable = PageRequest.of(
                 pageNum, pageSize, Sort.by("id").ascending());
 
         Page<CommunityArticleEntity> communityEntityPage =
-                communitySearchRepository.findAllByTitleContainingOrContentContainingOrUserId_NicknameContaining(titleKeyword, contentKeyword, nicknameKeyword, pageable);
+                communitySearchRepository.findAllByTitleOrContentOrUserId_NicknameContaining(contentKeyword, pageable);
 
         return communityEntityPage.map(CommunityArticleListDto::fromEntity);
     }
