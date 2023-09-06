@@ -30,6 +30,8 @@ public class CommunityArticleEntity {
     private String title;       // 제목
     @Column(nullable = false)
     private String content;     // 내용
+    @Column(nullable = false)
+    private String nickname;    // 작성자
     @ColumnDefault(value = "0")
     private Long hits;          // 조회수
     private String thumbnail;   // 대표이미지
