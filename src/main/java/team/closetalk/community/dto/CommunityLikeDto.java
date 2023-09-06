@@ -14,7 +14,7 @@ public class CommunityLikeDto {
     public static CommunityLikeDto fromEntity(CommunityLikeEntity entity) {
         return CommunityLikeDto.builder()
                 .userId(entity.getId())
-                .articleId(entity.getArticleId().getId())
+                .articleId(entity.getCommunityArticleId().getId())
                 .build();
     }
 }

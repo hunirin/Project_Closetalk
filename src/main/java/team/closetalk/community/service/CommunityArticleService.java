@@ -164,6 +164,6 @@ public class CommunityArticleService {
 
     // 게시글 좋아요 수 체크
     private Long countLike(Long articleId) {
-        return communityLikeRepository.countByArticleIdId(articleId);
+        return communityLikeRepository.countByCommunityArticleId_Id(articleId);
     }
 }

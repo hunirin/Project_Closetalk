@@ -20,6 +20,6 @@ public class CommunityLikeEntity {
     private UserEntity userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "article_id")
-    private CommunityArticleEntity articleId;
+    @JoinColumn(name = "community_article_id")
+    private CommunityArticleEntity communityArticleId;
 }

@@ -28,12 +28,12 @@ public class CommunityLikeService {
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         if (!article.getUserId().equals(user)) {
-            Optional<CommunityLikeEntity> checkLike = communityLikeRepository.findByUserIdIdAndArticleIdId(user.getId(), articleId);
+            Optional<CommunityLikeEntity> checkLike = communityLikeRepository.findByUserIdAndCommunityArticleId(user, article);
             // 좋아요 누른 적이 없으면 좋아요
             if (checkLike.isEmpty()) {
                 CommunityLikeEntity like = new CommunityLikeEntity();
                 like.setUserId(user);
-                like.setArticleId(article);
+                like.setCommunityArticleId(article);
                 communityLikeRepository.save(like);
 
                 article.increaseLikeCount();
