@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.closet.dto.ClosetItemDto;
-import team.closetalk.closet.entity.ClosetItemEntity;
 import team.closetalk.closet.repository.ClosetItemRepository;
 import team.closetalk.closet.service.EntityRetrievalService;
 import team.closetalk.community.dto.*;
@@ -20,7 +19,6 @@ import team.closetalk.community.dto.article.response.CommunityArticleDto;
 import team.closetalk.community.dto.article.response.CommunityArticleImagesDto;
 import team.closetalk.community.dto.article.response.CommunityArticleListDto;
 import team.closetalk.community.dto.article.request.CommunityCreateArticleDto;
-import team.closetalk.community.entity.composite.ArticleClosetItemId;
 import team.closetalk.community.entity.composite.CommunityArticleClosetItems;
 import team.closetalk.community.entity.CommunityArticleEntity;
 import team.closetalk.community.entity.CommunityArticleImagesEntity;
@@ -36,7 +34,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -50,7 +47,6 @@ public class CommunityArticleService {
     private final EntityRetrievalService entityRetrievalService;
     private final CommunityCommentService communityCommentService;
     private final CommunityArticleSaveImageService saveImageService;
-    private final CommunityArticleSaveImageService imageService;
     private final CommunityLikeRepository communityLikeRepository;
 
     // 커뮤니티 전체 게시물 조회(페이지 단위로 조회)
@@ -109,9 +105,8 @@ public class CommunityArticleService {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
             closetItemDtoList.add(closetItemDto);
         }
-        Long likeCount = countLike(articleId);
 
-        return CommunityArticleDto.detailFromEntity(article, commentDtoList, imagesDtoList, closetItemDtoList, likeCount);
+        return CommunityArticleDto.detailFromEntity(article, commentDtoList, imagesDtoList, closetItemDtoList);
     }
 
     // 게시글 수정

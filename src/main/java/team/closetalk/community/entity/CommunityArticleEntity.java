@@ -68,6 +68,15 @@ public class CommunityArticleEntity {
         return this;
     }
 
+    // 좋아요 수 증가
+    public void increaseLikeCount() {
+        this.likeCount = likeCount + 1;
+    }
+
+    // 좋아요 수 감소
+    public void decreaseLikeCount() {
+        this.likeCount = likeCount - 1;
+    }
     // 게시글 삭제
     public CommunityArticleEntity deleteArticle() {
         this.deletedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));

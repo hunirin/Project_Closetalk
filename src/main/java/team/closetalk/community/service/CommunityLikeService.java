@@ -35,11 +35,17 @@ public class CommunityLikeService {
                 like.setUserId(user);
                 like.setArticleId(article);
                 communityLikeRepository.save(like);
+
+                article.increaseLikeCount();
+                communityArticleRepository.save(article);
                 return "좋아요";
             } else {
                 // 좋아요를 누른 적이 있다면 좋아요 취소
                 communityLikeRepository.delete(checkLike.get());
                 communityLikeRepository.flush();
+
+                article.decreaseLikeCount();
+                communityArticleRepository.save(article);
                 return "좋아요 취소";
             }
         } else {

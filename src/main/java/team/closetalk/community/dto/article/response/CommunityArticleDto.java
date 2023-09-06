@@ -33,8 +33,7 @@ public class CommunityArticleDto {
     public static CommunityArticleDto detailFromEntity(CommunityArticleEntity entity,
                                                        List<CommunityCommentDto> commentDtoList,
                                                        List<CommunityArticleImagesDto> imageDtoList,
-                                                       List<ClosetItemDto> closetItemDtoList,
-                                                       Long likeCount
+                                                       List<ClosetItemDto> closetItemDtoList
                                                        ) {
         CommunityArticleDto dto = new CommunityArticleDto();
         dto.setId(entity.getId());
@@ -42,7 +41,7 @@ public class CommunityArticleDto {
         dto.setTitle(entity.getTitle());
         dto.setContent(entity.getContent());
         dto.setHits(entity.getHits());
-        dto.setLikeCount(likeCount);
+        dto.setLikeCount(entity.getLikeCount());
         dto.setCommunityComments(commentDtoList);
         dto.setCommunityImages(imageDtoList);
         dto.setClosetItems(closetItemDtoList);
