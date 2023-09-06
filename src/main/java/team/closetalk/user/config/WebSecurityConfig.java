@@ -43,6 +43,7 @@ public class WebSecurityConfig {
                                         , "/loginPage"
                                         , "/issue"
                                         , "/issue/{id}"
+                                        , "/community/**"
                                 ).permitAll()
                                 .anyRequest()
                                 .authenticated()
