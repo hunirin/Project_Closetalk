@@ -28,7 +28,6 @@ public class IssueArticleEntity {
     private String title;           // 제목
     @Column(nullable = false)
     private String content;         // 내용
-//    @Column(nullable = false)
     private String thumbnail;       // 대표이미지
     @ColumnDefault(value = "0")
     private Long hits;              // 조회수
@@ -40,7 +39,7 @@ public class IssueArticleEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @OneToMany(mappedBy = "issueArticle")
+    @OneToMany(mappedBy = "issueArticleId")
     private List<IssueArticleImageEntity> issueImages = new ArrayList<>();
 
     @ManyToOne
@@ -65,6 +64,12 @@ public class IssueArticleEntity {
 
     public IssueArticleEntity deleteArticle() {
         this.deletedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        return this;
+    }
+
+    // 썸네일 저장
+    public IssueArticleEntity saveThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
         return this;
     }
 }
