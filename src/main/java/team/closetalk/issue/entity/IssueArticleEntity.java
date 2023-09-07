@@ -28,7 +28,7 @@ public class IssueArticleEntity {
     private String title;           // 제목
     @Column(nullable = false)
     private String content;         // 내용
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String thumbnail;       // 대표이미지
     @ColumnDefault(value = "0")
     private Long hits;              // 조회수

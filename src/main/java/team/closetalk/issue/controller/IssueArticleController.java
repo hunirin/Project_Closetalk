@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import team.closetalk.issue.dto.IssueArticleDto;
 import team.closetalk.issue.dto.IssueArticleListDto;
+import team.closetalk.issue.dto.IssueCreateArticleDto;
 import team.closetalk.issue.dto.ResponseDto;
 import team.closetalk.issue.service.IssueArticleService;
 
@@ -27,6 +28,13 @@ import java.util.List;
 public class IssueArticleController {
     private final IssueArticleService issueArticleService;
 
+
+    // 게시글 생성
+    @PostMapping("/create")
+    public IssueArticleDto createArticle(
+            IssueCreateArticleDto dto, Authentication authentication) {
+        return issueArticleService.createArticle(dto, authentication);
+    }
 
     // 이미지 업로드
     @PostMapping(

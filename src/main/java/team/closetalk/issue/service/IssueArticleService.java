@@ -17,6 +17,7 @@ import team.closetalk.closet.service.EntityRetrievalService;
 import team.closetalk.issue.dto.IssueArticleDto;
 import team.closetalk.issue.dto.IssueArticleListDto;
 import team.closetalk.issue.dto.IssueBannerDto;
+import team.closetalk.issue.dto.IssueCreateArticleDto;
 import team.closetalk.issue.entity.IssueArticleEntity;
 import team.closetalk.issue.entity.IssueArticleImageEntity;
 import team.closetalk.issue.repository.IssueArticleImageRepository;
@@ -39,6 +40,15 @@ import java.util.Optional;
 public class IssueArticleService {
     private final IssueArticleRepository issueArticleRepository;
     private final EntityRetrievalService entityRetrievalService;
+
+    public IssueArticleDto createArticle(IssueCreateArticleDto dto,
+                                         Authentication authentication) {
+        UserEntity user = getUserEntity(authentication.getName());
+        IssueArticleEntity article =
+                new IssueArticleEntity(dto.getCategory(), dto.getTitle(), dto.getContent(), user);
+        issueArticleRepository.save(article);
+        return readArticle(article.getId());
+    }
 
     // 이슈 이미지 업로드 -- 수정필요
     // 1. thumbnail에 첫번째 사진 저장하기
