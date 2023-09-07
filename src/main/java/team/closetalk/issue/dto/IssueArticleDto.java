@@ -1,18 +1,17 @@
 package team.closetalk.issue.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import team.closetalk.issue.entity.IssueArticleEntity;
-import team.closetalk.issue.entity.IssueArticleImageEntity;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class IssueArticleDto {
     private Long id;
     private String category;        // 카테고리
@@ -27,14 +26,18 @@ public class IssueArticleDto {
     private List<IssueArticleImageDto> issueImages;
 
     // 게시글 상세 조회
-    public static IssueArticleDto fromEntity(IssueArticleEntity entity) {
+    public static IssueArticleDto fromEntity(IssueArticleEntity entity,
+                                             List<IssueArticleImageDto> imageDtoList) {
         IssueArticleDto dto = new IssueArticleDto();
         dto.setId(entity.getId());
         dto.setCategory(entity.getCategory());
         dto.setTitle(entity.getTitle());
         dto.setContent(entity.getContent());
+        dto.setThumbnail(entity.getThumbnail());
         dto.setHits(entity.getHits());
+        dto.setIssueImages(imageDtoList);
         dto.setNickname(entity.getUserId().getNickname());
+
 
         if (entity.getModifiedAt() == null)
             dto.setCreatedAt(entity.getCreatedAt()
