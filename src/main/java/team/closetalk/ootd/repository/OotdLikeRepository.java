@@ -10,5 +10,6 @@ import java.util.Optional;
 
 public interface OotdLikeRepository extends JpaRepository<OotdLikeEntity, Long> {
     Optional<OotdLikeEntity> findByUserIdAndOotdArticleId(UserEntity userId, OotdArticleEntity articleId);
-    
+
+    Long countByOotdArticleId_Id(Long articleId);
 }
