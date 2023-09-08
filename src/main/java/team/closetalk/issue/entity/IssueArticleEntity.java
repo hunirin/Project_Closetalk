@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import team.closetalk.community.entity.CommunityArticleEntity;
+import team.closetalk.issue.enumeration.Category;
 import team.closetalk.user.entity.UserEntity;
 
 import java.time.LocalDateTime;
@@ -23,7 +24,8 @@ public class IssueArticleEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String category;        // 카테고리
+    @Enumerated(EnumType.STRING)
+    private Category category;        // 카테고리
     @Column(nullable = false)
     private String title;           // 제목
     @Column(nullable = false)
@@ -46,7 +48,7 @@ public class IssueArticleEntity {
     @JoinColumn(name = "user_id")
     private UserEntity userId;
 
-    public IssueArticleEntity(String category, String title,
+    public IssueArticleEntity(Category category, String title,
                               String content, UserEntity user) {
         this.category = category;
         this.title = title;
@@ -61,7 +63,7 @@ public class IssueArticleEntity {
         this.hits = hits + 1;
         return this;
     }
-
+    // 게시글 삭제
     public IssueArticleEntity deleteArticle() {
         this.deletedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         return this;

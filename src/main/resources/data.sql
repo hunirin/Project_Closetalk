@@ -129,12 +129,12 @@ insert into ootd_comment (id, ootd_article_id, user_id, ootd_comment_id, content
 -- INSERT OOTD_LIKE..?
 
 -- INSERT ISSUE_ARTICLE
-insert into issue_article (id, content, thumbnail) VALUES (1, '첫번째 글', '/static/images/issue/1/1.jpg');
-insert into issue_article (id, content, thumbnail) VALUES (2, '두번째 글', '/static/images/issue/2/2.jpg');
-insert into issue_article (id, content, thumbnail) VALUES (3, '세번째 글', '/static/images/issue/3/3.jpg');
-insert into issue_article (id, content, thumbnail) VALUES (4, '네번째 글', '/static/images/issue/4/1.jpg');
-insert into issue_article (id, content, thumbnail) VALUES (5, '다섯번째 글', '/static/images/issue/5/2.jpg');
-insert into issue_article (id, content, thumbnail) VALUES (6, '여섯번째 글', '/static/images/issue/6/3.jpg');
+insert into issue_article (id, user_id, category, title, content, thumbnail, created_at) VALUES (1, 1, 'ISSUE', '첫번째 제목', '첫번째 글', '/static/images/issue/1/1.jpg', NOW());
+insert into issue_article (id, user_id, category, title, content, thumbnail, created_at) VALUES (2, 2, 'MAGAZINE', '두번째 제목', '두번째 글', '/static/images/issue/2/2.jpg', NOW());
+insert into issue_article (id, user_id, category, title, content, thumbnail, created_at) VALUES (3, 3, 'ISSUE', '세번째 제목', '세번째 글', '/static/images/issue/3/3.jpg', NOW());
+insert into issue_article (id, user_id, category, title, content, thumbnail, created_at) VALUES (4, 4, 'MAGAZINE', '네번째 제목', '네번째 글', '/static/images/issue/4/1.jpg', NOW());
+insert into issue_article (id, user_id, category, title, content, thumbnail, created_at) VALUES (5, 5, 'MAGAZINE', '다섯번째 제목', '다섯번째 글', '/static/images/issue/5/2.jpg', NOW());
+insert into issue_article (id, user_id, category, title, content, thumbnail, created_at) VALUES (6, 5, 'ISSUE', '여섯번째 제목', '여섯번째 글', '/static/images/issue/6/3.jpg', NOW());
 
 -- INSERT ISSUE_ARTICLE_IMAGES
 insert into issue_article_images (id, issue_article_id, image_url) values (1, 1, '/static/images/issue/1/1.jpg');

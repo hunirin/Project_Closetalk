@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import team.closetalk.issue.entity.IssueArticleEntity;
+import team.closetalk.issue.enumeration.Category;
 
 import java.time.format.DateTimeFormatter;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class IssueArticleDto {
     private Long id;
-    private String category;        // 카테고리
+    private Category category;        // 카테고리
     private String title;           // 제목
     private String content;         // 내용
     private String thumbnail;       // 대표이미지
