@@ -27,12 +27,12 @@ public class IssueArticleEntity {
     @Enumerated(EnumType.STRING)
     private Category category;        // 카테고리
     @Column(nullable = false)
-    private String title;           // 제목
+    private String title;            // 제목
     @Column(nullable = false)
-    private String content;         // 내용
-    private String thumbnail;       // 대표이미지
+    private String content;          // 내용
+    private String thumbnail;        // 대표이미지
     @ColumnDefault(value = "0")
-    private Long hits;              // 조회수
+    private Long hits;                // 조회수
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
