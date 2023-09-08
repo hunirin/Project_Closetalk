@@ -12,6 +12,7 @@ import team.closetalk.issue.repository.IssueArticleImageRepository;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,7 +21,7 @@ public class IssueArticleSaveImageService {
     private final IssueArticleImageRepository issueArticleImageRepository;
 
     // 이미지 저장
-    public void saveArticleImage(IssueArticleEntity article,
+    public List<IssueArticleImageEntity> saveArticleImage(IssueArticleEntity article,
                                  List<MultipartFile> articleImages) {
         // 디렉토리 생성
         String ARTICLE_IMAGE_DIRECTORY =
@@ -30,6 +31,9 @@ public class IssueArticleSaveImageService {
         } catch (IOException e) {
             throw  new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+
+        // 이미지 저장용 리스트
+        List<IssueArticleImageEntity> savedImages = new ArrayList<>();
 
         for (MultipartFile image : articleImages) {
             String imageFileName = image.getOriginalFilename();
@@ -42,7 +46,10 @@ public class IssueArticleSaveImageService {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
-            issueArticleImageRepository.save(new IssueArticleImageEntity(article, imageFilePath));
+            // 이미지 리스트에 저장
+            IssueArticleImageEntity savedImage = issueArticleImageRepository.save(new IssueArticleImageEntity(article, imageFilePath));
+            savedImages.add(savedImage);
         }
+        return savedImages;
     }
 }
