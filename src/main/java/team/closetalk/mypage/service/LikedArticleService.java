@@ -33,7 +33,7 @@ public class LikedArticleService {
     @Transactional(readOnly = true)
     public Page<CommunityArticleListDto> readLikedCommunityArticlePaged(Integer page, Integer limit, Authentication authentication) {
         Pageable pageable = PageRequest.of(
-                page, limit, Sort.by("id").ascending()); // 최신순으로 하려면 descending 사용
+                page, limit, Sort.by("id").descending()); // 최신순을 하기위해 역순
 
         List<Long> likedArticleIds =
                 likedArticleRepository.findLikedCommunityArticleIdsByLoginId(authentication.getName());
