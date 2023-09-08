@@ -89,13 +89,15 @@
             </div>
         </div>
 
+<!--        <form th:action="@{/ootd/{articleId}}" th:object="${ootdComment}" method="post">-->
         <div class="board_bottom_insert_comment">
             <div class="comment_in">
                 <!--            <p class="not_login_comment">로그인 후 댓글쓰기가 가능합니다.</p>-->
                 <textarea type="text" class="comment_input" placeholder="댓글을 작성 해 주세요." maxlength="255"></textarea>
-                <button class="comment_submit_btn">등록</button>
+                <button type="submit" class="comment_submit_btn">등록</button>
             </div>
         </div>
+<!--        </form>-->
 
         <div class="board_bottom_btn">
           <button class="board_bottom_btn_edit">수정</button>
