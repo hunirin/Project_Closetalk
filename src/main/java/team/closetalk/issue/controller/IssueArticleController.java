@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import team.closetalk.issue.enumeration.Category;
 import team.closetalk.issue.dto.IssueArticleDto;
 import team.closetalk.issue.dto.IssueArticleListDto;
 import team.closetalk.issue.dto.IssueCreateArticleDto;
@@ -35,6 +36,16 @@ public class IssueArticleController {
             @RequestParam(value = "limit", defaultValue = "10") Integer limit
     ) {
         return issueArticleService.readIssuePaged(page,limit);
+    }
+
+    // 카테고리별 게시글 목록 조회
+    @GetMapping("/category")
+    public Page<IssueArticleListDto> readArticleListByCategory(
+            @RequestParam(value = "category", required = false) Category category,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "20") Integer limit
+    ) {
+        return issueArticleService.readIssuePagedByCategory(category, page, limit);
     }
 
     // 게시글 상세 조회

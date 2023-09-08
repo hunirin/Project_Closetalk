@@ -15,6 +15,7 @@ import team.closetalk.closet.service.EntityRetrievalService;
 import team.closetalk.issue.dto.*;
 import team.closetalk.issue.entity.IssueArticleEntity;
 import team.closetalk.issue.entity.IssueArticleImageEntity;
+import team.closetalk.issue.enumeration.Category;
 import team.closetalk.issue.repository.IssueArticleImageRepository;
 import team.closetalk.issue.repository.IssueArticleRepository;
 import team.closetalk.user.entity.UserEntity;
@@ -54,6 +55,7 @@ public class IssueArticleService {
         return readArticle(article.getId());
     }
 
+    // 게시글 상세 페이지 조회
     public IssueArticleDto readArticle(Long articleId) {
         IssueArticleEntity article = issueArticleRepository.findById(articleId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -72,6 +74,7 @@ public class IssueArticleService {
         return IssueArticleDto.fromEntity(article, imageDtoList);
     }
 
+    // 게시글 전체 조회
     public Page<IssueArticleListDto> readIssuePaged(Integer pageNum, Integer pageSize) {
         Pageable pageable = PageRequest.of(
                 pageNum, pageSize, Sort.by("id").ascending());
@@ -79,6 +82,18 @@ public class IssueArticleService {
         Page<IssueArticleEntity> issueArticleEntityPage =
                 issueArticleRepository.findAllByDeletedAtIsNull(pageable);
 
+        return issueArticleEntityPage.map(IssueArticleListDto::fromEntity);
+    }
+
+    // 카테고리별 게시글 조회
+    public Page<IssueArticleListDto> readIssuePagedByCategory(Category category,
+                                                              Integer pageNum,
+                                                              Integer pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNum, pageSize, Sort.by("id").ascending());
+
+        Page<IssueArticleEntity> issueArticleEntityPage =
+                issueArticleRepository.findAllByCategoryAndDeletedAtIsNull(category, pageable);
         return issueArticleEntityPage.map(IssueArticleListDto::fromEntity);
     }
 
