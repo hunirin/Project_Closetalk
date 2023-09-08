@@ -19,6 +19,9 @@ import team.closetalk.issue.repository.IssueArticleImageRepository;
 import team.closetalk.issue.repository.IssueArticleRepository;
 import team.closetalk.user.entity.UserEntity;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -82,6 +85,7 @@ public class IssueArticleService {
     // 게시글 수정
     public IssueArticleDto updateArticle(Long articleId,
                                          Authentication authentication,
+                                         List<MultipartFile> newImageUrlList,
                                          IssueArticleDto dto) {
         UserEntity user = getUserEntity(authentication.getName());
 
@@ -91,8 +95,36 @@ public class IssueArticleService {
         article.setTitle(dto.getTitle());
         article.setContent(dto.getContent());
         article.setModifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
-        issueArticleRepository.save(article);
 
+        // 게시글 생성시 업로드한 이미지
+        List<IssueArticleImageEntity> oldImages = issueArticleImageRepository.findAllByIssueArticleId_Id(articleId);
+        String oldThumbnailUrl = article.getThumbnail();
+
+        if (newImageUrlList != null) { // 새로 이미지 추가 시
+            // 새로 추가한 이미지를 저장
+            List<IssueArticleImageEntity> newImages =
+                    issueArticleSaveImageService.saveArticleImage(article, newImageUrlList);
+            if (!newImages.isEmpty()){
+                // 새로 이미지 추가한 파일의 첫번째 파일을 썸네일로 저장
+                String newThumbnailUrl = newImages.get(0).getImageUrl();
+                article.setThumbnail(newThumbnailUrl);
+            }
+
+            for (IssueArticleImageEntity oldImage : oldImages) {
+                issueArticleImageRepository.delete(oldImage);
+
+                if (!oldImage.getImageUrl().equals(oldThumbnailUrl)) { // 기존 이미지와 썸네일의 경로가 다를때
+                    try {
+                        // 파일 삭제
+                        Files.delete(Path.of(oldImage.getImageUrl()));
+                    } catch (IOException e) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                    }
+                }
+            }
+      }
+        issueArticleRepository.save(article);
+        
         return readArticle(articleId);
     }
 
