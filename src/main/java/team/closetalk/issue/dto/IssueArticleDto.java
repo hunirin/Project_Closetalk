@@ -44,7 +44,7 @@ public class IssueArticleDto {
                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         else
             dto.setCreatedAt(entity.getCreatedAt()
-                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + " (수정됨");
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + " (수정됨)");
 
         return dto;
     }
