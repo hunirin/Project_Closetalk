@@ -41,7 +41,7 @@ public class WebSecurityConfig {
                                         , "/ootd/rest/**"
                                         , "/static/**"
                                         , "/loginPage"
-                                        , "/issue/**"
+                                        , "/issue/"
                                         , "/issue/{id}"
                                         , "/community/**"
                                 ).permitAll()
