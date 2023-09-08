@@ -11,11 +11,13 @@ import team.closetalk.community.dto.article.response.CommunityArticleListDto;
 import team.closetalk.mypage.service.LikedArticleService;
 import team.closetalk.ootd.dto.OotdArticleDto;
 
+
 @RestController
-@RequestMapping("/mypage")
+@RequestMapping("/myPage")
 @RequiredArgsConstructor
 public class LikeArticleController {
     private final LikedArticleService likedArticleService;
+
 
     // Community
     // 좋아요 한 목록
