@@ -48,11 +48,12 @@ public class IssueArticleController {
     // 게시글 수정
     @PutMapping("/{articleId}")
     public IssueArticleDto updateArticle(
-            @PathVariable("articleId") Long aritcleId,
-            @RequestBody IssueArticleDto dto,
+            @PathVariable("articleId") Long articleId,
+            @RequestPart(value = "data") IssueArticleDto dto,
+            @RequestPart(value = "newImageUrl", required = false) List<MultipartFile> imagesUrlList,
             Authentication authentication
     ) {
-        return issueArticleService.updateArticle(aritcleId, authentication, dto);
+        return issueArticleService.updateArticle(articleId, authentication, imagesUrlList, dto);
     }
 
     // 게시글 삭제
