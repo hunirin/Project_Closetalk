@@ -11,6 +11,11 @@ import team.closetalk.community.entity.CommunityArticleEntity;
 import team.closetalk.community.repository.CommunityArticleRepository;
 import team.closetalk.community.repository.CommunityLikeRepository;
 import team.closetalk.mypage.repository.LikedArticleRepository;
+import team.closetalk.ootd.dto.OotdArticleDto;
+import team.closetalk.ootd.entity.OotdArticleEntity;
+import team.closetalk.ootd.repository.OotdArticleRepository;
+import team.closetalk.ootd.repository.OotdLikeRepository;
+
 
 import java.util.List;
 
@@ -21,17 +26,22 @@ public class LikedArticleService {
     private final CommunityArticleRepository communityArticleRepository;
     private final LikedArticleRepository likedArticleRepository;
     private final CommunityLikeRepository communityLikeRepository;
+    private final OotdArticleRepository ootdArticleRepository;
+    private final OotdLikeRepository ootdLikeRepository;
 
+    // Community
+    // 좋아요한 글 목록보기
     @Transactional(readOnly = true)
-    public Page<CommunityArticleListDto> readLikedArticlePaged(Integer page, Integer limit, Authentication authentication) {
+    public Page<CommunityArticleListDto> readLikedCommunityArticlePaged(Integer page, Integer limit, Authentication authentication) {
         Pageable pageable = PageRequest.of(
-                page, limit, Sort.by("id").ascending());
+                page, limit, Sort.by("id").descending()); // 최신순을 하기위해 역순
 
         List<Long> likedArticleIds =
-                likedArticleRepository.findLikedArticleIdsByLoginId(authentication.getName());
+                likedArticleRepository.findLikedCommunityArticleIdsByLoginId(authentication.getName());
 
         List<CommunityArticleEntity> communityArticleEntities =
                 communityArticleRepository.findAllByIdIn(likedArticleIds);
+        log.info(likedArticleIds.toString());
 
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), communityArticleEntities.size());
@@ -45,6 +55,38 @@ public class LikedArticleService {
         // 각 게시물의 좋아요 수 조회
         articleListDtoPage.forEach(dto -> {
             Long likeCount = communityLikeRepository.countByCommunityArticleId_Id(dto.getId());
+            dto.setLikeCount(likeCount);
+        });
+
+        return articleListDtoPage;
+    }
+
+    // OOTD
+    // 좋아요한 글 목록보기
+    @Transactional(readOnly = true)
+    public Page<OotdArticleDto> readLikedOotdArticlePaged(Integer page, Integer limit, Authentication authentication) {
+        Pageable pageable = PageRequest.of(
+                page, limit, Sort.by("id").descending()); // 최신순으로 하기위해 역순
+
+        List<Long> likedArticleIds =
+                likedArticleRepository.findLikedOotdArticleIdsByLoginId(authentication.getName());
+        log.info(authentication.getName());
+
+        List<OotdArticleEntity> ootdArticleEntities =
+                ootdArticleRepository.findAllById(likedArticleIds);
+        log.info(likedArticleIds.toString());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), ootdArticleEntities.size());
+        List<OotdArticleEntity> paginatedLikedArticles = ootdArticleEntities.subList(start, end);
+
+        Page<OotdArticleEntity> likedArticleListPage =
+                new PageImpl<>(paginatedLikedArticles, pageable, ootdArticleEntities.size());
+        Page<OotdArticleDto> articleListDtoPage =
+                likedArticleListPage.map(OotdArticleDto::fromEntityForList);
+
+        articleListDtoPage.forEach(dto -> {
+            Long likeCount = ootdLikeRepository.countByOotdArticleId_Id(dto.getId());
             dto.setLikeCount(likeCount);
         });
 

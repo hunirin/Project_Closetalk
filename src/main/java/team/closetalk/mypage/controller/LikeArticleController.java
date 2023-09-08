@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import team.closetalk.community.dto.article.response.CommunityArticleListDto;
 import team.closetalk.mypage.service.LikedArticleService;
+import team.closetalk.ootd.dto.OotdArticleDto;
+
 
 @RestController
 @RequestMapping("/myPage")
@@ -16,13 +18,26 @@ import team.closetalk.mypage.service.LikedArticleService;
 public class LikeArticleController {
     private final LikedArticleService likedArticleService;
 
+
+    // Community
     // 좋아요 한 목록
-    @GetMapping("/liked")
-    public Page<CommunityArticleListDto> readArticleList(
+    @GetMapping("/liked/community")
+    public Page<CommunityArticleListDto> readCommunityArticleList(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "limit", defaultValue = "20") Integer limit,
             Authentication authentication
     ) {
-        return likedArticleService.readLikedArticlePaged(page, limit, authentication);
+        return likedArticleService.readLikedCommunityArticlePaged(page, limit, authentication);
+    }
+
+    // OOTD
+    // 좋아요 한 목록
+    @GetMapping("/liked/ootd")
+    public Page<OotdArticleDto> readOotdArticleList(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "20") Integer limit,
+            Authentication authentication
+    ) {
+        return likedArticleService.readLikedOotdArticlePaged(page, limit, authentication);
     }
 }
