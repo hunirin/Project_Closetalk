@@ -1,6 +1,5 @@
 package team.closetalk.issue.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -8,157 +7,157 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import team.closetalk.issue.dto.IssueArticleDto;
-import team.closetalk.issue.dto.IssueBannerDto;
+import team.closetalk.closet.service.EntityRetrievalService;
+import team.closetalk.issue.dto.*;
 import team.closetalk.issue.entity.IssueArticleEntity;
 import team.closetalk.issue.entity.IssueArticleImageEntity;
+import team.closetalk.issue.enumeration.Category;
 import team.closetalk.issue.repository.IssueArticleImageRepository;
 import team.closetalk.issue.repository.IssueArticleRepository;
+import team.closetalk.user.entity.UserEntity;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class IssueArticleService {
     private final IssueArticleRepository issueArticleRepository;
+    private final IssueArticleImageRepository issueArticleImageRepository;
+    private final IssueArticleSaveImageService issueArticleSaveImageService;
+    private final EntityRetrievalService entityRetrievalService;
 
-    public IssueArticleDto createIssueArticle(IssueArticleDto dto) {
-        IssueArticleEntity newIssueArticle = new IssueArticleEntity();
-        newIssueArticle.setTitle(dto.getTitle());
-        newIssueArticle.setContent(dto.getContent());
-        newIssueArticle.setHits(dto.getHits());
-        newIssueArticle.setCreatedAt(dto.getCreatedAt());
-        return IssueArticleDto.fromEntity(issueArticleRepository.save(newIssueArticle));
+    // 게시글 생성
+    public IssueArticleDto createArticle(IssueCreateArticleDto dto,
+                                         List<MultipartFile> imageUrlList,
+                                         Authentication authentication) {
+        UserEntity user = getUserEntity(authentication.getName());
+        IssueArticleEntity article =
+                new IssueArticleEntity(dto.getCategory(), dto.getTitle(), dto.getContent(), user);
+        issueArticleRepository.save(article);
+        if (imageUrlList != null) {
+            issueArticleSaveImageService.saveArticleImage(article, imageUrlList);
+            IssueArticleImageEntity imagesEntityList =
+                    issueArticleImageRepository.findAllByIssueArticleId_Id(article.getId()).get(0);
+            issueArticleRepository.save(article.saveThumbnail(imagesEntityList.getImageUrl()));
+
+        }
+        return readArticle(article.getId());
     }
 
-    // 이슈 이미지 업로드 -- 수정필요
-    // 1. thumbnail에 첫번째 사진 저장하기
-    // 2. imageUrl의 첫번째 사진 불러오기 -> html에 연결
-    public List<IssueArticleDto> uploadIssueImg(Long id, List<MultipartFile> issueImages) {
+    // 게시글 상세 페이지 조회
+    public IssueArticleDto readArticle(Long articleId) {
+        IssueArticleEntity article = issueArticleRepository.findById(articleId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        // 1. 유저 확인
-        Optional<IssueArticleEntity> optionalUser = issueArticleRepository.findById(id);
-        if (optionalUser.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        if (article.getDeletedAt() != null) {
+            log.error("삭제된 게시물입니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        List<IssueArticleImageEntity> imageEntityList =
+                issueArticleImageRepository.findAllByIssueArticleId_Id(article.getId());
+        List<IssueArticleImageDto> imageDtoList =
+                imageEntityList.stream().map(IssueArticleImageDto::fromEntity).toList();
+        // 조회수 증가
+        issueArticleRepository.save(article.increaseHit());
 
-        IssueArticleEntity issueArticleEntity = optionalUser.get();
-        List<IssueArticleDto> uploadedIssueArticles = new ArrayList<>();
+        return IssueArticleDto.fromEntity(article, imageDtoList);
+    }
 
-        for (MultipartFile issueImage : issueImages) {
-            // 2-1. 폴더 만들기
-            String issueDir = String.format("src/main/resources/static/images/issue/%d/", id);
-            log.info(issueDir);
-            try {
-                Files.createDirectories(Path.of(issueDir));
+    // 게시글 전체 조회
+    public Page<IssueArticleListDto> readIssuePaged(Integer pageNum, Integer pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNum, pageSize, Sort.by("id").ascending());
 
-            } catch (IOException e) {
-                log.error(e.getMessage());
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        Page<IssueArticleEntity> issueArticleEntityPage =
+                issueArticleRepository.findAllByDeletedAtIsNull(pageable);
+
+        return issueArticleEntityPage.map(IssueArticleListDto::fromEntity);
+    }
+
+    // 카테고리별 게시글 조회
+    public Page<IssueArticleListDto> readIssuePagedByCategory(Category category,
+                                                              Integer pageNum,
+                                                              Integer pageSize) {
+        Pageable pageable = PageRequest.of(
+                pageNum, pageSize, Sort.by("id").ascending());
+
+        Page<IssueArticleEntity> issueArticleEntityPage =
+                issueArticleRepository.findAllByCategoryAndDeletedAtIsNull(category, pageable);
+        return issueArticleEntityPage.map(IssueArticleListDto::fromEntity);
+    }
+
+    // 게시글 수정
+    public IssueArticleDto updateArticle(Long articleId,
+                                         Authentication authentication,
+                                         List<MultipartFile> newImageUrlList,
+                                         IssueArticleDto dto) {
+        UserEntity user = getUserEntity(authentication.getName());
+
+        IssueArticleEntity article = issueArticleRepository.findByIdAndUserId_Id(articleId, user.getId()).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        article.setTitle(dto.getTitle());
+        article.setContent(dto.getContent());
+        article.setModifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+
+        // 게시글 생성시 업로드한 이미지
+        List<IssueArticleImageEntity> oldImages = issueArticleImageRepository.findAllByIssueArticleId_Id(articleId);
+        String oldThumbnailUrl = article.getThumbnail();
+
+        if (newImageUrlList != null) { // 새로 이미지 추가 시
+            // 새로 추가한 이미지를 저장
+            List<IssueArticleImageEntity> newImages =
+                    issueArticleSaveImageService.saveArticleImage(article, newImageUrlList);
+            if (!newImages.isEmpty()){
+                // 새로 이미지 추가한 파일의 첫번째 파일을 썸네일로 저장
+                String newThumbnailUrl = newImages.get(0).getImageUrl();
+                article.setThumbnail(newThumbnailUrl);
             }
 
-            // 2-2. 확장자를 포함한 이미지 이름 만들기 (issue.{확장자})
-            String originalFilename = issueImage.getOriginalFilename();
-            // issue.jpg => fileNameSplit = {"issue_img, "jpg"}
-            String[] fileNameSplit = originalFilename.split("\\.");
-            String extension = fileNameSplit[fileNameSplit.length - 1];
-            String issueFilename = "issue." + extension;
-            log.info(issueFilename);
+            for (IssueArticleImageEntity oldImage : oldImages) {
+                issueArticleImageRepository.delete(oldImage);
 
-            // 2-3. 폴더와 파일 경로를 포함한 이름 만들기
-            String issuePath = issueDir + issueFilename;
-            log.info(issuePath);
-
-            // 3. MultiPartFile 저장하기
-            try {
-                issueImage.transferTo(Path.of(issuePath));
-            } catch (IOException e) {
-                log.error(e.getMessage());
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+                if (!oldImage.getImageUrl().equals(oldThumbnailUrl)) { // 기존 이미지와 썸네일의 경로가 다를때
+                    try {
+                        // 파일 삭제
+                        Files.delete(Path.of(oldImage.getImageUrl()));
+                    } catch (IOException e) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                    }
+                }
             }
-
-            // 4. UserEntity 업데이트
-            // http://localhost:8080/static/1/issueImage.jpg
-            log.info(String.format("/images/issue/%d/%s", id, issueFilename));
-
-
-//            issueArticleEntity.setImageUrl(String.format("/images/issue/%d/%s", id, issueFilename));
-
-            IssueArticleEntity savedIssueArticle = issueArticleRepository.save(issueArticleEntity);
-            uploadedIssueArticles.add(IssueArticleDto.fromEntity(savedIssueArticle));
-        }
-        return uploadedIssueArticles;
-    }
-
-    public IssueArticleDto readIssueArticle(Long id) {
-        Optional<IssueArticleEntity> optionalIssueArticle = issueArticleRepository.findById(id);
-
-        if (optionalIssueArticle.isPresent()) {
-            IssueArticleEntity entity = optionalIssueArticle.get();
-
-            // 조회수 증가
-            entity.setHits(entity.getHits() + 1);
-            issueArticleRepository.save(entity);
-
-            return IssueArticleDto.fromEntity(optionalIssueArticle.get());
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    public Page<IssueArticleDto> readIssueArticleAll(
-            @RequestParam(value = "page", defaultValue = "1") Integer pageNumber,
-            @RequestParam(value = "limit", defaultValue = "8") Integer pageSize
-    ) {
-        Pageable pageable = PageRequest.of(0, 8);
-//        Page<IssueArticleDto> issueArticlePage = new ArrayList<>();
-        Page<IssueArticleEntity> issueArticleEntityPage = issueArticleRepository.findAll(pageable);
-        List<IssueArticleDto> issueArticleDtoList = new ArrayList<>();
-        for (IssueArticleEntity entity : issueArticleEntityPage) {
-            issueArticleDtoList.add(IssueArticleDto.fromEntity(entity));
-        }
-        return issueArticleEntityPage.map(IssueArticleDto::fromEntity);
-    }
-
-    public IssueArticleDto updateIssueArticle(Long id, IssueArticleDto dto) {
-        Optional<IssueArticleEntity> optionalIssueArticle = issueArticleRepository.findById(id);
-        if (optionalIssueArticle.isPresent()) {
-            IssueArticleEntity issueArticle = optionalIssueArticle.get();
-            issueArticle.setTitle(dto.getTitle());
-            issueArticle.setContent(dto.getContent());
-            issueArticle.setHits(dto.getHits());
-//            issueArticle.setImageUrl(dto.getImageUrl());
-            issueArticle.setModifiedAt(dto.getModifiedAt());
-            issueArticleRepository.save(issueArticle);
-            return IssueArticleDto.fromEntity(issueArticle);
-        }
-        else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+      }
+        issueArticleRepository.save(article);
+        
+        return readArticle(articleId);
     }
 
 
-    @Transactional
-    public void deleteIssueArticle(Long id) {
-        try {
-            // 이미지와의 관계 삭제
-            IssueArticleEntity issueArticle = issueArticleRepository.findById(id)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public void deleteArticle(Long articleId, Authentication authentication) {
+        UserEntity user = getUserEntity(authentication.getName());
+        IssueArticleEntity article = issueArticleRepository.findByIdAndUserId_Id(articleId, user.getId()).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-            List<IssueArticleImageEntity> issueImages = issueArticle.getIssueImages();
-            for (IssueArticleImageEntity issueImage : issueImages) {
-                issueImage.setIssueArticle(null);
-            }
-            // 이미지와의 관계 삭제 후 게시글 삭제
-            issueArticleRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new RuntimeException("게시글 삭제에 실패하였습니다.", e);
+        if (!Objects.equals(article.getUserId().getId(), user.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
+
+        issueArticleRepository.save(article.deleteArticle());
+    }
+
+
+    public UserEntity getUserEntity(String loginId) {
+        return entityRetrievalService.getUserEntity(loginId);
     }
 }
