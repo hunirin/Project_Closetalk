@@ -44,6 +44,7 @@ public class WebSecurityConfig {
                                         , "/issue"
                                         , "/issue/{id}"
                                         , "/community/**"
+                                        , "/ootd/rest/list"
                                 ).permitAll()
                                 .anyRequest()
                                 .authenticated()

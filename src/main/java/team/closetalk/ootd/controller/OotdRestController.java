@@ -2,6 +2,7 @@ package team.closetalk.ootd.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.realm.AuthenticatedUserRealm;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
@@ -70,7 +71,6 @@ public class OotdRestController {
         return "Delete success";
     }
 
-
     // 게시글 좋아요
     @PostMapping("/like/{articleId}")
     public String likeOotdArticle(
@@ -78,5 +78,15 @@ public class OotdRestController {
             Authentication authentication
     ) {
         return ootdLikeService.likeOotdArticle(articleId, authentication);
+    }
+
+    @GetMapping("/rest/list")
+    public Page<OotdArticleDto> readOotList(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "12") Integer limit
+    ) {
+        Page<OotdArticleDto> ootdPage = ootdArticleService.readOotdPaged(page, limit);
+
+        return ootdPage;
     }
 }
