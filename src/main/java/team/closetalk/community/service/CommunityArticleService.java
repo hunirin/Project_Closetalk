@@ -52,7 +52,7 @@ public class CommunityArticleService {
     // 커뮤니티 전체 게시물 조회(페이지 단위로 조회)
     public Page<CommunityArticleListDto> readCommunityPaged(Integer pageNum, Integer pageSize) {
         Pageable pageable = PageRequest.of(
-                pageNum, pageSize, Sort.by("id").ascending());
+                pageNum, pageSize, Sort.by("id").descending()); // 최신순으로 수정
 
         Page<CommunityArticleEntity> communityEntityPage =
                 communityArticleRepository.findAllByDeletedAtIsNull(pageable);
@@ -65,6 +65,7 @@ public class CommunityArticleService {
             dto.setLikeCount(likeCount);
         });
 
+
         return articleListDtoPage;
     }
 
@@ -72,7 +73,7 @@ public class CommunityArticleService {
     public Page<CommunityArticleListDto> readCommunityPagedByCategory(Category category,
                                                                       Integer pageNum, Integer pageSize) {
         Pageable pageable = PageRequest.of(
-                pageNum, pageSize, Sort.by("id").ascending());
+                pageNum, pageSize, Sort.by("id").descending()); // 최신순으로 수정
 
         Page<CommunityArticleEntity> communityEntityPage =
                 communityArticleRepository.findAllByCategoryAndDeletedAtIsNull(category, pageable);

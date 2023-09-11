@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" >
-    <title>OOTD</title>
+    <title>Community</title>
     <link rel="stylesheet" href="/static/css/ootd/article.css">
     <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
@@ -45,8 +45,7 @@
             <p th:text="${ootdArticle?.createdAt}">2023.08.28</p>
           </div>
           <div class="board_middle_btn">
-<!--            <div class="board_middle_btn_unlike"><i class="fa-regular fa-heart"></i></div>-->
-            <div class="board_middle_btn_like" id="heart-icon"><i class="fa-solid fa-heart"></i></div>
+            <div class="board_middle_btn_like" id="heart-icon"><i class="fa-regular fa-heart"></i></div>
             <div class="board_middle_btn_URL" id="copy-link"><i class="fa-solid fa-link"></i></div>
           </div>
           <div class="board_bottom_content"></div>
@@ -91,7 +90,6 @@
         <div class="board_bottom_insert_comment">
             <div class="comment_in">
                 <form th:action="@{'/ootd/' + ${articleId}}" method="post">
-                <!--            <p class="not_login_comment">로그인 후 댓글쓰기가 가능합니다.</p>-->
                 <textarea name="content" class="comment_input" placeholder="댓글을 작성 해 주세요." maxlength="255"></textarea>
                 <button type="submit" class="comment_submit_btn">등록</button>
                 </form>
@@ -123,12 +121,12 @@
       <script>
       document.getElementById('heart-icon').addEventListener('click', function() {
       var heartIcon = this.querySelector('i');
-      if (heartIcon.classList.contains('fa-solid')) {
-      heartIcon.classList.remove('fa-solid');
-      heartIcon.classList.add('fa-regular');
-      } else {
+      if (heartIcon.classList.contains('fa-regular')) {
       heartIcon.classList.remove('fa-regular');
       heartIcon.classList.add('fa-solid');
+      } else {
+      heartIcon.classList.remove('fa-solid');
+      heartIcon.classList.add('fa-regular');
       }
       });
       </script>

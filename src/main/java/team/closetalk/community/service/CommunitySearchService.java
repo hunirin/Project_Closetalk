@@ -20,7 +20,7 @@ public class CommunitySearchService {
     // 커뮤니티 게시물 전체 검색
     public Page<CommunityArticleListDto> searchCommunityPaged(String contentKeyword, Integer pageNum, Integer pageSize) {
         Pageable pageable = PageRequest.of(
-                pageNum, pageSize, Sort.by("id").ascending());
+                pageNum, pageSize, Sort.by("id").descending()); // 최신순으로 수정
 
         Page<CommunityArticleEntity> communityEntityPage =
                 communitySearchRepository.findAllByTitleOrContentOrUserId_NicknameContaining(contentKeyword, pageable);
@@ -31,7 +31,7 @@ public class CommunitySearchService {
     // 커뮤니티 게시물 제목 검색
     public Page<CommunityArticleListDto> searchTitleCommunityPaged(String titleKeyword, Integer pageNum, Integer pageSize) {
         Pageable pageable = PageRequest.of(
-                pageNum, pageSize, Sort.by("id").ascending());
+                pageNum, pageSize, Sort.by("id").descending()); // 최신순으로 수정
 
         Page<CommunityArticleEntity> communityEntityPage =
                 communitySearchRepository.findAllByTitleContaining(titleKeyword, pageable);
@@ -41,7 +41,7 @@ public class CommunitySearchService {
         // 커뮤니티 게시물 닉네임 검색
         public Page<CommunityArticleListDto> searchNicknameCommunityPaged (String nicknameKeyword, Integer pageNum, Integer pageSize){
             Pageable pageable = PageRequest.of(
-                    pageNum, pageSize, Sort.by("id").ascending());
+                    pageNum, pageSize, Sort.by("id").descending()); // 최신순으로 수정
 
             Page<CommunityArticleEntity> communityEntityPage =
                     communitySearchRepository.findAllByUserId_NicknameContaining(nicknameKeyword, pageable);
