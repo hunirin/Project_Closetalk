@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>채팅하기</title>
+  <style>
+    #container {
+      display: flex;
+      height: 70vh;
+    }
+
+    #room-container {
+      overflow-y: scroll;
+      width: 30vw;
+    }
+
+    #chat-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-left: 1px inset;
+      width: 60vw;
+      padding: 10px;
+    }
+
+    #message-container {
+      overflow-y: scroll;
+      flex: 1;
+      margin-bottom: 10px;
+    }
+
+    #message-form {
+      display: flex;
+      width: 100%;
+      align-items: stretch;
+    }
+
+    #message-input {
+      width: 100%;
+      height: 24px;
+    }
+
+  </style>
+</head>
+<body>
+<h1>채팅하기</h1>
+<div id="user-container"></div>
+<hr>
+<div id="container">
+  <div id="room-container"></div>
+  <div id="chat-container">
+    <h2 id="chat-title"></h2>
+    <div id="message-container">채팅방을 골라주세요.</div>
+    <form id="message-form">
+      <input type="text" id="message-input">
+      <input type="submit" value="보내기">
+    </form>
+  </div>
+</div>
+<hr>
+<a href="/views/home">홈페이지</a>
+<script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@5.0.0/bundles/stomp.umd.min.js"></script>
+<script src="/static/assets/js/user.js"></script>
+<script>
+  let userId
+  let selectedRoom = parseInt(new URLSearchParams(location.search).get('room')) ?? null
+  // 채팅방 목록 갱신
+  const setChatRooms = function () {
+    return fetch('/dm', {
+              headers: {
+                'Authorization': `Bearer ${getJwt()}`,
+              }
+            }
+    ).then(response => {
+      if (response.ok)
+        return response.json()
+      else throw new Error(response.status.toString())
+    }).then(bodyJson => {
+      const roomContainer = document.getElementById('room-container')
+      roomContainer.innerHTML = ``
+      for (const room of bodyJson) {
+        const roomElem = document.createElement('div')
+        const roomTitle = document.createElement('h3')
+        const roomWith = document.createElement('h4')
+        const roomUnread = document.createElement('p')
+        const roomOpenButton = document.createElement('button')
+        roomTitle.innerText = room.item
+        if (selectedRoom === room.id) {
+          const chatTitle = document.getElementById('chat-title')
+          chatTitle.innerText = roomTitle.innerText
+
+          fetchMessages(room.id)
+        }
+        roomWith.innerText = room.with
+        roomUnread.innerText = `읽지 않은 메시지: ${room.messageNotRead}`
+        roomOpenButton.innerText = '열기'
+        roomOpenButton.addEventListener('click', () => {
+          selectedRoom = room.id
+          const chatTitle = document.getElementById('chat-title')
+          chatTitle.innerText = roomTitle.innerText
+          roomUnread.innerText = '읽지 않은 메시지: 0'
+
+          fetchMessages(room.id)
+        })
+        roomElem.appendChild(roomTitle)
+        roomElem.appendChild(roomWith)
+        roomElem.appendChild(roomUnread)
+        roomElem.appendChild(roomOpenButton)
+        roomElem.appendChild(document.createElement('hr'))
+        roomElem.setAttribute('data-room-id', room.id)
+        roomContainer.appendChild(roomElem)
+      }
+    }).catch(e => {
+      console.log(e.message)
+      alert(e.message)
+    })
+  }
+
+  // 채팅방 선택시 채팅 메시지 가져오기
+  const fetchMessages = function (roomId) {
+    fetch(`/dm/message/${roomId}`, {
+      headers: {
+        'Authorization': `Bearer ${getJwt()}`
+      }
+    }).then(response => {
+      if (response.ok)
+        return response.json()
+      else throw new Error(response.status.toString())
+    }).then(bodyJson => {
+      const messageContainer = document.getElementById('message-container')
+      messageContainer.innerHTML = ``
+      for (const message of bodyJson) {
+        const messageElem = document.createElement('div')
+        const senderElem = document.createElement('h4')
+        const contentElem = document.createElement('p')
+        const timeElem = document.createElement('h5')
+        senderElem.innerText = message.sender
+        contentElem.innerText = message.content
+        timeElem.innerText = message.timestamp
+
+        messageElem.appendChild(senderElem)
+        messageElem.appendChild(contentElem)
+        messageElem.appendChild(timeElem)
+
+        messageContainer.insertBefore(messageElem, messageContainer.firstChild)
+      }
+      messageContainer.scrollTop = messageContainer.scrollHeight
+      return fetch(`/dm/message/${roomId}`, {
+        method: 'get',
+        headers: {
+          'Authorization': `Bearer ${getJwt()}`,
+        },
+      })
+    }).catch(e => {
+      console.log(e.message)
+      alert(e.message)
+    })
+  }
+
+  // 메시지 보내기
+  const sendMessage = function (roomId) {
+    fetch(`/dm/message/${roomId}`, {
+      method: 'post',
+      headers: {
+        'Authorization': `Bearer ${getJwt()}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ content })
+    })
+  }
+
+  document.getElementById('message-form').addEventListener('submit', e => {
+    e.preventDefault()
+    const contentInput = document.getElementById('message-input')
+    const content = contentInput.value
+    contentInput.value = ''
+
+    if (!selectedRoom)
+      alert('채팅방을 선택하세요!')
+    else if (content.trim().length === 0)
+      alert('메시지를 입력하세요!')
+    else sendMessage(content)
+  })
+
+  fetchLoggedIn().then(userInfo => {
+    if (!userInfo) {
+      requireLogin()
+      throw new Error("unauthorized")
+    }
+    else {
+      userId = userInfo.id
+      const userElem = loggedInUserElem(userInfo.username)
+      document.querySelector('body').replaceChild(userElem,document.getElementById('user-container'))
+    }
+  }).then(
+          () => setChatRooms()
+  ).then(() => {
+    if (selectedRoom)
+      fetchMessages(selectedRoom)
+  }).then(() => {
+    // STOMP 구독
+    const client = new StompJs.Client({
+      brokerURL: 'ws://localhost:8080/chatting',
+      debug: function (str) {
+        console.log(str)
+      },
+      connectHeaders: {
+        'token': `${getJwt()}`
+      },
+      reconnectDelay: 2000,
+      onConnect: () => {
+        client.subscribe(`/topic/${userId}`, (frame) => {
+          const message = JSON.parse(frame.body)
+          const targetRoom = document.querySelector(`[data-room-id="${message.roomId}"]`)
+          if (message.roomId === selectedRoom) {
+            const messageContainer = document.getElementById('message-container')
+            const messageElem = document.createElement('div')
+            const senderElem = document.createElement('h4')
+            const contentElem = document.createElement('p')
+            const timeElem = document.createElement('h5')
+            senderElem.innerText = message.sender
+            contentElem.innerText = message.content
+            timeElem.innerText = message.timestamp
+
+            messageElem.appendChild(senderElem)
+            messageElem.appendChild(contentElem)
+            messageElem.appendChild(timeElem)
+
+            messageContainer.appendChild(messageElem)
+            messageContainer.scrollTop = messageContainer.scrollHeight
+            fetch(`/dm/rooms/${message.roomId}`, {
+              method: 'get',
+              headers: {
+                'Authorization': `Bearer ${getJwt()}`,
+              },
+            })
+            const roomContainer = document.getElementById('room-container')
+            roomContainer.insertBefore(targetRoom, roomContainer.firstChild)
+          }
+          else if (targetRoom) {
+            const roomUnread = targetRoom.childNodes[2]
+            const lastUnread = parseInt(roomUnread.innerText.split(': ')[1]) + 1
+            roomUnread.innerText = `읽지 않은 메시지: ${lastUnread}`
+            const roomContainer = document.getElementById('room-container')
+            roomContainer.insertBefore(targetRoom, roomContainer.firstChild)
+          }
+          else setChatRooms()
+        }, {
+          'token': `${getJwt()}`
+        })
+      }
+    })
+    client.activate()
+  }).catch(e => {
+    console.log(e.message)
+  })
+
+</script>
+</body>
+</html>
