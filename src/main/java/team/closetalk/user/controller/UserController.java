@@ -88,20 +88,23 @@ public class UserController {
         }
 
         String accessToken = jwtUtils.generateAccessToken(responseUser); // Access Token
-//        String refreshToken = tokenService.getRefreshToken(responseUser.getLoginId()); // Refresh Token
-//        if (refreshToken == null || refreshToken.isEmpty()) {
-//            refreshToken = jwtUtils.generateRefreshToken(responseUser);
-//            tokenService.saveRefreshToken(refreshToken, responseUser.getLoginId());
-//        }
+        tokenService.saveAccessToken(accessToken, responseUser.getLoginId());
+
+        String refreshToken = tokenService.getRefreshToken(responseUser.getLoginId()); // Refresh Token
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            refreshToken = jwtUtils.generateRefreshToken(responseUser);
+            tokenService.saveRefreshToken(refreshToken, responseUser.getLoginId());
+        }
         LoginResponseDto loginResDto =
                 new LoginResponseDto(responseUser.getNickname(), accessToken);
 
-//        Cookie cookie = new Cookie("refreshToken", refreshToken);
-//        cookie.setMaxAge(7 * 24 * 60 * 60); // 쿠키 유효 기간 (7일)
-//        cookie.setHttpOnly(true); // JavaScript로 쿠키 접근 방지
-//        cookie.setSecure(true); // HTTPS 연결에서만 전송
-//        response.addCookie(cookie); // HttpServletResponse에 쿠키 추가
-
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setPath("/");
+        cookie.setMaxAge(7 * 24 * 60 * 60); // 쿠키 유효 기간 (7일)
+        cookie.setHttpOnly(true); // JavaScript로 쿠키 접근 방지
+        cookie.setSecure(true); // HTTPS 연결에서만 전송
+        response.addCookie(cookie); // HttpServletResponse에 쿠키 추가
+        log.info("Cookie: {}", cookie);
         /* 클라이언트 부분 일단 킵
             // 쿠키에서 리프레시 토큰 읽기
             function getCookie(name) {
@@ -114,7 +117,7 @@ public class UserController {
             console.log('Refresh Token:', refreshToken);
          */
         log.info("accessToken: {}", accessToken);
-//        log.info("refreshToken: {}", refreshToken);
+        log.info("refreshToken: {}", refreshToken);
 
         return ResponseEntity.ok()
                 .body(loginResDto);
