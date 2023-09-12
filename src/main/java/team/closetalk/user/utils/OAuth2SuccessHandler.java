@@ -7,19 +7,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 import team.closetalk.user.dto.CustomUserDetails;
 import team.closetalk.user.service.UserService;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpHeaders;
-import java.net.http.HttpRequest;
-import java.time.Duration;
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -37,6 +31,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String providerId = oAuth2User.getAttribute("id"); //이거의 역할? 로그인 할 때마다 매번 달라지는지 확인 필요
         log.info("이번 로그인 시도의 providerId는: {}", providerId);
         String email = oAuth2User.getAttribute("email");
+        assert email != null;
         String loginId = email.split("@")[0]; //전달 받은 인증정보에서 이메일 앞자리로 따와서 loginId로 사용
         String nickname = oAuth2User.getAttribute("nickname");
 
@@ -45,7 +40,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             userService.createUser(CustomUserDetails.builder()
                     .loginId(loginId)
                     .password(providerId)
-                    .nickname(loginId)
+                    .nickname(nickname)
                     .email(email)
                     .social(provider)
                     .build()
@@ -54,13 +49,15 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         //JWT 발급
         CustomUserDetails customUserDetails = userService.loadUserByUsername(loginId);
-        String token = jwtUtils.generateToken(customUserDetails);
+        String token = jwtUtils.generateAccessToken(customUserDetails);
 
-        //(임시) JWT 확인
-        log.info(token);
+        //JWT 확인
+        log.info("accessToken: {}", token);
 
-//        response.addHeader("Authorization", "Bearer " + token);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("/loginPage")
+                .queryParam("accessToken", token);
+        String redirectUrl = builder.toUriString();
 
-        response.sendRedirect("/testPage?token=" + token);
+        response.sendRedirect(redirectUrl);
     }
 }

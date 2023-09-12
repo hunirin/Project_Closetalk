@@ -5,10 +5,8 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import team.closetalk.user.dto.CustomUserDetails;
 
 import java.security.Key;
 import java.security.SecureRandom;
@@ -20,6 +18,9 @@ import java.util.Date;
 public class JwtUtils {
     private final Key signingKey;
     private final JwtParser jwtParser;
+
+    private static final long ACCESS_TOKEN_EXPIRATION_SECONDS = 1800; // 30분
+    private static final long REFRESH_TOKEN_EXPIRATION_SECONDS = 86400; // 1일
 
     private static final byte[] JWT_SECRET = generateRandomKey(32);
 
@@ -54,11 +55,23 @@ public class JwtUtils {
         }
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateAccessToken(UserDetails userDetails) {
         Claims jwtClaims = Jwts.claims()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(Date.from(Instant.now()))
-                .setExpiration(Date.from(Instant.now().plusSeconds(1200)));
+                .setExpiration(Date.from(Instant.now().plusSeconds(ACCESS_TOKEN_EXPIRATION_SECONDS))); // 액세스 토큰의 만료 시간
+
+        return Jwts.builder()
+                .setClaims(jwtClaims)
+                .signWith(signingKey)
+                .compact();
+    }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        Claims jwtClaims = Jwts.claims()
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(Date.from(Instant.now()))
+                .setExpiration(Date.from(Instant.now().plusSeconds(REFRESH_TOKEN_EXPIRATION_SECONDS))); // 리프레시 토큰의 만료 시간
 
         return Jwts.builder()
                 .setClaims(jwtClaims)
