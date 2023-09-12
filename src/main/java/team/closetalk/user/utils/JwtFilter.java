@@ -33,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if(authHeader != null && authHeader.startsWith("Bearer ")){
             String token = authHeader.split(" ")[1];
             if(jwtUtils.validate(token)){
-//                if (isTokenValidInRedis(token)) {
+                if (isTokenValidInRedis(token)) {
                     SecurityContext context = SecurityContextHolder.createEmptyContext();
 
                     String username = jwtUtils.parseClaims(token).getSubject();
@@ -47,9 +47,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
                     context.setAuthentication(authenticationToken);
                     SecurityContextHolder.setContext(context);
-//                } else {
-//                    log.warn("토큰이 만료되었거나 유효하지 않습니다.");
-//                }
+                } else {
+                    log.warn("토큰이 만료되었거나 유효하지 않습니다.");
+                }
             } else {
                 log.warn("인증되지 않은 사용자입니다.");
             }
