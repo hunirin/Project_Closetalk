@@ -5,12 +5,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import team.closetalk.community.dto.CommunityCommentDto;
+import team.closetalk.community.dto.article.response.CommunityArticleDto;
 import team.closetalk.community.dto.article.response.CommunityArticleListDto;
 import team.closetalk.community.enumeration.Category;
 import team.closetalk.community.service.CommunityArticleService;
+import team.closetalk.community.service.CommunityCommentService;
 import team.closetalk.community.service.CommunitySearchService;
+import team.closetalk.ootd.dto.OotdCommentDto;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/community/view")
@@ -18,6 +25,7 @@ import team.closetalk.community.service.CommunitySearchService;
 public class CommunityViewController {
     private final CommunityArticleService communityArticleService;
     private final CommunitySearchService communitySearchService;
+    private final CommunityCommentService communityCommentService;
 
 
     // 게시글 전체 조회
@@ -44,6 +52,7 @@ public class CommunityViewController {
         return "/community/communityList";
     }
 
+    // 검색기능
     @GetMapping("/search")
     public String searchCommunity(
             @RequestParam(value = "searchType", defaultValue = "all") String searchType,
@@ -67,6 +76,22 @@ public class CommunityViewController {
         model.addAttribute("keyword", keyword);
 
         return "/community/communityList";
+    }
+
+    // 상세페이지 조회
+    @GetMapping("/{articleId}")
+    public String readArticle(
+            Model model,
+            @PathVariable Long articleId
+    ) {
+        CommunityArticleDto communityArticle = communityArticleService.readArticle(articleId);
+        model.addAttribute("communityArticle", communityArticle);
+
+        List<CommunityCommentDto> communityCommentList = communityCommentService.readCommentList(articleId);
+        model.addAttribute("communityCommentList", communityCommentList);
+        model.addAttribute("articleId", articleId);
+
+        return "/community/communityArticle";
     }
 
 }

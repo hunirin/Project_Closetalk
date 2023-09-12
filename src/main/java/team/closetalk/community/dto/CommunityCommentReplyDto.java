@@ -12,6 +12,7 @@ public class CommunityCommentReplyDto {
     private String nickname;
     private String content;
     private String createdAt;    // 작성 날짜
+    private String profile;
 
     public static CommunityCommentReplyDto toReplyDto(CommunityCommentEntity comment) {
         if (comment.getDeletedAt() != null) {
@@ -21,6 +22,7 @@ public class CommunityCommentReplyDto {
         } else if (comment.getModifiedAt() != null) {
             return CommunityCommentReplyDto.builder()
                     .nickname(comment.getUserId().getNickname())
+                    .profile(comment.getUserId().getProfileImageUrl())
                     .content(comment.getContent())
                     .createdAt(comment.getCreatedAt()
                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + " (수정됨)")
@@ -28,6 +30,7 @@ public class CommunityCommentReplyDto {
         } else {
             return CommunityCommentReplyDto.builder()
                     .nickname(comment.getUserId().getNickname())
+                    .profile(comment.getUserId().getProfileImageUrl())
                     .content(comment.getContent())
                     .createdAt(comment.getCreatedAt()
                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))

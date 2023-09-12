@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+  <html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" >
+    <title>Community</title>
+    <link rel="stylesheet" href="/static/css/community/article.css">
+    <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+</head>
+<body>
+<section class="ootd">
+
+    <!-- header -->
+    <header th:insert="~{header :: header}"></header>
+
+    <div id="root">
+      <div class="main_body">
+
+        <div class="board_top">
+            <div class="board_top_title">
+                <p th:text="${communityArticle.title}">title</p>
+            </div>
+          <div class="board_top_info">
+            <div class="board_top_userinfo">
+                <img th:src="@{${communityArticle.profile}}" th:if="${communityArticle!= null}">
+                <p class="user_nickname" th:text="${communityArticle.nickname}">nickname</p>
+            </div>
+          </div>
+        </div>
+
+
+          <div class="board_image" th:each="image : ${communityArticle.communityImages}">
+            <img th:src="@{${image.imageUrl}}" style="height: 100%; width: 100%">
+          </div>
+
+        <div class="board_middle">
+          <div class="board_middle_boardinfo">
+            <p th:text="${communityArticle.createdAt}">2023.08.28</p>
+          </div>
+          <div class="board_middle_btn">
+            <div class="board_middle_btn_like" id="heart-icon"><i class="fa-regular fa-heart"></i></div>
+            <div class="board_middle_btn_URL" id="copy-link"><i class="fa-solid fa-link"></i></div>
+          </div>
+          <div class="board_bottom_content"></div>
+        </div>
+
+        <div class="board_bottom">
+          <div class="board_bottom_content">
+            <div th:text="${communityArticle.content}">content</div>
+          </div>
+        </div>
+
+        <div class="board_bottom_comment" >
+            <div class="board_bottom_commentList" th:each="commentList : ${communityCommentList}">
+                <div class="commentList_item">
+                    <img th:src="@{${commentList.profile}}" class="comment_profile_img">
+                    <div class="board_bottom_comment_user">
+                        <p class="user_nickname" th:text="${commentList.nickname}">nickname2</p>
+                        <p class="user_content" th:text="${commentList.content}">comment</p>
+                        <p class="comment_time" th:text="${commentList.createdAt}">2023.08.28</p>
+                        <p class="comment_reply">답글달기</p>
+                    </div>
+                </div>
+                <div class="board_bottom_sub_comment" th:each="replyList : ${commentList.replies}">
+                    <img th:src="${replyList.profile}" class="comment_profile_img">
+                    <div class="board_bottom_comment_user">
+                        <p class="user_nickname" th:text="${replyList.nickname}">nickname1</p>
+                        <p class="user_content" th:text="${replyList.content}">
+                            <span class="comment_sub_content" th:text="${commentList.nickname}">nickname2</span>
+                            comment
+                        </p>
+                        <p class="comment_time" th:text="${replyList.createdAt}">2023.08.28</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="board_bottom_insert_comment">
+            <div class="comment_in">
+                <form th:action="@{'/ootd/' + ${articleId}}" method="post">
+                <textarea name="content" class="comment_input" placeholder="댓글을 작성 해 주세요." maxlength="255"></textarea>
+                <button type="submit" class="comment_submit_btn">등록</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="board_bottom_btn">
+          <button class="board_bottom_btn_edit">수정</button>
+          <button class="board_bottom_btn_delete" onclick="confirmDelete()">삭제</button>
+          <a href="/ootd/main">
+            <button class="board_bottom_btn_list">목록</button>
+          </a>
+        </div>
+     </div>
+    </div>
+
+    <footer th:insert="~{footer :: footer}"></footer>
+
+      <!-- 배너 스와이프 API -->
+      <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+      <script>
+          var swiper = new Swiper(".mySwiper", {
+              pagination: {
+                  el: ".swiper-pagination",
+              },
+          });
+      </script>
+      <!-- heart 클릭 시 변형하는 JS -->
+      <script>
+      document.getElementById('heart-icon').addEventListener('click', function() {
+      var heartIcon = this.querySelector('i');
+      if (heartIcon.classList.contains('fa-regular')) {
+      heartIcon.classList.remove('fa-regular');
+      heartIcon.classList.add('fa-solid');
+      } else {
+      heartIcon.classList.remove('fa-solid');
+      heartIcon.classList.add('fa-regular');
+      }
+      });
+      </script>
+      <!-- link 클릭 시 링크 복사하는 JS -->
+      <script>
+          document.getElementById('copy-link').addEventListener('click', function() {
+              var link = window.location.href; // Get the current page's URL
+              var tempInput = document.createElement("input");
+              tempInput.value = link;
+              document.body.appendChild(tempInput);
+              tempInput.select();
+              document.execCommand("copy");
+              document.body.removeChild(tempInput);
+
+              // Show a notification
+              var notification = document.createElement("div");
+              notification.textContent = "링크가 복사되었습니다!";
+              notification.classList.add("copy-notification");
+              document.body.appendChild(notification);
+
+              setTimeout(function() {
+                  document.body.removeChild(notification);
+              }, 3000);
+          });
+      </script>
+
+    <script>
+        // 댓글 작성 시 로그인 확인
+        var isAuthenticated = /* 사용자가 로그인 했는지 확인하는 로직 */;
+
+        var textarea = document.querySelector('.comment_input');
+        if (!isAuthenticated) {
+            textarea.placeholder = '로그인 후 댓글을 작성해주세요.';
+        }
+    </script>
+
+    <script>
+        // 삭제창 누르면 나오는 확인창
+        function confirmDelete() {
+            var result = confirm("이 글을 삭제하시겠습니까?");
+            if (result) {
+                var articleId = /*[[${articleId}]]*/;
+                $.ajax({
+                    type: "DELETE",
+                    url: "/ootd/" + articleId,
+                    success: function(response) {
+                        alert("성공적으로 삭제했습니다.");
+
+                    },
+                    error: function(xhr, status, error) {
+                        alert("Error deleting article: " + error);
+                    }
+                });
+            } else {
+
+            }
+        }
+    </script>
+
+
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+</section>
+</body>
+</html>

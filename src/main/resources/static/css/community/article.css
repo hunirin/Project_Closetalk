@@ -39,6 +39,11 @@
         padding: 20px 30px;
     }
 
+    .board_top_title {
+        font-size: 25px;
+        font-weight: bold;
+    }
+
     .board_top_info {
         align-items: center;
         display: flex;
@@ -56,14 +61,12 @@
     }
 
     .board_top_userinfo>.user_nickname {
-        font-size: 20px;
-        font-weight: bold;
+        font-size: 18px;
         display: inline-block;
     }
 
-
     .board_middle {
-
+        /*border-bottom: 1px solid #4d5154;*/
     }
 
     .board_middle_boardinfo {
@@ -125,6 +128,7 @@
         margin: 20px auto auto;
         font-size: 20px;
         display: block;
+        border-top: 1px solid #4d5154;
     }
 
     .board_bottom_commentList {

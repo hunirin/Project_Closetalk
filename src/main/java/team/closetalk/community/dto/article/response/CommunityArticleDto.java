@@ -24,7 +24,8 @@ public class CommunityArticleDto {
     private Long hits;          // 조회수
     private Long likes;     // 좋아요 수
     private String createdAt;   // 작성 날짜
-    private String nickname;    // 작성자
+    private String nickname;    // 작성자 닉네임
+    private String profile;     // 작성자 프로필
 
     private List<ClosetItemDto> closetItems;
     private List<CommunityArticleImagesDto> communityImages;
@@ -47,6 +48,7 @@ public class CommunityArticleDto {
         dto.setCommunityImages(imageDtoList);
         dto.setClosetItems(closetItemDtoList);
         dto.setNickname(entity.getUserId().getNickname());
+        dto.setProfile(entity.getUserId().getProfileImageUrl());
 
         if (entity.getModifiedAt() == null) // 수정 시 created_at 변경
             dto.setCreatedAt(entity.getCreatedAt()

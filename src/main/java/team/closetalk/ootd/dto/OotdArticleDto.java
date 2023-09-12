@@ -48,19 +48,6 @@ public class OotdArticleDto {
         dto.setNickname(entity.getUserEntity().getNickname());
         dto.setThumbnail(entity.getThumbnail());
 
-        /*
-       // 첫번째 이미지를 thumbnail 저장
-        // service 단계에서 저장해주면 굳이 안써도됨
-        List<OotdArticleImagesEntity> ootdImages = entity.getOotdImages();
-        if (ootdImages != null && !ootdImages.isEmpty()) {
-            dto.setThumbnail(ootdImages.stream()
-                    .map(OotdArticleImagesDto::fromEntity)
-                    .toList().get(0).getImageUrl());
-        }
-        System.out.println(dto.getThumbnail());
-         */
-
-
         return dto;
     }
 
