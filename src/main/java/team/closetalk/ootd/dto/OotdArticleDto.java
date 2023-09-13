@@ -60,7 +60,7 @@ public class OotdArticleDto {
         dto.setContent(entity.getContent());
         dto.setHashtag(entity.getHashtag());
         dto.setCreatedAt(entity.getCreatedAt()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+                .format(DateTimeFormatter.ofPattern("yyyy.MM.dd")));
         // 이미지 전체 불러오기
         List<OotdArticleImagesEntity> ootdImages = entity.getOotdImages();
         if (ootdImages != null && !ootdImages.isEmpty()) {

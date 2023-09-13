@@ -118,19 +118,44 @@
               },
           });
       </script>
-      <!-- heart 클릭 시 변형하는 JS -->
-      <script>
-      document.getElementById('heart-icon').addEventListener('click', function() {
-      var heartIcon = this.querySelector('i');
-      if (heartIcon.classList.contains('fa-regular')) {
-      heartIcon.classList.remove('fa-regular');
-      heartIcon.classList.add('fa-solid');
-      } else {
-      heartIcon.classList.remove('fa-solid');
-      heartIcon.classList.add('fa-regular');
-      }
-      });
-      </script>
+      <!-- heart 클릭 시 좋아요 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const heartIcon = document.getElementById('heart-icon');
+
+            if (heartIcon) {
+                heartIcon.addEventListener('click', function() {
+                    // Toggle between "fa-regular" and "fa-solid" classes
+                    const icon = heartIcon.querySelector('i');
+                    icon.classList.toggle('fa-regular');
+                    icon.classList.toggle('fa-solid');
+
+                    // Adjust the endpoint based on your Spring Boot URL
+                    const articleId = [[${articleId}]];
+                    const endpoint = `/ootd/like/${articleId}`;
+
+                    // Send a POST request to the endpoint to toggle the like
+                    fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + accessToken,
+                        },
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                // If the request fails, revert the icon class to its original state
+                                icon.classList.toggle('fa-regular');
+                                icon.classList.toggle('fa-solid');
+                                alert('게시물 좋아요 처리에 실패했습니다.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                });
+            }
+        });
+    </script>
       <!-- link 클릭 시 링크 복사하는 JS -->
       <script>
           document.getElementById('copy-link').addEventListener('click', function() {

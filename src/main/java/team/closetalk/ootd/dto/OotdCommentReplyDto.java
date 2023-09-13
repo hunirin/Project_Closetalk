@@ -4,8 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 import team.closetalk.ootd.entity.OotdCommentEntity;
 
-import java.time.format.DateTimeFormatter;
-
 @Data
 @Builder
 public class OotdCommentReplyDto {
@@ -24,16 +22,14 @@ public class OotdCommentReplyDto {
                     .nickname(comment.getUserEntity().getNickname())
                     .profile(comment.getUserEntity().getProfileImageUrl())
                     .content(comment.getContent())
-                    .createdAt(comment.getCreatedAt()
-                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) +" (수정됨)")
+                    .createdAt(comment.getCreatedAt() + " (수정됨)")
                     .build();
         } else {
             return OotdCommentReplyDto.builder()
                     .nickname(comment.getUserEntity().getNickname())
                     .profile(comment.getUserEntity().getProfileImageUrl())
                     .content(comment.getContent())
-                    .createdAt(comment.getCreatedAt()
-                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
+                    .createdAt(String.valueOf(comment.getCreatedAt()))
                     .build();
         }
     }
