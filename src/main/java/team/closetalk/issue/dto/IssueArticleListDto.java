@@ -32,7 +32,7 @@ public class IssueArticleListDto {
                 .title(entity.getTitle())
                 .hits(entity.getHits())
                 .thumbnail(entity.getThumbnail())
-                .createdAt(entity.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .createdAt(entity.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .nickname(entity.getUserId().getNickname())
                 .build();
     }
