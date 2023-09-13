@@ -78,7 +78,8 @@ spring:
       mail.smtp.starttls.enable: true
   data:
     redis:
-      host: 127.0.0.1
+      host: 52.78.204.250
       port: 6379
+
 jwt:
   secret : ${JWT_SECRET}
