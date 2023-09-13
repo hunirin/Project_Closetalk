@@ -29,7 +29,8 @@ public class OotdCommentDto {
                     .nickname(comment.getUserEntity().getNickname())
                     .profile(comment.getUserEntity().getProfileImageUrl())
                     .content(comment.getContent())
-                    .createdAt(comment.getCreatedAt() + " (수정됨)")
+                    .createdAt(comment.getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) +" (수정됨)")
                     .replies(replies)
                     .build();
         } else {
@@ -38,7 +39,8 @@ public class OotdCommentDto {
                     .nickname(comment.getUserEntity().getNickname())
                     .content(comment.getContent())
                     .profile(comment.getUserEntity().getProfileImageUrl())
-                    .createdAt(String.valueOf(comment.getCreatedAt()))
+                    .createdAt(comment.getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
                     .replies(replies)
                     .build();
         }

@@ -36,7 +36,7 @@
         </div>
 
         <section id="boardList" th:each="commList : ${communityList}">
-            <a class="article">
+            <a class="article" th:href="'/community/view/' + ${commList.id}">
                 <div class="image">
                     <img th:src="@{${commList.thumbnail}}" >
                 </div>

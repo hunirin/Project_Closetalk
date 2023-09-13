@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @Builder
 public class CommunityCommentDto {
+    private Long id;
     private String nickname;
     private String content;
     private String createdAt;    // 작성 날짜
@@ -24,6 +25,7 @@ public class CommunityCommentDto {
                     .build();
         } else if (comment.getModifiedAt() != null) {
             return CommunityCommentDto.builder()
+                    .id(comment.getId())
                     .nickname(comment.getUserId().getNickname())
                     .profile(comment.getUserId().getProfileImageUrl())
                     .content(comment.getContent())
@@ -33,6 +35,7 @@ public class CommunityCommentDto {
                     .build();
         } else {
             return CommunityCommentDto.builder()
+                    .id(comment.getId())
                     .nickname(comment.getUserId().getNickname())
                     .profile(comment.getUserId().getProfileImageUrl())
                     .content(comment.getContent())
