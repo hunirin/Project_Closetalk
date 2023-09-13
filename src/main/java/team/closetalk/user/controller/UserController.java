@@ -1,5 +1,8 @@
 package team.closetalk.user.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -10,10 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import team.closetalk.user.dto.CustomUserDetails;
-import team.closetalk.user.dto.EmailAuthDto;
-import team.closetalk.user.dto.JwtTokenDto;
+import team.closetalk.user.dto.*;
 import team.closetalk.user.service.EmailSendService;
+import team.closetalk.user.service.TokenService;
 import team.closetalk.user.service.UserService;
 import team.closetalk.user.utils.JwtUtils;
 
@@ -29,6 +31,7 @@ public class UserController {
     private final JwtUtils jwtUtils;
 
     private final EmailSendService emailSendService;
+    private final TokenService tokenService;
 
     //C
     //이메일 인증 처리
@@ -75,25 +78,49 @@ public class UserController {
 
     }
 
-    //R
-    //로그인
-    // Header -> Response token
-    @PostMapping("/login-token")
-    public ResponseEntity<?> loginUserToJwt(@RequestParam("loginId") String loginId,
-                                       @RequestParam("password") String password) {
-        CustomUserDetails responseUser = userService.loadUserByUsername(loginId);
-        if (!passwordEncoder.matches(password, responseUser.getPassword())) {
+    // 로그인(나중에 Service 분리)
+    @PostMapping("/login")
+    public ResponseEntity<?> login(HttpServletResponse response,
+                                  @RequestBody LoginRequestDto loginReqDto) {
+        CustomUserDetails responseUser = userService.loadUserByUsername(loginReqDto.getLoginId());
+        if (!passwordEncoder.matches(loginReqDto.getPassword(), responseUser.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        String token = jwtUtils.generateToken(responseUser);
+        String accessToken = jwtUtils.generateAccessToken(responseUser); // Access Token
+        tokenService.saveAccessToken(accessToken, responseUser.getLoginId());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + token);
+        String refreshToken = tokenService.getRefreshToken(responseUser.getLoginId()); // Refresh Token
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            refreshToken = jwtUtils.generateRefreshToken(responseUser);
+            tokenService.saveRefreshToken(refreshToken, responseUser.getLoginId());
+        }
+        LoginResponseDto loginResDto =
+                new LoginResponseDto(responseUser.getNickname(), accessToken);
+
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setPath("/");
+        cookie.setMaxAge(7 * 24 * 60 * 60); // 쿠키 유효 기간 (7일)
+        cookie.setHttpOnly(true); // JavaScript로 쿠키 접근 방지
+        cookie.setSecure(true); // HTTPS 연결에서만 전송
+        response.addCookie(cookie); // HttpServletResponse에 쿠키 추가
+        log.info("Cookie: {}", cookie);
+        /* 클라이언트 부분 일단 킵
+            // 쿠키에서 리프레시 토큰 읽기
+            function getCookie(name) {
+              const value = `; ${document.cookie}`;
+              const parts = value.split(`; ${name}=`);
+              if (parts.length === 2) return parts.pop().split(';').shift();
+            }
+
+            const refreshToken = getCookie('refreshToken'); // 쿠키 이름 'refreshToken'에 저장된 리프레시 토큰 값
+            console.log('Refresh Token:', refreshToken);
+         */
+        log.info("accessToken: {}", accessToken);
+        log.info("refreshToken: {}", refreshToken);
 
         return ResponseEntity.ok()
-                .headers(headers)
-                .body("Login successful");
+                .body(loginResDto);
     }
 
     //회원정보 가져오기
