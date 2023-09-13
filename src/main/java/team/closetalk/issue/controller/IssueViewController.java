@@ -69,4 +69,16 @@ public class IssueViewController {
 
         return "issue/issueList";
     }
+
+    @GetMapping("/{articleId}")
+    public String readArticle(
+            @PathVariable Long articleId,
+            Model model
+    ) {
+        IssueArticleDto issueArticle = issueArticleService.readArticle(articleId);
+        model.addAttribute("issueArticle", issueArticle);
+        model.addAttribute("articleId", articleId);
+
+        return "issue/issueArticle";
+    }
 }
