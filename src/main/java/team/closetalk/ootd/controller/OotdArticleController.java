@@ -57,4 +57,9 @@ public class OotdArticleController {
         model.addAttribute("ootdCommentList", ootdCommentList);
         return "ootd/ootdArticle";
     }
+
+    @GetMapping("/writePage")
+    public String writeOotdPage(Model model){
+        return "ootd/writeOotdArticle";
+    }
 }

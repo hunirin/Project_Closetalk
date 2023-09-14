@@ -162,6 +162,11 @@
                 updateButtonPosition();
                 $(window).on("scroll", updateButtonPosition);
             });
+
+            let btnWrite = document.querySelector("#plus-btn")
+            btnWrite.addEventListener('click', () => {
+                location.href = "writePage"
+            })
         </script>
     </form>
 </section>
