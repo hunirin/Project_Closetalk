@@ -10,6 +10,7 @@
     color: #000;
     margin: 0;
     padding: 0;
+    text-decoration: none;
   }
 
   #root {
@@ -18,7 +19,7 @@
     width: 300vw;
     position: relative;
     margin: 100px auto auto;
-    font-size: 18px;
+    font-size: 14px;
     display: block;
   }
 
@@ -118,7 +119,7 @@
     flex: 1;
   }
 
-  select {
+  .select {
     box-sizing: border-box;
     height: 40px;
     padding: 0 20px;
@@ -183,7 +184,7 @@
     justify-content: center;
   }
 
-  .pagination a {
+  .pagination .number a {
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -216,6 +217,7 @@
   }
 
   .pop-up-btn {
+    cursor: pointer;
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -233,6 +235,7 @@
     text-align: center;
     line-height: 20px;
   }
+
 
   .pop-up-button-item {
     margin: 5px 0;
@@ -309,7 +312,7 @@
     width: 300vw;
     position: relative;
     margin: 100px auto auto;
-    font-size: 18px;
+    font-size: 15px;
     display: block;
   }
 
@@ -371,6 +374,11 @@
     padding: 1px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .card a {
+    text-decoration: none;
+    color: black;
   }
 
   .card-img-top {
