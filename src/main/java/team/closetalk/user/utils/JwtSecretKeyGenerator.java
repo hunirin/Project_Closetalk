@@ -4,7 +4,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 public class JwtSecretKeyGenerator {
-    public static void main(String[] args) {
+    private static String generateSecretKey() {
         // 시크릿 키 길이 설정 (256 비트)
         int keyLength = 32;
 
@@ -12,9 +12,7 @@ public class JwtSecretKeyGenerator {
         byte[] secretKeyBytes = generateRandomKey(keyLength);
 
         // 시크릿 키를 Base64 인코딩하여 문자열로 표현
-        String secretKey = Base64.getEncoder().encodeToString(secretKeyBytes);
-
-        System.out.println("Generated Secret Key: " + secretKey);
+        return Base64.getEncoder().encodeToString(secretKeyBytes);
     }
 
     private static byte[] generateRandomKey(int keyLength) {

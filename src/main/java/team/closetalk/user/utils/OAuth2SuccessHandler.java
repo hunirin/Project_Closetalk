@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 import team.closetalk.user.dto.CustomUserDetails;
+import team.closetalk.user.service.TokenService;
 import team.closetalk.user.service.UserService;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.io.IOException;
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtUtils jwtUtils;
     private final UserService userService;
+    private final TokenService tokenService;
 
     //인증에 성공했을 때
     @Override
@@ -51,6 +53,11 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         CustomUserDetails customUserDetails = userService.loadUserByUsername(loginId);
         String token = jwtUtils.generateAccessToken(customUserDetails);
 
+        String refreshToken = tokenService.getRefreshToken(customUserDetails.getLoginId()); // Refresh Token
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            refreshToken = jwtUtils.generateRefreshToken(customUserDetails);
+            tokenService.saveRefreshToken(refreshToken, customUserDetails.getLoginId());
+        }
         //JWT 확인
         log.info("accessToken: {}", token);
 
