@@ -54,6 +54,10 @@ INSERT INTO closet_item (brand, category, item_image_url, item_name, price, desc
 VALUES ('아디다스', 'OUTER', '/static/images/closetItem/userNo.1/아우터모음/adidas.png', '아디다스 패딩', 324207, '생존용 롱패딩 구비', '2023-08-15 13:24:12', NOW(), (SELECT id FROM closet LIMIT 1 OFFSET 1));
 INSERT INTO closet_item (brand, category, item_image_url, item_name, price, description, created_at, modified_at, closet_id)
 VALUES ('보세', 'OUTER', '/static/images/closetItem/userNo.1/아우터모음/cc.jpg', '흑청자켓', 77000, '', '2023-08-16 11:23:32', NOW(), (SELECT id FROM closet LIMIT 1 OFFSET 1));
+INSERT INTO closet_item (brand, category, item_image_url, item_name, price, description, created_at, modified_at, closet_id)
+VALUES ('유니클로', 'OUTER', '/static/images/closetItem/userNo.1/아우터모음/outer_1.jpg', '헌팅자켓', 89000, '', '2023-08-16 11:23:32', NOW(), (SELECT id FROM closet LIMIT 1 OFFSET 1));
+INSERT INTO closet_item (brand, category, item_image_url, item_name, price, description, created_at, modified_at, closet_id)
+VALUES ('유니클로', 'BOTTOM', '/static/images/closetItem/userNo.1/아우터모음/bottom_4.jpg', '헌팅자켓', 89000, '', '2023-08-16 11:23:32', NOW(), (SELECT id FROM closet LIMIT 1 OFFSET 1));
 
 -- INSERT OOTD_ARTICLE
 insert into ootd_article (id, user_id, content, hashtag, created_at, thumbnail) VALUES (1, 1, '수변공원에서 사는 사람', '#ootd#가을코디#수변공원', '2023-08-16 11:23:32', '/static/images/ootd/1/1.jpg');
@@ -191,7 +195,7 @@ insert into community_article (id, category, title, content, thumbnail, created_
 insert into community_article (id, category, title, content, thumbnail, created_at, user_id, hits, like_count) values (35, 'SMALLTALK', '드디어', 'test', '/static/images/community/35/outer_6.jpg', '2023-08-24', 1, 285, 11);
 insert into community_article (id, category, title, content, thumbnail, created_at, user_id, hits, like_count) values (36, 'CLOSETALK', '이 코디에 신발 어울릴까요', 'test', '/static/images/community/36/shoes_9.jpg', '2023-08-24', 1, 100, 15);
 insert into community_article (id, category, title, content, thumbnail, created_at, user_id, hits, like_count) values (37, 'CLOSETALK', '장갑 샀는데 평가좀', 'test', '/static/images/community/37/etc_4.jpg', '2023-08-24', 1, 301, 5);
-insert into community_article (id, category, title, content, thumbnail, created_at, user_id, hits, like_count) values (38, 'CLOSETALK', '옷 조합좀 봐주세요', 'test', '/static/images/community/38/outer_1.jpg', '2023-08-24', 1, 195, 7);
+insert into community_article (id, category, title, content, thumbnail, created_at, user_id, hits, like_count) values (38, 'CLOSETALK', '옷 조합좀 봐주세요', '이바지에 아우터 어울릴까요', '/static/images/community/38/outer_1.jpg', '2023-08-24', 1, 195, 7);
 insert into community_article (id, category, title, content, thumbnail, created_at, user_id, hits, like_count) values (39, 'SMALLTALK', '이거 어떤가요?', '가을에 어울리는 컬러라 고민되네요', '/static/images/community/39/top_5.jpg', '2023-08-24', 1, 211, 5);
 insert into community_article (id, category, title, content, thumbnail, created_at, user_id, hits, like_count) values (40, 'SMALLTALK', '맨투맨 살깡 말깡', '유니클로에서 새로 나온 신상인데 이쁠까요', '/static/images/community/40/top_1.jpg', '2023-08-24', 1, 51, 5);
 
@@ -254,3 +258,6 @@ values  (10, '첫번째 게시물의 수정된 다섯번째 댓글', NOW(), NOW(
 
 -- INSERT COMMUNITY_LIKE
 -- INSERT COMMUNITY_CLOSET_ITEM
+insert into closetalk_item (closet_item_id, community_article_id) values (1, 1);
+insert into closetalk_item (closet_item_id, community_article_id) values (5, 38);
+insert into closetalk_item (closet_item_id, community_article_id) values (6, 38);

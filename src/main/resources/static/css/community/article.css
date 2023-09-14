@@ -65,8 +65,24 @@
         display: inline-block;
     }
 
-    .board_middle {
-        /*border-bottom: 1px solid #4d5154;*/
+    .closetalk .td_box {
+        width: 100px;
+        height: 100px;
+        border: 1px solid #000;
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 10px;
+        margin-right: 10px;
+        display: inline-block;
+        background-color: #fff;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .closetalk img {
+        width: 100px;
+        height: 100px;
+        vertical-align: middle;
     }
 
     .board_middle_boardinfo {
