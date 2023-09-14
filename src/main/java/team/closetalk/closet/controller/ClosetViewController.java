@@ -42,4 +42,10 @@ public class ClosetViewController {
         closetItemService.createClosetItem(closetName, entity, itemImageUrl, authentication);
         return "/closet/itemRegistration";
     }
+  
+    // 내 옷장 보기
+    @GetMapping("/{nickname}")
+    public String closetList(@PathVariable("nickname") String nickname) {
+        return "closet/my-closet";
+    }
 }
