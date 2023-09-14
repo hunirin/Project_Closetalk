@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>게시글 생성</title>
+  <link rel="stylesheet" href="/static/css/issue/article.css">
+  <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+<section class="create-issue">
+
+  <!-- header -->
+  <header th:insert="~{header :: header}"></header>
+
+  <div id="root">
+    <div class="main_body">
+      <div class="board_top">
+        <form th:action="@{/issue/view/create}" enctype="multipart/form-data" method="post" th:objects="${issueArticle}">
+          <div class="board_top_title">
+            <label for="category">카테고리:</label>
+            <select id="category" name="category">
+              <option value="ISSUE">ISSUE</option>
+              <option value="MAGAZINE">MAGAZINE</option>
+            </select>
+            <label for="title">제목:</label>
+            <input type="text" id="title" name="title">
+          </div>
+          <div class="board_middle">
+            <label for="content">내용:</label>
+            <textarea id="content" name="content"></textarea>
+          </div>
+          <div class="board_image">
+            <label for="imageUrl">이미지 업로드:</label>
+            <input type="file" id="imageUrl" name="imageUrl" accept="image/*">
+          </div>
+          <!--          <input type="hidden" name="${authentication}" value="${accessToken}">-->
+          <button id="sendPostRequestButton" type="submit">게시글 생성</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer th:insert="~{footer :: footer}"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+</section>
+<script>
+  window.addEventListener('load', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessToken = urlParams.get('accessToken');
+
+    if (accessToken) {
+      // 토큰이 존재하면 localStorage에 저장
+      localStorage.setItem('accessToken', accessToken);
+    }
+  });
+
+  document.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    function checkLogin() {
+      const accessToken = localStorage.getItem("accessToken")
+
+      if (accessToken) {
+        fetch('/issue/view/create', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + accessToken,
+            'Content-Type': 'application/json'
+          }
+        })
+                .then(response => {
+                  if (response.status === 200) {
+                    // 요청이 성공적으로 처리되면 원하는 동작을 수행합니다.
+                    window.location.href = '/issue/view/list';
+                  } else {
+                    // 오류 처리
+                    console.error('요청이 실패했습니다.');
+                  }
+                })
+                .catch(error => {
+                  console.error('오류 발생: ' + error);
+                });
+      } else {
+        // 로그인되지 않은 경우
+        window.location.href = '/loginPage';
+      }
+    }
+
+    return checkLogin();
+  })
+</script>
+
+</body>
+</html>
