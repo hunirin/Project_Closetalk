@@ -19,7 +19,10 @@ public class OotdArticleDto {
     private String content;
     private String hashtag;
 
-    //LocalDateTime으로 전달하는 편이 어떨지... 데이터 가공할 때 그게 더 편할 것 같은데
+    // 좋아요
+    public Long likes;
+
+    // LocalDateTime으로 전달하는 편이 어떨지... 데이터 가공할 때 그게 더 편할 것 같은데
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String createdAt;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -43,19 +46,7 @@ public class OotdArticleDto {
         dto.setContent(entity.getContent());
         dto.setHashtag(entity.getHashtag());
         dto.setNickname(entity.getUserEntity().getNickname());
-
-        /*
-       // 첫번째 이미지를 thumbnail 저장
-        // service 단계에서 저장해주면 굳이 안써도됨
-        List<OotdArticleImagesEntity> ootdImages = entity.getOotdImages();
-        if (ootdImages != null && !ootdImages.isEmpty()) {
-            dto.setThumbnail(ootdImages.stream()
-                    .map(OotdArticleImagesDto::fromEntity)
-                    .toList().get(0).getImageUrl());
-        }
-        System.out.println(dto.getThumbnail());
-         */
-
+        dto.setThumbnail(entity.getThumbnail());
 
         return dto;
     }
@@ -89,5 +80,10 @@ public class OotdArticleDto {
         entity.setThumbnail(thumbnail);
 
         return entity;
+    }
+
+    // 좋아요 수 조회
+    public void setLikeCount(Long likeCount) {
+        this.likes = likeCount;
     }
 }

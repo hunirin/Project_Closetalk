@@ -2,7 +2,6 @@ package team.closetalk.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -10,12 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import team.closetalk.user.dto.CustomUserDetails;
-import team.closetalk.user.dto.EmailAuthDto;
-import team.closetalk.user.dto.JwtTokenDto;
+import team.closetalk.user.dto.*;
 import team.closetalk.user.service.EmailSendService;
 import team.closetalk.user.service.UserService;
-import team.closetalk.user.utils.JwtUtils;
 
 import java.io.IOException;
 
@@ -26,8 +22,6 @@ import java.io.IOException;
 public class UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtils jwtUtils;
-
     private final EmailSendService emailSendService;
 
     //C
@@ -75,26 +69,25 @@ public class UserController {
 
     }
 
-    //R
-    //로그인
-    // Header -> Response token
-    @PostMapping("/login-token")
-    public ResponseEntity<?> loginUserToJwt(@RequestParam("loginId") String loginId,
-                                       @RequestParam("password") String password) {
-        CustomUserDetails responseUser = userService.loadUserByUsername(loginId);
-        if (!passwordEncoder.matches(password, responseUser.getPassword())) {
+    // 로그인
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginReqDto) {
+        CustomUserDetails responseUser = userService.loadUserByUsername(loginReqDto.getLoginId());
+        if (!passwordEncoder.matches(loginReqDto.getPassword(), responseUser.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-
-        String token = jwtUtils.generateToken(responseUser);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + token);
-
         return ResponseEntity.ok()
-                .headers(headers)
-                .body("Login successful");
+                .body(userService.login(responseUser));
     }
+
+    // 로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(Authentication authentication) {
+        CustomUserDetails responseUser = userService.loadUserByUsername(authentication.getName());
+        userService.logout(responseUser);
+        return ResponseEntity.ok().build();
+    }
+
 
     //회원정보 가져오기
     @GetMapping
@@ -127,5 +120,16 @@ public class UserController {
         userService.deleteUser(CustomUserDetails.fromAuthentication(authentication).getLoginId());
         //로그아웃처리
         return "Delete user successful";
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity<?> test(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            CustomUserDetails responseUser = userService.loadUserByUsername(authentication.getName());
+            return ResponseEntity.ok(responseUser.getNickname());
+        } else {
+            // 인증되지 않은 경우, 예외 처리 또는 다른 응답을 반환할 수 있습니다.
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 }

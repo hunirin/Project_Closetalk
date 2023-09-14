@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.user.dto.CustomUserDetails;
+import team.closetalk.user.dto.LoginResponseDto;
 import team.closetalk.user.entity.UserEntity;
 import team.closetalk.user.repository.UserRepository;
+import team.closetalk.user.utils.JwtUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,6 +31,8 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsManager {
     private final UserRepository userRepository;
+    private final JwtUtils jwtUtils;
+    private final TokenService tokenService;
 
     private final String PROFILE_IMAGE_DIRECTORY_THYMELEAF = "/static/images/profile/";
     private final String PROFILE_IMAGE_DIRECTORY = "src/main/resources/static/images/profile/";
@@ -116,6 +120,23 @@ public class UserService implements UserDetailsManager {
     }
 
     //로그인
+    public LoginResponseDto login(CustomUserDetails responseUser) {
+
+        String accessToken = jwtUtils.generateAccessToken(responseUser);
+        String refreshToken = tokenService.getRefreshToken(responseUser.getLoginId());
+
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            refreshToken = jwtUtils.generateRefreshToken(responseUser);
+            tokenService.saveRefreshToken(refreshToken, responseUser.getLoginId());
+        }
+
+        return new LoginResponseDto(responseUser.getNickname(), accessToken);
+    }
+
+    //로그아웃
+    public void logout(CustomUserDetails responseUser) {
+        tokenService.deleteRefreshToken(responseUser.getLoginId());
+    }
 
     @Override
     public CustomUserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
@@ -189,5 +210,4 @@ public class UserService implements UserDetailsManager {
     public boolean userExists(String username) {
         return userRepository.existsByLoginId(username);
     }
-
 }

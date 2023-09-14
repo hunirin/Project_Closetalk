@@ -32,13 +32,15 @@
 
         <div class="ootd-container-a">
             <div class="ootd-container-b" id="ootd-container">
-                <th:block th:each="ootd : ${ootdPage}">
+                <div th:each="ootd : ${ootdPage}">
                     <div class="ootd-image" id="ootd-image">
-                        <img th:src="@{${ootd.getThumbnail()}}" style="border-radius: 0px; width: 100%; height: 100%;">
+                        <img th:src="@{${ootd.thumbnail}}" style="width: 100%; height: 100%;" >
+                        <p th:text="${ootd.id}" style="display: none;"></p>
                     </div>
-                </th:block>
+                </div>
             </div>
         </div>
+
     </div>
         <div class="pop-up-btn">
             <i id="up-btn" class="fa-solid fa-square-caret-up fa-2x"></i>
@@ -48,21 +50,27 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 
-        <!-- 배너 스와이프 API -->
+
         <script>
+            <!-- 배너 스와이프 API -->
             var swiper = new Swiper(".mySwiper", {
                 pagination: {
                     el: ".swiper-pagination",
                 },
             });
         </script>
-        <!-- 무한스크롤 JQuery 함수 -->
+
         <script>
+            <!-- 무한스크롤 JQuery 함수 -->
+
             var page = 0; // 현재 페이지
             var isLoading = false; // true가 되면 데이터를 가져오는 중임을 나타냄
             var ootdContainer = document.getElementById('ootd-container');
+            var articleId = $(".ootd-articleId").data("ootdId");
 
-            function createOotdImage(thumbnailUrl) {
+
+
+            function createOotdImage(thumbnailUrl, articleId) {
                 var ootdImageDiv = document.createElement('div');
                 ootdImageDiv.className = 'ootd-image';
 
@@ -72,7 +80,15 @@
                 img.style.width = '100%';
                 img.style.height = '100%';
 
+                img.addEventListener('click', function() {
+                    window.location.href = '/ootd/' + articleId;
+                });
+
                 ootdImageDiv.appendChild(img);
+
+                var articleIdParagraph = document.createElement('p');
+                ootdImageDiv.appendChild(articleIdParagraph);
+
                 return ootdImageDiv;
             }
 
@@ -87,7 +103,11 @@
 
                     newThumbnails.each(function() {
                         var thumbnailUrl = $(this).attr('src');
-                        var ootdImageDiv = createOotdImage(thumbnailUrl);
+
+                        // Get the articleId for this specific image
+                        var articleId = $(this).siblings('p').text();
+
+                        var ootdImageDiv = createOotdImage(thumbnailUrl, articleId);
                         ootdContainer.appendChild(ootdImageDiv);
                     });
 
@@ -142,6 +162,11 @@
                 updateButtonPosition();
                 $(window).on("scroll", updateButtonPosition);
             });
+
+            let btnWrite = document.querySelector("#plus-btn")
+            btnWrite.addEventListener('click', () => {
+                location.href = "writePage"
+            })
         </script>
     </form>
 </section>

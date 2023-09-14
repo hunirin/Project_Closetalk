@@ -4,11 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import team.closetalk.community.enumeration.StringToCategoryConverter;
 import team.closetalk.user.service.CustomOAuth2UserService;
 import team.closetalk.user.utils.JwtFilter;
 import team.closetalk.user.utils.OAuth2SuccessHandler;
@@ -31,7 +33,6 @@ public class WebSecurityConfig {
                                         , "/users/sendEmail"
                                         , "/users/register"
                                         , "/users/login"
-                                        , "users/login-token"
                                         , "/ootd/main"
                                         , "/ootd/header"
                                         , "/ootd/list"
@@ -44,6 +45,9 @@ public class WebSecurityConfig {
                                         , "/issue"
                                         , "/issue/{id}"
                                         , "/community/**"
+                                        , "/ootd/rest/list"
+                                        , "/closet/view/**"
+                                        , "/issue/view/**"
                                 ).permitAll()
                                 .anyRequest()
                                 .authenticated()

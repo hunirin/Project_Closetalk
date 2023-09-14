@@ -1,6 +1,8 @@
 package team.closetalk.ootd.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.realm.AuthenticatedUserRealm;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
@@ -11,6 +13,7 @@ import team.closetalk.ootd.dto.OotdArticleDto;
 import team.closetalk.ootd.dto.OotdCommentDto;
 import team.closetalk.ootd.service.OotdArticleService;
 import team.closetalk.ootd.service.OotdCommentService;
+import team.closetalk.ootd.service.OotdLikeService;
 
 import java.util.List;
 
@@ -20,6 +23,7 @@ import java.util.List;
 public class OotdRestController {
     private final OotdArticleService ootdArticleService;
     private final OotdCommentService ootdCommentService;
+    private final OotdLikeService ootdLikeService;
 
     @GetMapping("/rest/{articleId}")
     public OotdArticleDto readOotdOneRest(
@@ -67,20 +71,22 @@ public class OotdRestController {
         return "Delete success";
     }
 
-//    @GetMapping("/{articleId}/comment")
-//    public List<OotdCommentDto> commentList(
-//            @PathVariable Long articleId
-//    ) {
-//        return ootdCommentService.readCommentList(articleId);
-//    }
-//
-//    // 댓글 생성
-//    @PostMapping("/{articleId}")
-//    public void createComment(
-//            @PathVariable("articleId") Long articleId,
-//            @RequestParam("content") String content,
-//            Authentication authentication
-//    ) {
-//        ootdCommentService.createComment(articleId, content, authentication);
-//    }
+    // 게시글 좋아요
+    @PostMapping("/like/{articleId}")
+    public String likeOotdArticle(
+            @PathVariable Long articleId,
+            Authentication authentication
+    ) {
+        return ootdLikeService.likeOotdArticle(articleId, authentication);
+    }
+
+    @GetMapping("/rest/list")
+    public Page<OotdArticleDto> readOotList(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "12") Integer limit
+    ) {
+        Page<OotdArticleDto> ootdPage = ootdArticleService.readOotdPaged(page, limit);
+
+        return ootdPage;
+    }
 }

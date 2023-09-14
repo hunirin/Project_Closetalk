@@ -1,0 +1,585 @@
+/* list.css */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&family=Roboto+Condensed:ital,wght@1,300;1,700&display=swap');
+
+/* 화면크기가 768px 이상일 때 적용 */
+@media(min-width : 768px) {
+  /* 전체 페이지 스타일 */
+  body {
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    background-color: #fefefe;
+    color: #000;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+  }
+
+  #root {
+    max-width: 768px;
+    height: auto;
+    width: 300vw;
+    position: relative;
+    margin: 100px auto auto;
+    font-size: 14px;
+    display: block;
+  }
+
+  #list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .categories {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    justify-content: start;
+    width: 100%;
+    height: 32px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    overflow: auto;
+    padding: 0 20px;
+  }
+
+  .category {
+    font-size: .9em;
+  }
+
+  .category.current {
+    font-weight: bold;
+  }
+
+  .category a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background-color: transparent;
+    border-radius: 8px;
+    color: #4d5154;
+    text-decoration: none;
+  }
+
+  .category a span {
+    padding: 0 10px;
+  }
+
+  .board-container {
+    margin-top: 120px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    display:grid;
+    grid-template-columns: repeat(2, minmax(auto, 1fr));
+    grid-gap: 10px;
+  }
+
+  .card {
+    width: 400px;
+    border: 5px solid #ccc;
+    border-radius: 5px;
+    padding: 3px; /* 내부 여백 */
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-img-top {
+    max-width: 100%;
+    height: 520px;
+  }
+
+  .searchAndWrite {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 30px 0;
+    padding: 0 10px;
+    font-size: 0.8em;
+  }
+
+  .searchAndWrite > div {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .searchAndWrite form {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    width: 440px;
+    height: 40px;
+  }
+
+  .search {
+    display: flex;
+    flex: 1;
+  }
+
+  .select {
+    box-sizing: border-box;
+    height: 40px;
+    padding: 0 20px;
+    cursor: pointer;
+    border: 0;
+    font-size: 1em;
+    border-radius: 8px;
+    appearance: none;
+    word-wrap: normal;
+    text-transform: none;
+    background-color: #f1f3f5
+  }
+
+  option {
+    font-size: 1em;
+  }
+
+  .search input {
+    box-sizing: border-box;
+    flex: 1;
+    height: 40px;
+    padding: 0 16px;
+    margin: 0 14px;
+    font-size: 1em;
+    background-color: #f1f3f5;
+    border: 0;
+    border-radius: 8px;
+  }
+
+  .search button {
+    box-sizing: border-box;
+    height: 40px;
+    padding: 0 10px;
+    margin: 0;
+    font-size: 1em;
+    background-color: #f1f3f5;
+    border: 0;
+    border-radius: 8px;
+  }
+
+  .searchAndWrite .write {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 32px 0;
+  }
+
+  .pagination .pre {
+    box-sizing: border-box;
+    width: 50px;
+    height: 30px;
+  }
+
+  .pagination .number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pagination .number a {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    margin: 0 5px;
+    background-color: transparent;
+    text-decoration: none;
+    color: #4d5154;
+  }
+
+  .pagination .number .selected {
+    color: blueviolet;
+  }
+
+  .pagination .next {
+    box-sizing: border-box;
+    width: 50px;
+    height: 30px;
+  }
+
+  .pagination .next a {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .pop-up-btn {
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .pop-up-btn i {
+    background-color: #fefefe;
+    border-radius: 80%;
+    width: 23px;
+    height: 20px;
+    margin: 5px 0;
+    text-align: center;
+    line-height: 20px;
+  }
+
+
+  .pop-up-button-item {
+    margin: 5px 0;
+  }
+
+  /* 제목 스타일 */
+  h1 {
+    color: #333;
+    text-align: center;
+    padding: 20px;
+    background-color: #fff;
+  }
+
+  /* 본문 스타일 */
+  p {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 20px;
+  }
+
+  /* 링크 스타일 */
+  a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  a:hover {
+    color: #0056b3;
+  }
+
+  /* 리스트 스타일 */
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    margin-bottom: 10px;
+  }
+
+  /* 버튼 스타일 */
+  .button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+
+  .button:hover {
+    background-color: #0056b3;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    background-color: #fefefe;
+    color: #000;
+    margin: 0;
+    padding: 0;
+  }
+
+  #root {
+    max-width: 768px;
+    height: auto;
+    width: 300vw;
+    position: relative;
+    margin: 100px auto auto;
+    font-size: 15px;
+    display: block;
+  }
+
+  #list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .categories {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    justify-content: start;
+    width: 100%;
+    height: 32px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    overflow: auto;
+    padding: 0 20px;
+  }
+
+  .category {
+    font-size: .9em;
+  }
+
+  .category.current {
+    font-weight: bold;
+  }
+
+  .category a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background-color: transparent;
+    border-radius: 8px;
+    color: #4d5154;
+    text-decoration: none;
+  }
+
+  .category a span {
+    padding: 0 10px;
+  }
+
+  .board-container {
+    margin-top: 120px;
+    padding: 2px;
+    background-color: #f0f0f0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(auto, 1fr));
+    grid-gap: 2px;
+  }
+
+  .card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .card a {
+    text-decoration: none;
+    color: black;
+  }
+
+  .card-img-top {
+    max-width: 100%;
+    height: 500px;
+  }
+
+  .titleContainer {
+    display: flex;
+    align-items: center;
+    padding: 2px 0;
+    overflow: hidden;
+  }
+
+  .title {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .title .pre {
+    margin-right: 5px;
+  }
+
+  .title .text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .pop-up-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .pop-up-btn i {
+    background-color: #fefefe;
+    border-radius: 80%;
+    width: 23px;
+    height: 20px;
+    margin: 5px 0;
+    text-align: center;
+    line-height: 20px;
+  }
+
+
+  .pop-up-button-item {
+    margin: 5px 0;
+  }
+
+  .searchAndWrite {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 30px 0;
+    padding: 0 10px;
+    font-size: 0.8em;
+  }
+
+  .searchAndWrite > div {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .searchAndWrite form {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    width: 440px;
+    height: 40px;
+  }
+
+  .search {
+    display: flex;
+    flex: 1;
+  }
+
+  select {
+    box-sizing: border-box;
+    height: 40px;
+    padding: 0 20px;
+    cursor: pointer;
+    border: 0;
+    font-size: 1em;
+    border-radius: 8px;
+    appearance: none;
+    word-wrap: normal;
+    text-transform: none;
+    background-color: #f1f3f5
+  }
+
+  option {
+    font-size: 1em;
+  }
+
+  .search input {
+    box-sizing: border-box;
+    flex: 1;
+    height: 40px;
+    padding: 0 16px;
+    margin: 0 14px;
+    font-size: 1em;
+    background-color: #f1f3f5;
+    border: 0;
+    border-radius: 8px;
+  }
+
+  .search button {
+    box-sizing: border-box;
+    height: 40px;
+    padding: 0 10px;
+    margin: 0;
+    font-size: 1em;
+    background-color: #f1f3f5;
+    border: 0;
+    border-radius: 8px;
+  }
+
+  .searchAndWrite .write {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .titleContainer {
+    display: flex;
+    align-items: center;
+    padding: 2px 0;
+    overflow: hidden;
+  }
+
+  .title {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .title .pre {
+    margin-right: 5px;
+  }
+
+  .title .text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 32px 0;
+  }
+
+  .pagination .pre {
+    box-sizing: border-box;
+    width: 50px;
+    height: 30px;
+  }
+
+  .pagination .number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pagination a {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    margin: 0 5px;
+    background-color: transparent;
+    text-decoration: none;
+    color: #4d5154;
+  }
+
+  .pagination .number .selected {
+    color: blueviolet;
+  }
+
+  .pagination .next {
+    box-sizing: border-box;
+    width: 50px;
+    height: 30px;
+  }
+
+  .pagination .next a {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+}

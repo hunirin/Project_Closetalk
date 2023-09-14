@@ -16,13 +16,7 @@ public class IssueBannerDto {
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
         dto.setContent(entity.getContent());
-
-        List<IssueArticleImageEntity> issueImages = entity.getIssueImages();
-        if (issueImages != null && !issueImages.isEmpty()) {
-            dto.setThumbnail(issueImages.stream()
-                    .map(IssueArticleImageDto::fromEntity)
-                    .toList().get(0).getImageUrl());
-        }
+        dto.setThumbnail(entity.getThumbnail());
         return dto;
     }
 }

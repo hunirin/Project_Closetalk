@@ -1,23 +1,37 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <style>
+        .main-content {
+            max-width: 768px;
+            height: 300px;
+            width: 300vw;
+            position: relative;
+            margin: 20px auto auto;
+        }
+    </style>
 </head>
 <body>
 <header th:insert="~{header :: header}"></header>
 
-<main class="main-content">
+<main class="main-content" style="margin-top: 200px; text-align: center; width: 300px" >
     <div class="title">
         <h1>LOGIN</h1>
     </div>
-    <form th:action="@{/users/login}" method="post">
-        <div class="div-input">
-            <input name="loginId" placeholder="ID">
-            <input name="password" placeholder="PASSWORD">
-
+    <form id="loginForm" style="vertical-align: center">
+        <div class="div-input" style="display: inline-block; margin-top: 10px;">
+            <label for="loginId">
+                <input type="text" id="loginId" name="userId"
+                       placeholder="ID" required style="margin-bottom: 5px;">
+            </label>
+            <label for="password">
+                <input type="password" id="password" name="password"
+                       placeholder="PASSWORD" required>
+            </label>
         </div>
-        <button type="submit">LOGIN</button>
+        <button type="submit" style="margin-top: 10px; padding: 5px;">LOGIN</button>
     </form>
     <div style="margin-top: 16px; text-align: right">
         <a href="/oauth2/authorization/naver">네이버</a>
@@ -27,5 +41,45 @@
 </main>
 
 <footer th:insert="~{footer :: footer}"></footer>
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const formData = {
+            loginId: document.getElementById("loginId").value,
+            password: document.getElementById("password").value
+        };
+
+        fetch('/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                const accessToken = data.accessToken;
+
+                localStorage.setItem('accessToken', accessToken);
+                window.location.href = '/ootd/main';
+            })
+            .catch(error => {
+                alert("아이디와 비밀번호가 일치하지 않습니다.");
+                console.error("Error:", error);
+            });
+    });
+
+    window.addEventListener('load', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const accessToken = urlParams.get('accessToken');
+
+        if (accessToken) {
+            // 토큰이 존재하면 localStorage에 저장
+            localStorage.setItem('accessToken', accessToken);
+            window.location.href = '/ootd/main';
+        }
+    });
+</script>
 </body>
 </html>

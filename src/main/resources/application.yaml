@@ -4,6 +4,11 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     username: '${DB_USERNAME}'
     password: '${DB_PASSWORD}'
+
+    redis:
+      port: '${REDIS_PORT}'  #Redis 기본 포트 번호
+      host: '${REDIS_HOST}'  #로컬 테스트에서는 localhost, 배포시에는 redis(redis 환경변수)
+      password: '${REDIS_PASSWORD}'
   jpa:
     hibernate:
       ddl-auto: create
@@ -27,6 +32,7 @@ spring:
   web:
     resources:
       static-locations: file:media/,classpath:/static
+
 
   #소셜 로그인 관련 yaml 설정
   security:
@@ -76,5 +82,3 @@ spring:
       mail.smtp.ssl.enable: true
       mail.smtp.trust: smtp.naver.com   #호스트와 동일하게
       mail.smtp.starttls.enable: true
-jwt:
-  secret : ${JWT_SECRET}

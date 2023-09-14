@@ -22,7 +22,7 @@ public class OotdCommentController {
     public String createComment(
             Model model,
             @PathVariable("articleId") Long articleId,
-            @RequestParam("content") String content,
+            @RequestParam(value = "content") String content,
             Authentication authentication
     ) {
         OotdCommentDto ootdComment = ootdCommentService.createComment(articleId, content, authentication);
@@ -41,6 +41,7 @@ public class OotdCommentController {
     ) {
         OotdCommentDto ootdComment = ootdCommentService.createReply(articleId, commentId, content, authentication);
         model.addAttribute("ootdComment", ootdComment);
+        model.addAttribute("commentId", commentId);
         return "redirect:/ootd/" + articleId;
     }
 
@@ -72,7 +73,7 @@ public class OotdCommentController {
 
 
     // 댓글 삭제
-    @DeleteMapping("/{articleId}/{commentId}")
+    @PostMapping("/{articleId}/{commentId}/delete")
     public String deleteComment(
             Model model,
             @PathVariable Long articleId,

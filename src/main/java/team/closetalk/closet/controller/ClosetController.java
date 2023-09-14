@@ -17,7 +17,7 @@ public class ClosetController {
     private final ClosetService closetService;
 
     // 옷장 목록
-    @PostMapping
+    @GetMapping
     public List<ClosetDto> closetList(Authentication authentication) {
         return closetService.findCloset(authentication);
     }
@@ -54,7 +54,7 @@ public class ClosetController {
     }
 
     // 해당하는 닉네임을 가진 유저의 옷장 아이템 목록 조회
-    @PostMapping("/{nickname}/{closetName}")
+    @GetMapping("/{nickname}/{closetName}")
     public List<ClosetItemDto> readItems(@PathVariable("nickname") String nickname,
                                          @PathVariable("closetName") String closetName,
                                          @RequestParam(name = "category", required = false) String category,

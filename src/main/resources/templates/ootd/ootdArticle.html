@@ -45,8 +45,7 @@
             <p th:text="${ootdArticle?.createdAt}">2023.08.28</p>
           </div>
           <div class="board_middle_btn">
-<!--            <div class="board_middle_btn_unlike"><i class="fa-regular fa-heart"></i></div>-->
-            <div class="board_middle_btn_like" id="heart-icon"><i class="fa-solid fa-heart"></i></div>
+            <div class="board_middle_btn_like" id="heart-icon"><i class="fa-regular fa-heart"></i></div>
             <div class="board_middle_btn_URL" id="copy-link"><i class="fa-solid fa-link"></i></div>
           </div>
           <div class="board_bottom_content"></div>
@@ -62,7 +61,6 @@
           </div>
         </div>
 
-<!--        <div th:insert="~{ootd/ootdComment :: comment}"></div>-->
         <div class="board_bottom_comment" >
             <div class="board_bottom_commentList" th:each="commentList : ${ootdCommentList}">
                 <div class="commentList_item">
@@ -71,7 +69,8 @@
                         <p class="user_nickname" th:text="${commentList.nickname}">nickname2</p>
                         <p class="user_content" th:text="${commentList.content}">comment</p>
                         <p class="comment_time" th:text="${commentList.createdAt}">2023.08.28</p>
-                        <p class="comment_reply">답글달기</p>
+                        <p class="comment_reply" th:data-commentId="${commentList.id}">답글달기</p>
+                        <p class="comment_delete" th:data-commentId="${commentList.id}">삭제</p>
                     </div>
                 </div>
                 <div class="board_bottom_sub_comment" th:each="replyList : ${commentList.replies}">
@@ -80,32 +79,33 @@
                         <p class="user_nickname" th:text="${replyList.nickname}">nickname1</p>
                         <p class="user_content" th:text="${replyList.content}">
                             <span class="comment_sub_content" th:text="${commentList.nickname}">nickname2</span>
-                            commentcommentcommentcomment
+                            comment
                         </p>
                         <p class="comment_time" th:text="${replyList.createdAt}">2023.08.28</p>
-                        <p class="comment_reply">답글달기</p>
                     </div>
                 </div>
             </div>
         </div>
 
-<!--        <form th:action="@{/ootd/{articleId}}" th:object="${ootdComment}" method="post">-->
+
         <div class="board_bottom_insert_comment">
             <div class="comment_in">
-                <!--            <p class="not_login_comment">로그인 후 댓글쓰기가 가능합니다.</p>-->
-                <textarea type="text" class="comment_input" placeholder="댓글을 작성 해 주세요." maxlength="255"></textarea>
-                <button type="submit" class="comment_submit_btn">등록</button>
+                <form id="commentForm">
+                    <textarea name="content" class="comment_input" placeholder="로그인 후 댓글을 작성해주세요" maxlength="255"></textarea>
+                    <button type="button" class="comment_submit_btn">등록</button>
+                </form>
             </div>
         </div>
-<!--        </form>-->
 
         <div class="board_bottom_btn">
           <button class="board_bottom_btn_edit">수정</button>
           <button class="board_bottom_btn_delete">삭제</button>
-          <button class="board_bottom_btn_list">목록</button>
+          <a href="/ootd/main">
+            <button class="board_bottom_btn_list">목록</button>
+          </a>
         </div>
      </div>
-    </div>
+
 
     <footer th:insert="~{footer :: footer}"></footer>
 
@@ -118,19 +118,44 @@
               },
           });
       </script>
-      <!-- heart 클릭 시 변형하는 JS -->
-      <script>
-      document.getElementById('heart-icon').addEventListener('click', function() {
-      var heartIcon = this.querySelector('i');
-      if (heartIcon.classList.contains('fa-solid')) {
-      heartIcon.classList.remove('fa-solid');
-      heartIcon.classList.add('fa-regular');
-      } else {
-      heartIcon.classList.remove('fa-regular');
-      heartIcon.classList.add('fa-solid');
-      }
-      });
-      </script>
+      <!-- heart 클릭 시 좋아요 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const heartIcon = document.getElementById('heart-icon');
+
+            if (heartIcon) {
+                heartIcon.addEventListener('click', function() {
+                    // Toggle between "fa-regular" and "fa-solid" classes
+                    const icon = heartIcon.querySelector('i');
+                    icon.classList.toggle('fa-regular');
+                    icon.classList.toggle('fa-solid');
+
+                    // Adjust the endpoint based on your Spring Boot URL
+                    const articleId = [[${articleId}]];
+                    const endpoint = `/ootd/like/${articleId}`;
+
+                    // Send a POST request to the endpoint to toggle the like
+                    fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + accessToken,
+                        },
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                // If the request fails, revert the icon class to its original state
+                                icon.classList.toggle('fa-regular');
+                                icon.classList.toggle('fa-solid');
+                                alert('게시물 좋아요 처리에 실패했습니다.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                });
+            }
+        });
+    </script>
       <!-- link 클릭 시 링크 복사하는 JS -->
       <script>
           document.getElementById('copy-link').addEventListener('click', function() {
@@ -148,12 +173,119 @@
               notification.classList.add("copy-notification");
               document.body.appendChild(notification);
 
-              // Remove the notification after a certain time (e.g., 3 seconds)
               setTimeout(function() {
                   document.body.removeChild(notification);
               }, 3000);
           });
       </script>
+
+    <script>
+        const articleId = [[${articleId}]];
+        const accessToken = localStorage.getItem('accessToken');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const commentForm = document.getElementById('commentForm');
+            const commentSubmitBtn = document.querySelector('.comment_submit_btn');
+            let parentCommentId = null;
+
+            if (accessToken) {
+                const commentInput = document.querySelector('.comment_input');
+                if (commentInput) {
+                    commentInput.placeholder = '댓글을 작성해주세요';
+                }
+
+                if (commentSubmitBtn) {
+                    commentSubmitBtn.addEventListener('click', function(event) {
+                        event.preventDefault();
+
+                        const formData = new FormData(commentForm);
+                        let endpoint = `/ootd/${articleId}`;
+
+                        if (parentCommentId) {
+                            const commentId = parentCommentId;
+                            endpoint += `/${commentId}`;
+                        }
+
+                        fetch(endpoint, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': 'Bearer ' + accessToken
+                            },
+                            body: formData
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    alert('댓글이 등록되었습니다.');
+                                    window.location.reload();
+                                } else {
+                                    throw new Error('댓글 등록에 실패했습니다.');
+                                }
+                            })
+                            .catch(error => {
+                                alert(error.message); // Display an error message
+                                console.error('Error:', error);
+                                parentCommentId = null;
+                            });
+                    });
+                }
+            }
+
+            const replyLinks = document.querySelectorAll('.comment_reply');
+            replyLinks.forEach(function(replyLink) {
+                replyLink.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent the link from navigating
+
+                    parentCommentId = this.getAttribute('data-commentId');
+
+                    const parentCommentNickname = this.closest('.commentList_item').querySelector('.user_nickname').textContent;
+                    const commentInput = document.querySelector('.comment_input');
+                    if (commentInput) {
+                        commentInput.placeholder = `@${parentCommentNickname}에게 답글 작성하기`;
+                    }
+
+                    const parentCommentIdInput = document.getElementById('parentCommentId');
+                    if (parentCommentIdInput) {
+                        parentCommentIdInput.value = '';
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.comment_delete');
+            deleteButtons.forEach(function(deleteButton) {
+                deleteButton.addEventListener('click', function() {
+                    const commentId = this.getAttribute('data-commentId');
+
+                    // Show a confirmation dialog
+                    if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
+                        // User confirmed deletion, send a request to delete the comment
+                        fetch(`/ootd/${articleId}/${commentId}/delete`, {
+                            method: 'POST', // Use POST instead of DELETE
+                            headers: {
+                                'Authorization': 'Bearer ' + accessToken
+                            }
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    alert('댓글이 삭제되었습니다.');
+                                    window.location.reload(); // Refresh the page after deletion
+                                } else {
+                                    throw new Error('댓글 삭제에 실패했습니다.');
+                                }
+                            })
+                            .catch(error => {
+                                alert(error.message); // Display an error message
+                                console.error('Error:', error);
+                            });
+                    }
+                });
+            });
+        });
+    </script>
+
       <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
