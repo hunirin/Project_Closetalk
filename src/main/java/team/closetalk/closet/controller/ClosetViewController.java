@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/closet")
 @RequiredArgsConstructor
-public class ViewClosetController {
+public class ClosetViewController {
 
     @GetMapping("/{nickname}")
     public String closetList(@PathVariable("nickname") String nickname) {
