@@ -47,6 +47,7 @@ public class WebSecurityConfig {
                                         , "/issue/{id}"
                                         , "/community/**"
                                         , "/ootd/rest/list"
+                                        , "/closet/view/item"
                                 ).permitAll()
                                 .anyRequest()
                                 .authenticated()

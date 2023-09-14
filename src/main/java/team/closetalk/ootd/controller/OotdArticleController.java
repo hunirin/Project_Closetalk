@@ -55,7 +55,6 @@ public class OotdArticleController {
         // 댓글 조회
         List<OotdCommentDto> ootdCommentList = ootdCommentService.readCommentList(articleId);
         model.addAttribute("ootdCommentList", ootdCommentList);
-        // articleId
         return "ootd/ootdArticle";
     }
 }

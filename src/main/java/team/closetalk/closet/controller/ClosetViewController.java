@@ -1,7 +1,9 @@
 package team.closetalk.closet.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,24 +25,21 @@ public class ClosetViewController {
 
     // 아이템 등록 페이지
     @GetMapping("/item")
-    public String closetList(Model model, Authentication authentication) {
-        // 옷장 목록
-        List<ClosetDto> closetList = closetService.findCloset(authentication);
-        model.addAttribute("closetList", closetList);
-        return "closet/itemRegistration";
+    public String viewClosetList() {
+        return "/closet/itemRegistration";
     }
 
     // 옷장 아이템 등록
-    @PostMapping("/item/{closetName}")
+    @PostMapping("/item")
     public String createClosetItem (
             Model model,
-            @PathVariable("closetName") String closetName,
-            @RequestPart(value = "data") ClosetItemEntity entity,
+            @RequestParam(value = "closetName") String closetName,
+            @ModelAttribute(value = "data") ClosetItemEntity entity,
             @RequestParam(value = "itemImageUrl") MultipartFile itemImageUrl,
             Authentication authentication
     ) {
+
         closetItemService.createClosetItem(closetName, entity, itemImageUrl, authentication);
-        model.addAttribute("closetName", closetName);
-        return "closet/itemRegistration";
+        return "/closet/itemRegistration";
     }
 }

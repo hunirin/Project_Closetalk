@@ -17,7 +17,7 @@ public class ClosetController {
     private final ClosetService closetService;
 
     // 옷장 목록
-    @PostMapping
+    @GetMapping
     public List<ClosetDto> closetList(Authentication authentication) {
         return closetService.findCloset(authentication);
     }
