@@ -1,0 +1,331 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&family=Roboto+Condensed:ital,wght@1,300;1,700&display=swap');
+
+@media (min-width : 768px) {
+
+    body.on {
+        overflow: hidden;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    body {
+        background: #fefefe;
+        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+        color: #000;
+        margin: 0;
+        padding: 0;
+    }
+
+    * {
+        box-sizing: border-box;
+        background-color: transparent;
+    }
+
+
+    #root {
+        max-width: 768px;
+        height: auto;
+        width: 300vw;
+        position: relative;
+        margin: 100px auto auto;
+        font-size: 18px;
+        display: block;
+    }
+
+    #list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .categories {
+        position: relative;
+        display: flex;
+        gap: 10px;
+        justify-content: start;
+        width: 100%;
+        height: 32px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        overflow: auto;
+        padding: 0 20px;
+    }
+
+    .category {
+        font-size: .9em;
+    }
+
+    .category.current {
+        font-weight: bold;
+    }
+
+    .category a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        background-color: transparent;
+        border-radius: 8px;
+        color: #4d5154;
+        text-decoration: none;
+    }
+
+    .category a span {
+        padding: 0 10px;
+    }
+
+    #boardList {
+        box-sizing: border-box;
+        width: 100%;
+        font-size: 1em;
+        padding: 0 10px;
+    }
+
+    .article {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 10px;
+        border-bottom: 1px solid;
+        color: #4d5154;
+        text-decoration: none;
+    }
+
+    .article .image {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 65px;
+        height: 65px; /* 이미지의 높이와 너비를 동일하게 설정합니다. */
+        margin-right: 10px;
+        overflow: hidden; /* 이미지를 자르도록 설정합니다. */
+        border-radius: 10%; /* 이미지를 원 모양으로 만듭니다. */
+        background-color: #f0f0f0; /* 이미지가 로딩되기 전에 보일 배경색을 지정합니다. */
+    }
+
+    .article .image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 이미지가 가득 차게 설정합니다. */
+    }
+
+    .info {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 3px;
+        justify-content: center;
+        width: 80%;
+    }
+
+    .titleContainer {
+        display: flex;
+        align-items: center;
+        padding: 2px 0;
+        overflow: hidden;
+    }
+
+    .title {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .title .pre {
+        margin-right: 5px;
+    }
+
+    .title .text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .etc {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        padding: 2px 0;
+        font-size: .8em;
+        color: #4d5154;
+        white-space: nowrap;
+    }
+    .etc i {
+        margin-right: 3px;
+    }
+
+    .nickname {
+        margin-right: 8px;
+    }
+
+    .datetime {
+        margin-right: 8px;
+    }
+
+    .viewCount {
+        margin-right: 8px;
+    }
+
+    .likeCount {
+        margin-right: 8px;
+    }
+
+    .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 32px 0;
+    }
+
+    .pagination .pre {
+        box-sizing: border-box;
+        width: 50px;
+        height: 30px;
+    }
+
+    .pagination .number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .pagination a {
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        margin: 0 5px;
+        background-color: transparent;
+        text-decoration: none;
+        color: #4d5154;
+    }
+
+    .pagination .number .selected {
+        color: blueviolet;
+    }
+
+    .pagination .next {
+        box-sizing: border-box;
+        width: 50px;
+        height: 30px;
+    }
+
+    .pagination .next a {
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .searchAndWrite {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin: 30px 0;
+        padding: 0 10px;
+        font-size: 0.8em;
+    }
+
+    .searchAndWrite > div {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .searchAndWrite form {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+        width: 440px;
+        height: 40px;
+    }
+
+    .search {
+        display: flex;
+        flex: 1;
+    }
+
+    select {
+        box-sizing: border-box;
+        height: 40px;
+        padding: 0 20px;
+        cursor: pointer;
+        border: 0;
+        font-size: 1em;
+        border-radius: 8px;
+        appearance: none;
+        word-wrap: normal;
+        text-transform: none;
+        background-color: #f1f3f5
+    }
+
+    option {
+        font-size: 0.8em;
+    }
+
+    .search input {
+        box-sizing: border-box;
+        flex: 1;
+        height: 40px;
+        padding: 0 16px;
+        margin: 0 14px;
+        font-size: 1em;
+        background-color: #f1f3f5;
+        border: 0;
+        border-radius: 8px;
+    }
+
+    .search button {
+        box-sizing: border-box;
+        height: 40px;
+        padding: 0 10px;
+        margin: 0;
+        font-size: 1em;
+        background-color: #f1f3f5;
+        border: 0;
+        border-radius: 8px;
+    }
+
+    .searchAndWrite .write {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .pop-up-btn {
+        cursor: pointer;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .pop-up-btn i {
+        background-color: #fefefe;
+        border-radius: 80%;
+        width: 25px;
+        height: 20px;
+        margin: 5px 0;
+        text-align: center;
+        line-height: 20px;
+    }
+
+    .pop-up-button-item {
+        margin: 5px 0;
+    }
+
+}
+@media (max-width : 768px) {
+
+}

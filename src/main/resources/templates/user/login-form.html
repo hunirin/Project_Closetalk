@@ -53,7 +53,7 @@
                 const accessToken = data.accessToken;
 
                 localStorage.setItem('accessToken', accessToken);
-                window.location.href = '/ootd/list';
+                window.location.href = '/ootd/main';
             })
             .catch(error => {
                 alert("아이디와 비밀번호가 일치하지 않습니다.");
@@ -68,7 +68,7 @@
         if (accessToken) {
             // 토큰이 존재하면 localStorage에 저장
             localStorage.setItem('accessToken', accessToken);
-            window.location.href = '/ootd/list';
+            window.location.href = '/ootd/main';
         }
     });
 </script>

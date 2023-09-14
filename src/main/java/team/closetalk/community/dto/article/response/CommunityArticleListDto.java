@@ -33,7 +33,7 @@ public class CommunityArticleListDto {
                 .hits(entity.getHits())
                 .likes(entity.getLikeCount())
                 .thumbnail(entity.getThumbnail())
-                .createdAt(entity.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))) // 임시
+                .createdAt(entity.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))) // 수정
                 .nickname(entity.getUserId().getNickname())
                 .build();
     }

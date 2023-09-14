@@ -47,7 +47,7 @@ public class CommunityCommentController {
     }
 
     // 댓글 삭제
-    @DeleteMapping("/{articleId}/{commentId}")
+    @PostMapping("/{articleId}/{commentId}/delete")
     public void deleteComment(@PathVariable Long articleId,
                               @PathVariable Long commentId,
                               Authentication authentication) {

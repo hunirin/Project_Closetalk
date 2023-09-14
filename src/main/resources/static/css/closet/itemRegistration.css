@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&family=Roboto+Condensed:ital,wght@1,300;1,700&display=swap');
+
+@media (min-width : 768px) {
+
+    body.on {
+        overflow: hidden;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    body {
+        background: #fefefe;
+        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+        color: #000;
+        margin: 0;
+        padding: 0;
+    }
+
+    * {
+        box-sizing: border-box;
+        background-color: transparent;
+    }
+
+    #root {
+        max-width: 768px;
+        height: auto;
+        width: 300vw;
+        position: relative;
+        margin: 100px auto auto;
+        font-size: 20px;
+        display: block;
+    }
+
+    .board_top {
+        border-top: 1px solid #4d5154;
+        padding: 20px 30px;
+    }
+
+    .board_top_info {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+    }
+
+
+
+    .board_middle {
+
+    }
+
+    .itemRegister_top_btn {
+        align-items: center;
+        border-bottom: 1px solid #4d5154;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+    }
+
+    .itemRegister_top_btn_list {
+        display: inline-block;
+        vertical-align: middle;
+        border: 1px solid #000;
+        border-radius: 5px;
+        color: #000;
+        font-size: 16px;
+        font-weight: bold;
+        height: 40px;
+        width: 100px;
+        margin-top: 20px;
+        margin-right: 10px;
+    }
+
+    .itemRegister_top_btn_regi {
+        display: inline-block;
+        vertical-align: middle;
+        border: 1px solid #000;
+        border-radius: 5px;
+        color: #000;
+        font-size: 16px;
+        font-weight: bold;
+        height: 40px;
+        width: 100px;
+        margin-top: 20px;
+        float: right;
+    }
+}
+
+@media (max-width : 768px) {
+
+}

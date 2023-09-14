@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 @Builder
 public class OotdCommentDto {
+    private Long id;
     private String nickname;
     private String profile;
     private String content;
@@ -24,6 +25,7 @@ public class OotdCommentDto {
                     .build();
         } else if (comment.getModifiedAt() != null) {
             return OotdCommentDto.builder()
+                    .id(comment.getId())
                     .nickname(comment.getUserEntity().getNickname())
                     .profile(comment.getUserEntity().getProfileImageUrl())
                     .content(comment.getContent())
@@ -32,6 +34,7 @@ public class OotdCommentDto {
                     .build();
         } else {
             return OotdCommentDto.builder()
+                    .id(comment.getId())
                     .nickname(comment.getUserEntity().getNickname())
                     .content(comment.getContent())
                     .profile(comment.getUserEntity().getProfileImageUrl())

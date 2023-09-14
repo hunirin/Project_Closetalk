@@ -1,109 +1,78 @@
 package team.closetalk.issue.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import team.closetalk.issue.enumeration.Category;
 import team.closetalk.issue.dto.IssueArticleDto;
-import team.closetalk.issue.dto.ResponseDto;
+import team.closetalk.issue.dto.IssueArticleListDto;
+import team.closetalk.issue.dto.IssueCreateArticleDto;
 import team.closetalk.issue.service.IssueArticleService;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
-@Slf4j
-@Controller
+@RestController
 @RequestMapping("/issue")
 @RequiredArgsConstructor
 public class IssueArticleController {
-    private final IssueArticleService service;
+    private final IssueArticleService issueArticleService;
 
-    // POST /issue/create
-    @PostMapping("/create")
-    @ResponseBody
-    public IssueArticleDto create(
-            @RequestBody IssueArticleDto dto
-    ) {
-        service.createIssueArticle(dto);
-        dto.setCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
-        return dto;
+
+    // 게시글 생성
+    @PostMapping(path="/create")
+    public IssueArticleDto createArticle(
+            @RequestPart(value = "data") IssueCreateArticleDto dto,
+            @RequestPart(value = "imageUrl", required = false) List<MultipartFile> imageUrlList,
+            Authentication authentication) {
+        return issueArticleService.createArticle(dto, imageUrlList, authentication);
     }
 
-    // 이미지 업로드
-    @PostMapping(
-            value = "/multipart",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseDto multipart(
-            @RequestParam("name") String name,
-            @RequestParam("photo") List<MultipartFile> multipartFiles
-    ) throws IOException {
-        // 저장할 경로
-        Files.createDirectories(Path.of("issue"));
-        for (MultipartFile multipartFile : multipartFiles) {
-            // 업로드하는 파일 이름
-            String originalFilename = multipartFile.getOriginalFilename();
-            // 저장할 파일이름을 경로에 지정
-//        Path path = Path.of("issue/filename.jpg");
-            Path path = Path.of("src/main/resources/static/images/issue/", originalFilename);
-            // 저장
-            multipartFile.transferTo(path);
-        }
-        ResponseDto responseDto = new ResponseDto();
-        responseDto.setMessage("이미지가 추가되었습니다.");
-        return responseDto;
-    }
-
-//    @GetMapping("/main")
-//    public String getIssues() {
-//        return "issue";
-//    }
-
-    // GET /issue
+    // 게시글 전체 조회
     @GetMapping
-    @ResponseBody
-    public Page<IssueArticleDto> readAll() {
-        return service.readIssueArticleAll(0, 8);
-    }
-
-    // GET /issue/{id}
-    @GetMapping("/{id}")
-    @ResponseBody
-    public IssueArticleDto read(@PathVariable("id") Long id) {
-        return service.readIssueArticle(id);
-    }
-
-    // PUT /issue/{id}
-    @PutMapping("/{id}")
-    @ResponseBody
-    public IssueArticleDto update(
-            @PathVariable("id") Long id,
-            @RequestBody IssueArticleDto dto
+    public Page<IssueArticleListDto> readArticleList(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "10") Integer limit
     ) {
-        dto.setModifiedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
-        return service.updateIssueArticle(id, dto);
+        return issueArticleService.readIssuePaged(page,limit);
     }
 
-    // DELETE /issue/{id}
-    @DeleteMapping("/{id}")
-    @ResponseBody
-    public void delete(
-            @PathVariable("id") Long id) {
-        service.deleteIssueArticle(id);
+    // 카테고리별 게시글 목록 조회
+    @GetMapping("/category")
+    public Page<IssueArticleListDto> readArticleListByCategory(
+            @RequestParam(value = "category", required = false) Category category,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "20") Integer limit
+    ) {
+        return issueArticleService.readIssuePagedByCategory(category, page, limit);
     }
 
-    // 수정 필요
-    @GetMapping("/issueMain")
-    public String getIssues(Model model) {
-        Page<IssueArticleDto> issueArticlePage = service.readIssueArticleAll(0, 8);
-        model.addAttribute("issueList", issueArticlePage.getContent());
-        return "issueMain";
+    // 게시글 상세 조회
+    @GetMapping("/{articleId}")
+    public IssueArticleDto readArticle(
+            @PathVariable Long articleId
+    ) {
+        return issueArticleService.readArticle(articleId);
+    }
+
+    // 게시글 수정
+    @PutMapping("/{articleId}")
+    public IssueArticleDto updateArticle(
+            @PathVariable("articleId") Long articleId,
+            @RequestPart(value = "data") IssueArticleDto dto,
+            @RequestPart(value = "newImageUrl", required = false) List<MultipartFile> imagesUrlList,
+            Authentication authentication
+    ) {
+        return issueArticleService.updateArticle(articleId, authentication, imagesUrlList, dto);
+    }
+
+    // 게시글 삭제
+    @DeleteMapping("/{articleId}")
+    public void deleteArticle(
+            @PathVariable("articleId") Long articleId,
+            Authentication authentication
+    ) {
+        issueArticleService.deleteArticle(articleId, authentication);
     }
 }

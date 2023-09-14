@@ -61,6 +61,7 @@ public class OotdCommentService {
     // 1. 댓글 생성
     public OotdCommentDto createComment(Long articleId, String content,
                                         Authentication authentication) {
+
         OotdArticleEntity article = getArticle(articleId);
         UserEntity user = getUserEntity(authentication.getName());
         ootdCommentRepository.save(new OotdCommentEntity(content, user, article, null));
