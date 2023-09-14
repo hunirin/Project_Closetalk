@@ -11,17 +11,17 @@
     <div class="title">
         <h1>JOIN</h1>
     </div>
-    <form th:action="@{/users/register}" method="post" enctype="multipart/form-data">
+    <form id="form">
         <div class="div-input">
             <table>
                 <thead></thead>
                 <tbody>
                     <tr><td><label>아이디</label></td>
-                        <td><input name="loginId" placeholder="ID"></td></tr>
+                        <td><input name="loginId" placeholder="ID" id="input-login-id"></td></tr>
                     <tr><td><label>비밀번호</label></td>
-                        <td><input name="password" type="password" placeholder="PASSWORD"></td></tr>
+                        <td><input name="password" type="password" placeholder="PASSWORD" id="input-password"></td></tr>
                     <tr><td><label>비밀번호 확인</label></td>
-                        <td><input name="password-check" type="password" placeholder="PASSWORD"></td></tr>
+                        <td><input name="password-check" type="password" placeholder="PASSWORD" id="input-password-check"></td></tr>
                     <tr><td><label>이메일</label></td>
                         <td>
                             <input name="show-email" placeholder="email" id="input-email">
@@ -37,22 +37,21 @@
                     </tr>
                     <input name="social" type="hidden">
                     <tr><td><label>닉네임</label></td>
-                        <td><input name="nickname"></td></tr>
+                        <td><input name="nickname" id="input-nickname"></td></tr>
                     <tr><td><label>프로필 이미지</label></td>
-                        <td><input name="profile-image" type="file"></td></tr>
+                        <td><input name="profile-image" type="file" id="input-profile"></td></tr>
                 </tbody>
             </table>
         </div>
         <div>
-            <button type="submit">가입</button>
+            <button type="submit" id="btn-register">가입</button>
         </div>
     </form>
 </main>
 
-<footer th:insert="footer"></footer>
+<footer th:insert="~{footer :: footer}"></footer>
 
 
-<!--<script type="text/javascript" th:src="@{../js/join-form.js}" ></script>-->
 <script type="text/javascript">
     /*
 
@@ -114,6 +113,24 @@
 
         }
         alert(message)
+    })
+
+    const form = document.getElementById('form');
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault()
+        console.log('가입 버튼 클릭')
+        const userInfo = new FormData(form);
+
+        fetch("users/register", {
+            method: 'POST'
+            , body: userInfo
+            , headers: {'ContentType': 'multipart/form-data'}
+        })
+            .then((response) => {
+                if (response.status === 200) location.href = "/loginPage"
+                else alert("회원가입에 실패하였습니다.")
+            })
     })
 
 </script>
