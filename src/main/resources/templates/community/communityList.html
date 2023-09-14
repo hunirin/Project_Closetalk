@@ -144,11 +144,11 @@
     <script>
         $(document).ready(function() {
             $("#up-btn").click(function() {
-                $('html, body').animate({scrollTop: 0}, 500);
+                $('html, body').animate({scrollTop: 0});
             });
 
             $("#down-btn").click(function() {
-                $('html, body').animate({scrollTop: $(document).height()}, 500);
+                $('html, body').animate({scrollTop: $(document).height()});
             });
 
             function updateButtonPosition() {
