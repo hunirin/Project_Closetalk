@@ -33,7 +33,6 @@ public class WebSecurityConfig {
                                         , "/users/sendEmail"
                                         , "/users/register"
                                         , "/users/login"
-                                        , "users/login-token"
                                         , "/ootd/main"
                                         , "/ootd/header"
                                         , "/ootd/list"
@@ -47,7 +46,8 @@ public class WebSecurityConfig {
                                         , "/issue/{id}"
                                         , "/community/**"
                                         , "/ootd/rest/list"
-                                        , "/closet/view/item"
+                                        , "/closet/view/**"
+                                        , "/issue/view/**"
                                 ).permitAll()
                                 .anyRequest()
                                 .authenticated()
