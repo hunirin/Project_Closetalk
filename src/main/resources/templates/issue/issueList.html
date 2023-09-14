@@ -97,6 +97,14 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.0/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
+
+    function checkLogin() {
+        const accessToken = localStorage.getItem('accessToken');
+
+
+        return !!accessToken;
+    }
+
     $(document).ready(function() {
         $("#up-btn").click(function() {
             $('html, body').animate({scrollTop: 0}, 500);
@@ -104,6 +112,15 @@
 
         $("#down-btn").click(function() {
             $('html, body').animate({scrollTop: $(document).height()}, 500);
+        });
+
+        $("#plus-btn").click(function() {
+            var isLogin = checkLogin();
+            if (isLogin) {
+                window.location.href = "/issue/view/create";
+            } else {
+                window.location.href = "/loginPage";
+            }
         });
 
         function updateButtonPosition() {
