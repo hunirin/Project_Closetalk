@@ -41,7 +41,7 @@ public class IssueViewController {
         model.addAttribute("issueList", issueList);
         model.addAttribute("category", category);
 
-        return "/issue/issueList";
+        return "issue/issueList";
     }
 
     @GetMapping("/header")

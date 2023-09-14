@@ -49,7 +49,7 @@ public class CommunityViewController {
 
         model.addAttribute("communityList", communityList);
         model.addAttribute("category", category);
-        return "/community/communityList";
+        return "community/communityList";
     }
 
     // 검색기능
@@ -75,7 +75,7 @@ public class CommunityViewController {
         model.addAttribute("searchType", searchType);
         model.addAttribute("keyword", keyword);
 
-        return "/community/communityList";
+        return "community/communityList";
     }
 
     // 상세페이지 조회
@@ -91,7 +91,7 @@ public class CommunityViewController {
         model.addAttribute("communityCommentList", communityCommentList);
         model.addAttribute("articleId", articleId);
 
-        return "/community/communityArticle";
+        return "community/communityArticle";
     }
 
 }
