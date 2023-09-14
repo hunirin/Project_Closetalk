@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8">
+    <title>My Closet</title>
+  </head>
+  <body>
+    <!-- header -->
+    <header th:insert="~{header :: header}"></header>
+
+    <h2 style="margin-top: 80px">My CLOSET</h2>
+    <label for="closetSelect"></label>
+    <select id="closetSelect" name="selectedCloset"></select>
+    <div id="categoryButtons" style="margin-top: 10px">
+      <button class="category-button">ALL</button>
+      <button class="category-button" data-category="outer">OUTER</button>
+      <button class="category-button" data-category="top">TOP</button>
+      <button class="category-button" data-category="bottom">BOTTOM</button>
+      <button class="category-button" data-category="shoes">SHOES</button>
+      <button class="category-button" data-category="bag">BAG</button>
+      <button class="category-button" data-category="acc">ACC</button>
+    </div>
+    <div id="itemList" style="margin-top: 10px">
+      <!-- 옷장 목록 표시 -->
+    </div>
+    <div id="itemDetailsModal" class="modal">
+      <div class="modal-content">
+        <div id="itemDetailsContainer" class="close">
+          <!-- 아이템 세부 정보 표시 -->
+        </div>
+      </div>
+    </div>
+    <footer th:insert="~{footer :: footer}"></footer>
+    <script src="/static/js/closet/MyCloset.js"></script>
+  </body>
+</html>
