@@ -20,4 +20,9 @@ public class ViewController {
     public String viewJoinForm() {
         return "user/join-form";
     }
+
+    @GetMapping("test")
+    public String testForm() {
+        return "user/test";
+    }
 }
