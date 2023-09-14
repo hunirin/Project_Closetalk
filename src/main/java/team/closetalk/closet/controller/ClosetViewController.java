@@ -20,13 +20,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/closet/view")
 public class ClosetViewController {
-    private final ClosetService closetService;
     private final ClosetItemService closetItemService;
 
     // 아이템 등록 페이지
     @GetMapping("/item")
     public String viewClosetList() {
-        return "/closet/itemRegistration";
+        return "closet/itemRegistration";
     }
 
     // 옷장 아이템 등록
@@ -40,7 +39,7 @@ public class ClosetViewController {
     ) {
 
         closetItemService.createClosetItem(closetName, entity, itemImageUrl, authentication);
-        return "/closet/itemRegistration";
+        return "closet/itemRegistration";
     }
   
     // 내 옷장 보기
