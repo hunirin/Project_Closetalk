@@ -1,11 +1,7 @@
 package team.closetalk.user.controller;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,9 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import team.closetalk.user.dto.*;
 import team.closetalk.user.service.EmailSendService;
-import team.closetalk.user.service.TokenService;
 import team.closetalk.user.service.UserService;
-import team.closetalk.user.utils.JwtUtils;
 
 import java.io.IOException;
 
@@ -28,10 +22,7 @@ import java.io.IOException;
 public class UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtils jwtUtils;
-
     private final EmailSendService emailSendService;
-    private final TokenService tokenService;
 
     //C
     //이메일 인증 처리
@@ -78,50 +69,25 @@ public class UserController {
 
     }
 
-    // 로그인(나중에 Service 분리)
+    // 로그인
     @PostMapping("/login")
-    public ResponseEntity<?> login(HttpServletResponse response,
-                                  @RequestBody LoginRequestDto loginReqDto) {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginReqDto) {
         CustomUserDetails responseUser = userService.loadUserByUsername(loginReqDto.getLoginId());
         if (!passwordEncoder.matches(loginReqDto.getPassword(), responseUser.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-
-        String accessToken = jwtUtils.generateAccessToken(responseUser); // Access Token
-        tokenService.saveAccessToken(accessToken, responseUser.getLoginId());
-
-        String refreshToken = tokenService.getRefreshToken(responseUser.getLoginId()); // Refresh Token
-        if (refreshToken == null || refreshToken.isEmpty()) {
-            refreshToken = jwtUtils.generateRefreshToken(responseUser);
-            tokenService.saveRefreshToken(refreshToken, responseUser.getLoginId());
-        }
-        LoginResponseDto loginResDto =
-                new LoginResponseDto(responseUser.getNickname(), accessToken);
-
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setPath("/");
-        cookie.setMaxAge(7 * 24 * 60 * 60); // 쿠키 유효 기간 (7일)
-        cookie.setHttpOnly(true); // JavaScript로 쿠키 접근 방지
-        cookie.setSecure(true); // HTTPS 연결에서만 전송
-        response.addCookie(cookie); // HttpServletResponse에 쿠키 추가
-        log.info("Cookie: {}", cookie);
-        /* 클라이언트 부분 일단 킵
-            // 쿠키에서 리프레시 토큰 읽기
-            function getCookie(name) {
-              const value = `; ${document.cookie}`;
-              const parts = value.split(`; ${name}=`);
-              if (parts.length === 2) return parts.pop().split(';').shift();
-            }
-
-            const refreshToken = getCookie('refreshToken'); // 쿠키 이름 'refreshToken'에 저장된 리프레시 토큰 값
-            console.log('Refresh Token:', refreshToken);
-         */
-        log.info("accessToken: {}", accessToken);
-        log.info("refreshToken: {}", refreshToken);
-
         return ResponseEntity.ok()
-                .body(loginResDto);
+                .body(userService.login(responseUser));
     }
+
+    // 로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(Authentication authentication) {
+        CustomUserDetails responseUser = userService.loadUserByUsername(authentication.getName());
+        userService.logout(responseUser);
+        return ResponseEntity.ok().build();
+    }
+
 
     //회원정보 가져오기
     @GetMapping
@@ -154,5 +120,16 @@ public class UserController {
         userService.deleteUser(CustomUserDetails.fromAuthentication(authentication).getLoginId());
         //로그아웃처리
         return "Delete user successful";
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity<?> test(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            CustomUserDetails responseUser = userService.loadUserByUsername(authentication.getName());
+            return ResponseEntity.ok(responseUser.getNickname());
+        } else {
+            // 인증되지 않은 경우, 예외 처리 또는 다른 응답을 반환할 수 있습니다.
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 }

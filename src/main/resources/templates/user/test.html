@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>AccessToken 테스트</title>
+</head>
+<body>
+  <h1>AccessToken 테스트</h1>
+  <p>로컬 스토리지의 AccessToken 출력:</p>
+  <div id="accessTokenContainer"></div>
+
+  <!-- POST 요청을 보내는 버튼 추가 -->
+  <button id="sendPostRequest">POST 요청 보내기</button>
+  <script>
+      const accessToken = localStorage.getItem('accessToken');
+
+      // AccessToken 값을 화면에 출력
+      const accessTokenContainer = document.getElementById('accessTokenContainer');
+      if (accessToken) {
+          accessTokenContainer.innerText = `AccessToken: ${accessToken}`;
+      } else {
+          accessTokenContainer.innerText = 'AccessToken이 로컬 스토리지에 없습니다.';
+      }
+
+      // POST 요청을 보내는 버튼 클릭 이벤트 핸들러
+      const sendPostRequestButton = document.getElementById('sendPostRequest');
+      sendPostRequestButton.addEventListener('click', () => {
+          sendAuthenticatedRequest('/users/test', 'POST', accessToken);
+      });
+  </script>
+  <script src ="/static/js/setToken.js"></script>
+</body>
+</html>
