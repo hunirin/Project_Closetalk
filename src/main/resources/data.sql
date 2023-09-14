@@ -130,27 +130,27 @@ insert into ootd_comment (id, ootd_article_id, user_id, content, created_at) val
 insert into ootd_comment (id, ootd_article_id, user_id, ootd_comment_id, content, created_at) values (3, 1, 1, 1, 'reply testing', '2023-08-30 11:23:32');
 -- INSERT OOTD_LIKE..?
 
--- INSERT ISSUE_ARTICLE
-insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (1, 1, 'ISSUE', '첫번째 이슈', '첫번째 내용', 0, '/static/images/issue/1/1.jpg', NOW());
-insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (2, 2, 'ISSUE', '두번째 이슈', '두번째 내용', 0, '/static/images/issue/2/2.jpg', NOW());
-insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (3, 3, 'ISSUE', '세번째 이슈', '세번째 내용', 0, '/static/images/issue/3/3.jpg', NOW());
-insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (4, 4, 'MAGAZINE', '첫번째 매거진', '네번째 내용', 0, '/static/images/issue/4/1.jpg', NOW());
-insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (5, 5, 'MAGAZINE', '두번째 매거진', '다섯번째 내용', 0, '/static/images/issue/5/2.jpg', NOW());
-insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (6, 5, 'MAGAZINE', '세번째 매거진', '여섯번째 내용', 0, '/static/images/issue/6/3.jpg', NOW());
-insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (7, 1, 'MAGAZINE', '네번째 매거진', '첫번째 내용', 0, '/static/images/issue/1/2.jpg', NOW());
-insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (8, 2, 'ISSUE', '네번째 이슈', '첫번째 내용', 0, '/static/images/issue/2/1.jpg', NOW());
-insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (9, 3, 'ISSUE', '다섯번째 이슈', '두번째 내용', 0, '/static/images/issue/3/1.jpg', NOW());
-insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (10, 4, 'MAGAZINE', '다섯번째 매거진', '네번째 내용', 0, '/static/images/issue/4/2.jpg', NOW());
-insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (11, 5, 'ISSUE', '여섯번째 이슈', '다섯번째 내용', 0, '/static/images/issue/5/1.jpg', NOW());
-insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (12, 5, 'MAGAZINE', '여섯번째 매거진', '여섯번째 내용', 0, '/static/images/issue/6/3.jpg', NOW());
-
--- INSERT ISSUE_ARTICLE_IMAGES
-insert into issue_article_images (id, issue_article_id, image_url) values (1, 1, '/static/images/issue/1/1.jpg');
-insert into issue_article_images (id, issue_article_id, image_url) values (2, 2, '/static/images/issue/2/2.jpg');
-insert into issue_article_images (id, issue_article_id, image_url) values (3, 3, '/static/images/issue/3/3.jpg');
-insert into issue_article_images (id, issue_article_id, image_url) values (4, 4, '/static/images/issue/4/1.jpg');
-insert into issue_article_images (id, issue_article_id, image_url) values (5, 5, '/static/images/issue/5/2.jpg');
-insert into issue_article_images (id, issue_article_id, image_url) values (6, 6, '/static/images/issue/6/3.jpg');
+# -- INSERT ISSUE_ARTICLE
+# insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (1, 1, 'ISSUE', '첫번째 이슈', '첫번째 내용', 0, '/static/images/issue/1/1.jpg', NOW());
+# insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (2, 2, 'ISSUE', '두번째 이슈', '두번째 내용', 0, '/static/images/issue/2/2.jpg', NOW());
+# insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (3, 3, 'ISSUE', '세번째 이슈', '세번째 내용', 0, '/static/images/issue/3/3.jpg', NOW());
+# insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (4, 4, 'MAGAZINE', '첫번째 매거진', '네번째 내용', 0, '/static/images/issue/4/1.jpg', NOW());
+# insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (5, 5, 'MAGAZINE', '두번째 매거진', '다섯번째 내용', 0, '/static/images/issue/5/2.jpg', NOW());
+# insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (6, 5, 'MAGAZINE', '세번째 매거진', '여섯번째 내용', 0, '/static/images/issue/6/3.jpg', NOW());
+# insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (7, 1, 'MAGAZINE', '네번째 매거진', '첫번째 내용', 0, '/static/images/issue/1/2.jpg', NOW());
+# insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (8, 2, 'ISSUE', '네번째 이슈', '첫번째 내용', 0, '/static/images/issue/2/1.jpg', NOW());
+# insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (9, 3, 'ISSUE', '다섯번째 이슈', '두번째 내용', 0, '/static/images/issue/3/1.jpg', NOW());
+# insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (10, 4, 'MAGAZINE', '다섯번째 매거진', '네번째 내용', 0, '/static/images/issue/4/2.jpg', NOW());
+# insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (11, 5, 'ISSUE', '여섯번째 이슈', '다섯번째 내용', 0, '/static/images/issue/5/1.jpg', NOW());
+# insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (12, 5, 'MAGAZINE', '여섯번째 매거진', '여섯번째 내용', 0, '/static/images/issue/6/3.jpg', NOW());
+#
+# -- INSERT ISSUE_ARTICLE_IMAGES
+# insert into issue_article_images (id, issue_article_id, image_url) values (1, 1, '/static/images/issue/1/1.jpg');
+# insert into issue_article_images (id, issue_article_id, image_url) values (2, 2, '/static/images/issue/2/2.jpg');
+# insert into issue_article_images (id, issue_article_id, image_url) values (3, 3, '/static/images/issue/3/3.jpg');
+# insert into issue_article_images (id, issue_article_id, image_url) values (4, 4, '/static/images/issue/4/1.jpg');
+# insert into issue_article_images (id, issue_article_id, image_url) values (5, 5, '/static/images/issue/5/2.jpg');
+# insert into issue_article_images (id, issue_article_id, image_url) values (6, 6, '/static/images/issue/6/3.jpg');
 
 -- INSERT COMMUNITY_ARTICLE
 -- 첫번째 예시 수정
@@ -211,6 +211,24 @@ insert into community_article_images (id, community_article_id, image_url) value
 insert into community_article_images (id, community_article_id, image_url) values (13, 5, '/static/images/community/5/13.png');
 insert into community_article_images (id, community_article_id, image_url) values (14, 5, '/static/images/community/5/14.jpg');
 insert into community_article_images (id, community_article_id, image_url) values (15, 5, '/static/images/community/5/15.png');
+insert into community_article_images (id, community_article_id, image_url) values (24, 24, '/static/images/community/24/bottom_10.jpg');
+insert into community_article_images (id, community_article_id, image_url) values (25, 25, '/static/images/community/25/outer_8.jpg');
+insert into community_article_images (id, community_article_id, image_url) values (26, 26, '/static/images/community/26/outer_7.jpg');
+insert into community_article_images (id, community_article_id, image_url) values (27, 27, '/static/images/community/27/bottom_6.jpg');
+insert into community_article_images (id, community_article_id, image_url) values (28, 28, '/static/images/community/28/shoes_6.jpg');
+insert into community_article_images (id, community_article_id, image_url) values (29, 29, '/static/images/community/29/top_2.jpg');
+insert into community_article_images (id, community_article_id, image_url) values (30, 30, '/static/images/community/30/shoes_10.jpg');
+insert into community_article_images (id, community_article_id, image_url) values (31, 31, '/static/images/community/31/top_8.jpg');
+insert into community_article_images (id, community_article_id, image_url) values (32, 32, '/static/images/community/32/top_7.jpg');
+insert into community_article_images (id, community_article_id, image_url) values (33, 33, '/static/images/community/33/outer_5.jpg');
+insert into community_article_images (id, community_article_id, image_url) values (34, 34, '/static/images/community/34/bottom_4.jpg');
+insert into community_article_images (id, community_article_id, image_url) values (35, 35, '/static/images/community/35/outer_6.jpg');
+insert into community_article_images (id, community_article_id, image_url) values (36, 36, '/static/images/community/36/shoes_9.jpg');
+insert into community_article_images (id, community_article_id, image_url) values (37, 37, '/static/images/community/37/etc_4.jpg');
+insert into community_article_images (id, community_article_id, image_url) values (38, 38, '/static/images/community/38/outer_1.jpg');
+insert into community_article_images (id, community_article_id, image_url) values (39, 39, '/static/images/community/39/top_5.jpg');
+insert into community_article_images (id, community_article_id, image_url) values (40, 40, '/static/images/community/40/top_1.jpg');
+
 
 -- INSERT COMMUNITY_COMMENT
 insert into community_comment (id, content, created_at, user_id, community_article_id)
