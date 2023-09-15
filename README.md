@@ -25,29 +25,26 @@
 <br><br>
 
 ## 팀원 소개
-<div>
-    <table>
-        <thead>
-        </thead>
-        <tbody>
-            <tr>
-                <td colspan="5" align="center"><b>김임김이나</b></td>
-            </tr>
-            <tr>
-                <td align="center">임형택</td>
-                <td align="center">김영섭</td>
-                <td align="center">김민정</td>
-                <td align="center">이광훈</td>
-            </tr>
-            <tr>
-                <td align="center"><a href="https://github.com/Oh3gwnn">@Oh3gwnn</a></td>
-                <td align="center"><a href="https://github.com/youngseobkim">@youngseobkim</a></td>
-                <td align="center"><a href="https://github.com/bluelily555">@bluelily555</a></td>
-                <td align="center"><a href="https://github.com/hunirin">@hunirin</a></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<table>
+    <tbody>
+        <tr>
+            <td colspan="5" align="center"><b>김임김이나</b></td>
+        </tr>
+        <tr>
+            <td align="center">임형택</td>
+            <td align="center">김영섭</td>
+            <td align="center">김민정</td>
+            <td align="center">이광훈</td>
+        </tr>
+        <tr>
+            <td align="center"><a href="https://github.com/Oh3gwnn">@Oh3gwnn</a></td>
+            <td align="center"><a href="https://github.com/youngseobkim">@youngseobkim</a></td>
+            <td align="center"><a href="https://github.com/bluelily555">@bluelily555</a></td>
+            <td align="center"><a href="https://github.com/hunirin">@hunirin</a></td>
+        </tr>
+    </tbody>
+</table>
+
 <br><br>
 
 ## 기술 스택
@@ -72,6 +69,104 @@
 
 [**[PDF]** CLOSETALK 요구사항 명세서](https://drive.google.com/file/d/18u3Lt0JIaxdUg51ZdSHZO3DF7r6RET4U/view?usp=sharing)
 
+<br><br>
+
 --- 
-화면 구성
-REST API
+
+## 주요 기능
+🔸 **회원가입 및 로그인**
+
+        🔹 이메일 인증
+        🔹 소셜 로그인
+
+🔸 **마이페이지**
+
+        🔹 회원정보 - 수정/삭제
+        🔹 DM - 전송/조회/삭제
+        🔹 나의 OOTD - 내 글 조회
+
+🔸 **CLOSET**
+
+        🔹 옷장 - 추가/수정/삭제
+        🔹 아이템 등록
+        🔹 아이템 조회/수정/삭제
+
+🔸 **COMMUNITY**
+
+        🔹 게시글 목록 조회/검색/작성/수정/삭제/좋아요
+        🔹 Closetalk - 옷장 연동 게시물
+        🔹 Smalltalk - 일반 게시물 
+        🔹 댓글 작성, 대댓글 작성
+
+🔸 **OOTD**
+
+        🔹 게시글 목록 조회 - 무한스크롤 방식
+        🔹 상단 배너 - 이슈/매거진 조회 스와이프형식
+        🔹 게시글 조회/작성/수정/삭제/좋아요
+        🔹 댓글 작성, 대댓글 작성
+
+🔸 **ISSUE**
+
+        🔹 게시글 목록 조회
+        🔹 게시글 조회/작성/수정/삭제/좋아요
+
+🔸 **DIRECT MESSAGE**
+
+        🔹 DM 목록 조회 및 생성
+        🔹 DM 조회 및 보내기
+
+<br>
+
+## 화면 구성
+
+<table>
+    <tbody>
+        <tr>
+            <td colspan="5" align="center"><b>Mobile</b></td>
+        </tr>
+        <tr>
+            <td align="center"><b>LOGIN</b></td>
+            <td align="center"><b>OOTD</b></td>
+            <td align="center"><b>CLOSET</b></td>
+        </tr>
+        <tr>
+            <td align="center"><b><img src="./docs/images/mobile-login.jpg" alt="" width="666" height="460"></b></td>
+            <td align="center"><b><img src="./docs/images/mobile-ootd.jpg" alt="" width="666" height="460"></b></td>
+            <td align="center"><b><img src="./docs/images/mobile-closet.jpg" alt="" width="666" height="460"></b></td>
+        </tr>
+    </tbody>
+</table>
+
+<br>
+
+<table>
+    <tbody>
+        <tr>
+            <td colspan="5" align="center"><b>PC</b></td>
+        </tr>
+        <tr>
+            <td align="center"><b>COMMUNITY</b></td>
+            <td align="center"><b>COMMUNITY : Closetalk details</b></td>
+        </tr>
+        <tr>
+            <td align="center"><b><img src="./docs/images/pc-community.png" alt=""></b></td>
+            <td align="center"><b><img src="./docs/images/pc-community-closetalk.png" alt=""></b></td>
+        </tr>
+        <tr>
+            <td align="center"><b>COMMUNITY : Smalltalk details</b></td>
+            <td align="center"><b>OOTD details</b></td>
+        </tr>
+        <tr>
+            <td align="center"><b><img src="./docs/images/pc-community-smalltalk.png" alt=""></b></td>
+            <td align="center"><b><img src="./docs/images/pc-ootd-detail.png" alt=""></b></td>
+        </tr>
+        <tr>
+            <td align="center"><b>ISSUE</b></td>
+        </tr>
+        <tr>
+            <td align="center"><b><img src="./docs/images/pc-issue.png" alt=""></b></td>
+        </tr>
+    </tbody>
+</table>
+
+## REST API
