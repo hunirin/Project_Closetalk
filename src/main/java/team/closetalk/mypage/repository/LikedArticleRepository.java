@@ -14,3 +14,4 @@ public interface LikedArticleRepository extends JpaRepository<CommunityLikeEntit
     @Query("SELECT cl.ootdArticleId.id FROM OotdLikeEntity cl WHERE cl.userId.loginId = :loginId")
     List<Long> findLikedOotdArticleIdsByLoginId(@Param("loginId") String loginId);
 }
+

@@ -13,6 +13,5 @@ public interface CommunityArticleRepository extends JpaRepository<CommunityArtic
     Optional<CommunityArticleEntity> findByIdAndUserId_Id(Long articleId, Long userId);
     Page<CommunityArticleEntity> findAllByDeletedAtIsNull(Pageable pageable);
     Page<CommunityArticleEntity> findAllByCategoryAndDeletedAtIsNull(Category category, Pageable pageable);
-
     List<CommunityArticleEntity> findAllByIdIn(List<Long> articleIds);
 }
