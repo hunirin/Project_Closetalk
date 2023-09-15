@@ -12,6 +12,8 @@
 | **제작 기간** |                                    2023.08.13 ~ 2023.09.14                                    |
 | **배포 주소** | [CLOSETALK LINK](http://ec2-3-34-142-207.ap-northeast-2.compute.amazonaws.com:8080/loginPage) |
 
+<br>
+
 ### 기획 배경
 - 패션 트렌드의 빠른 변화로 인한 스타일링의 어려움
 - 빠르게 패션 정보를 얻을 수 있는 공간 필요함
@@ -59,10 +61,10 @@
 <br>
 
 
-### Flow Chart
+## Flow Chart
 <img src="./docs/images/closetalk_flow_chart.png" alt=""/>
 
-### ERD
+## ERD
 <img src="./docs/images/closetalk_erd.png" alt=""/>
 
 ### 요구사항 명세서
@@ -70,52 +72,58 @@
 [**[PDF]** CLOSETALK 요구사항 명세서](https://drive.google.com/file/d/18u3Lt0JIaxdUg51ZdSHZO3DF7r6RET4U/view?usp=sharing)
 
 <br><br>
-
---- 
+ 
 
 ## 주요 기능
-🔸 **회원가입 및 로그인**
+
+<details><summary> 🔸 <b>회원가입 및 로그인</b></summary>
 
         🔹 이메일 인증
         🔹 소셜 로그인
+</details>
 
-🔸 **마이페이지**
+<details><summary> 🔸 <b>마이페이지</b></summary>
 
         🔹 회원정보 - 수정/삭제
         🔹 DM - 전송/조회/삭제
         🔹 나의 OOTD - 내 글 조회
+</details>
 
-🔸 **CLOSET**
+<details><summary> 🔸 <b>CLOSET</b></summary>
 
         🔹 옷장 - 추가/수정/삭제
         🔹 아이템 등록
         🔹 아이템 조회/수정/삭제
+</details>
 
-🔸 **COMMUNITY**
+<details><summary> 🔸 <b>COMMUNITY</b></summary>
 
         🔹 게시글 목록 조회/검색/작성/수정/삭제/좋아요
         🔹 Closetalk - 옷장 연동 게시물
         🔹 Smalltalk - 일반 게시물 
         🔹 댓글 작성, 대댓글 작성
+</details>
 
-🔸 **OOTD**
+<details><summary> 🔸 <b>OOTD</b></summary>
 
         🔹 게시글 목록 조회 - 무한스크롤 방식
         🔹 상단 배너 - 이슈/매거진 조회 스와이프형식
         🔹 게시글 조회/작성/수정/삭제/좋아요
         🔹 댓글 작성, 대댓글 작성
+</details>
 
-🔸 **ISSUE**
+<details><summary> 🔸 <b>ISSUE</b></summary>
 
         🔹 게시글 목록 조회
         🔹 게시글 조회/작성/수정/삭제/좋아요
+</details>
 
-🔸 **DIRECT MESSAGE**
+<details><summary> 🔸 <b>DIRECT MESSAGE</b></summary>
 
         🔹 DM 목록 조회 및 생성
         🔹 DM 조회 및 보내기
-
-<br>
+</details>
+<br><br>
 
 ## 화면 구성
 
@@ -168,5 +176,7 @@
         </tr>
     </tbody>
 </table>
+
+<br><br>
 
 ## REST API
