@@ -17,7 +17,7 @@ public class IssueBannerService {
     private final IssueArticleRepository issueArticleRepository;
     // 마지막 세개만 조회
     public Page<IssueArticleDto> readLastThreeIssues() {
-        Pageable pageable = PageRequest.of(0, 3, Sort.by("id").ascending());
+        Pageable pageable = PageRequest.of(0, 3, Sort.by("id").descending());
         Page<IssueArticleEntity> issueEntityPage = issueArticleRepository.findAll(pageable);
         return issueEntityPage.map(IssueBannerDto::fromEntity);
     }

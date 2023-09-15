@@ -155,6 +155,12 @@ insert into issue_article_images (id, issue_article_id, image_url) values (3, 3,
 insert into issue_article_images (id, issue_article_id, image_url) values (4, 4, '/static/images/issue/4/1.jpg');
 insert into issue_article_images (id, issue_article_id, image_url) values (5, 5, '/static/images/issue/5/2.jpg');
 insert into issue_article_images (id, issue_article_id, image_url) values (6, 6, '/static/images/issue/6/3.jpg');
+insert into issue_article_images (id, issue_article_id, image_url) values (7, 7, '/static/images/issue/1/2.jpg');
+insert into issue_article_images (id, issue_article_id, image_url) values (8, 8, '/static/images/issue/2/1.jpg');
+insert into issue_article_images (id, issue_article_id, image_url) values (9, 9, '/static/images/issue/3/1.jpg');
+insert into issue_article_images (id, issue_article_id, image_url) values (10, 10, '/static/images/issue/4/2.jpg');
+insert into issue_article_images (id, issue_article_id, image_url) values (11, 11, '/static/images/issue/5/1.jpg');
+insert into issue_article_images (id, issue_article_id, image_url) values (12, 12, '/static/images/issue/6/3.jpg');
 
 -- INSERT COMMUNITY_ARTICLE
 -- 첫번째 예시 수정
