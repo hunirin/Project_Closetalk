@@ -41,17 +41,18 @@ public class OotdArticleService {
     private final UserRepository userRepository;
 
 
-    private final String OOTD_IMAGE_DIRECTORY = "src/main/resources/static/images/ootd/";
+    private final String ROOT_DIRECTORY = "src/main/resources";
+    private final String OOTD_IMAGE_DB_PATH = "/static/images/ootd/";
 
     private String saveOotdImageFile(MultipartFile profileImage, String articleId){
         //이미지 저장할 디렉토리 없으면 생성
         try {
-            Files.createDirectories(Path.of(OOTD_IMAGE_DIRECTORY + articleId));
+            Files.createDirectories(Path.of(ROOT_DIRECTORY + OOTD_IMAGE_DB_PATH + articleId));
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        String imagePath = OOTD_IMAGE_DIRECTORY + articleId + "/";
+        String imagePath = OOTD_IMAGE_DB_PATH + articleId + "/";
 
         //이미지를 등록한 경우 imagePath 변경 및 이미지 파일 저장
         if(profileImage != null && !profileImage.isEmpty()){
@@ -65,7 +66,7 @@ public class OotdArticleService {
             imagePath = imagePath + UUID.randomUUID() + "_" + savedDatetime + "." + extension;
 
             try {
-                profileImage.transferTo(Path.of(imagePath));
+                profileImage.transferTo(Path.of(ROOT_DIRECTORY + imagePath));
             } catch(IOException e){
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
             }

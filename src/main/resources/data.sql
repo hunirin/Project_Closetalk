@@ -57,7 +57,7 @@ VALUES ('보세', 'OUTER', '/static/images/closetItem/userNo.1/아우터모음/c
 INSERT INTO closet_item (brand, category, item_image_url, item_name, price, description, created_at, modified_at, closet_id)
 VALUES ('유니클로', 'OUTER', '/static/images/closetItem/userNo.1/아우터모음/outer_1.jpg', '헌팅자켓', 89000, '', '2023-08-16 11:23:32', NOW(), (SELECT id FROM closet LIMIT 1 OFFSET 1));
 INSERT INTO closet_item (brand, category, item_image_url, item_name, price, description, created_at, modified_at, closet_id)
-VALUES ('유니클로', 'BOTTOM', '/static/images/closetItem/userNo.1/아우터모음/bottom_4.jpg', '헌팅자켓', 89000, '', '2023-08-16 11:23:32', NOW(), (SELECT id FROM closet LIMIT 1 OFFSET 1));
+VALUES ('유니클로', 'BOTTOM', '/static/images/closetItem/userNo.1/아우터모음/bottom_4.jpg', '파라슈트팬츠', 59000, '', '2023-08-16 11:23:32', NOW(), (SELECT id FROM closet LIMIT 1 OFFSET 1));
 
 -- INSERT OOTD_ARTICLE
 insert into ootd_article (id, user_id, content, hashtag, created_at, thumbnail) VALUES (1, 1, '수변공원에서 사는 사람', '#ootd#가을코디#수변공원', '2023-08-16 11:23:32', '/static/images/ootd/1/1.jpg');
