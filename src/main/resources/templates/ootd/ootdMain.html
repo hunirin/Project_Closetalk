@@ -22,8 +22,10 @@
             <div class="swiper-wrapper" id="banner">
                 <th:block th:each="issue : ${issuePage}">
                     <div class="swiper-slide" id="swiper-slide">
-                        <!-- 최근 썸네일 세개만 배너에 올라감 -->
-                        <img th:src="@{${issue.getThumbnail()}}" style="width: 100%;">
+                        <a th:href="'/issue/view/' + ${issue.id}">
+                            <!-- 최근 썸네일 세개만 배너에 올라감 -->
+                            <img th:src="@{${issue.getThumbnail()}}" style="width: 100%;">
+                        </a>
                     </div>
                 </th:block>
             </div>
@@ -127,7 +129,7 @@
 
                 // 0.5초 뒤에 로딩되도록 설정
                 if (distanceToBottom < 200) {
-                    debounceTimer = setTimeout(loadMoreThumbnails, 500); // 1000  = 1초
+                    debounceTimer = setTimeout(loadMoreThumbnails); // 1000  = 1초
                 }
             });
 

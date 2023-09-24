@@ -153,39 +153,40 @@
                 const price = document.getElementById('price').value;
                 const itemName = document.getElementById('itemName').value;
                 const description = document.getElementById('description').value;
-                const itemImageFile = document.getElementById('itemImageFile').files[0];
+                const itemImageFile = document.getElementById('itemImageUrl').files[0];
 
-                // Create a FormData object to send the form data including the file
+                // Create a JSON object for the non-file data
+                const jsonData = {
+                    closetName: closetName,
+                    category: category,
+                    brand: brand,
+                    price: price,
+                    itemName: itemName,
+                    description: description,
+                };
+
                 const formData = new FormData();
-                formData.append('closetName', closetName);
-                formData.append('category', category);
-                formData.append('brand', brand);
-                formData.append('price', price);
-                formData.append('itemName', itemName);
-                formData.append('description', description);
-                formData.append('itemImageFile', itemImageFile);
+                formData.append('itemImageUrl', itemImageFile);
 
-                // Get accessToken (from localStorage)
+                formData.append('data', new Blob([JSON.stringify(jsonData)], { type: 'application/json' }));
+
                 const accessToken = localStorage.getItem('accessToken');
 
-                // If accessToken exists, perform API request
                 if (accessToken) {
-                    fetch('/item/' + closetName, {
+                    fetch('/closet/item/' + closetName, {
                         method: 'POST',
                         headers: {
-                            'Authorization': 'Bearer ' + accessToken
+                            'Authorization': 'Bearer ' + accessToken,
                         },
-                        body: formData // Send the form data with the image file
+                        body: formData
                     })
                         .then(response => {
                             if (response.status === 401) {
-                                // Handle unauthorized access (e.g. redirect to login page)
-                                // Example: window.location.href = '/login';
+                               window.location.href = '/loginPage';
                             }
                             return response.json();
                         })
                         .then(data => {
-                            // Handle the response (e.g., show a success message)
                             console.log('Item registration success:', data);
                         })
                         .catch(error => {

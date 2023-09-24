@@ -31,9 +31,35 @@
           </div>
         </div>
 
-
+        <div id="smalltalk" class="smalltalk">
           <div class="board_image" th:each="image : ${communityArticle.communityImages}">
             <img th:src="@{${image.imageUrl}}" style="height: 100%; width: 100%">
+          </div>
+        </div>
+
+          <div id="closetalk" class="closetalk">
+              <table>
+              <tbody th:each="commCloset : ${communityArticle.closetItems}">
+                  <tr th:if="${commCloset.category == 'OUTER'}">
+                      <td class="td_box">OUTER</td><td><img th:src="${commCloset.itemImageUrl}"></td>
+                  </tr>
+                  <tr th:if="${commCloset.category == 'TOP'}">
+                      <td class="td_box">TOP</td><td><img th:src="${commCloset.itemImageUrl}"></td>
+                  </tr>
+                  <tr th:if="${commCloset.category == 'BOTTOM'}">
+                      <td class="td_box">BOTTOM</td><td><img th:src="${commCloset.itemImageUrl}"></td>
+                  </tr>
+                  <tr th:if="${commCloset.category == 'SHOES'}">
+                      <td class="td_box">SHOES</td><td><img th:src="${commCloset.itemImageUrl}"></td>
+                  </tr>
+                  <tr th:if="${commCloset.category == 'ACC'}">
+                      <td class="td_box">ACC</td><td><img th:src="${commCloset.itemImageUrl}"></td>
+                  </tr>
+                  <tr th:if="${commCloset.category == 'ACC'}">
+                      <td class="td_box">ETC</td><img th:src="${commCloset.itemImageUrl}"></td>
+                  </tr>
+              </tbody>
+              </table>
           </div>
 
         <div class="board_middle">
@@ -101,15 +127,36 @@
 
     <footer th:insert="~{footer :: footer}"></footer>
 
-      <!-- 배너 스와이프 API -->
-      <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-      <script>
-          var swiper = new Swiper(".mySwiper", {
-              pagination: {
-                  el: ".swiper-pagination",
-              },
-          });
-      </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const communityArticleCategory = '[[${communityArticle.category}]]';
+            console.log("communityArticleCategory:", communityArticleCategory); // Add this line for debugging
+
+            const smalltalkDiv = document.getElementById('smalltalk');
+            const closetalkDiv = document.getElementById('closetalk');
+
+            if (communityArticleCategory === 'SMALLTALK') {
+                // Show the smalltalk div
+                if (smalltalkDiv) {
+                    smalltalkDiv.style.display = 'block';
+                }
+                // Hide the closetalk div
+                if (closetalkDiv) {
+                    closetalkDiv.style.display = 'none';
+                }
+            } else if (communityArticleCategory === 'CLOSETALK') {
+                // Show the closetalk div
+                if (closetalkDiv) {
+                    closetalkDiv.style.display = 'block';
+                }
+                // Hide the smalltalk div
+                if (smalltalkDiv) {
+                    smalltalkDiv.style.display = 'none';
+                }
+            }
+        });
+    </script>
+
 
       <!-- link 클릭 시 링크 복사하는 JS -->
       <script>

@@ -70,7 +70,7 @@ public class ClosetItemService {
 
                 // 저장되는 시간을 파일명으로
                 LocalDateTime currentTime = LocalDateTime.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss.");
                 String currentTimeStr = currentTime.format(formatter);
 
                 // 확장자를 포함한 이미지 이름
