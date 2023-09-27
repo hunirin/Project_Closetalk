@@ -173,5 +173,68 @@ function displayItemsByCategory(data) {
         }
     });
 }
+
+// 옷장 생성 버튼 눌렸을 때
+const addClothingButton = document.querySelector('.bi-plus-circle');
+addClothingButton.addEventListener('click', () => {
+    openAddItemModal();
+});
+
+// 옷장 생성 모달 열기
+function openAddItemModal() {
+    const addItemModal = document.getElementById('addItemModal');
+    addItemModal.style.display = 'block';
+}
+
+// 옷장 생성 모달 닫기
+function closeAddItemModal() {
+    const addItemModal = document.getElementById('addItemModal');
+    addItemModal.style.display = 'none';
+}
+
+// 저장 버튼 클릭 이벤트 핸들러
+const saveItemButton = document.getElementById('saveClosetButton');
+saveItemButton.addEventListener('click', () => {
+    const closetName = document.getElementById('closetName').value;
+    const isHidden = document.getElementById('isHidden').value;
+
+    const queryParams = new URLSearchParams({
+        closetName: closetName,
+        isHidden: isHidden
+    }).toString();
+
+    sendItemToServer(queryParams);
+});
+
+// 취소 버튼 클릭 이벤트 핸들러
+const cancelClosetButton = document.getElementById('cancelClosetButton');
+cancelClosetButton.addEventListener('click', () => {
+    closeAddItemModal();
+});
+
+// 서버로 아이템 이름 전송
+function sendItemToServer(queryParams) {
+    let requestUrl = `/closet/create?${queryParams}`;
+    fetch(requestUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Bearer ${accessToken}`
+        },
+    })
+        .then(response => {
+            if (response.status === 200) {
+                closeAddItemModal();
+                // 아이템 목록을 다시 불러오는 등의 작업을 수행할 수 있습니다.
+            } else {
+                throw new Error('옷장 추가 실패');
+            }
+        })
+        .catch(error => {
+            console.error('옷장 추가 실패:', error);
+            alert('옷장 추가 실패: ' + error.message);
+        });
+}
+
 // 페이지 로드 시 옷장 목록 호출
 fetchClosetList();
