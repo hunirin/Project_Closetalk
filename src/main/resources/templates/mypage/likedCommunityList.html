@@ -86,11 +86,9 @@
     <script>
         // 페이지가 로드될 때 실행되는 코드
         window.addEventListener('load', function () {
-            // Get accessToken (from localStorage)
             const accessToken = localStorage.getItem('accessToken');
             console.log(accessToken);
 
-            // Function to perform API requests for community data
             function fetchCommunityData() {
                 return fetch('/mypage/liked/community/list?page=0', {
                     method: 'GET',
@@ -102,38 +100,31 @@
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
                         }
-                        return response.text(); // Parse response as text (HTML)
+                        return response.text();
                     })
                     .then(communityData => {
                         var parser = new DOMParser();
                         var communityDoc = parser.parseFromString(communityData, 'text/html');
                         var communityListSection = communityDoc.getElementById('communityList');
 
-                        // Replace the content of the existing communityList with the new one
                         var existingCommunityList = document.getElementById('communityList');
                         existingCommunityList.innerHTML = communityListSection.innerHTML;
 
-                        setCurrentPageClass(); // Set page class
-
-                        // Add any additional logic for updating the section here if needed
-
+                        setCurrentPageClass();
                     })
                     .catch(error => {
                         console.error('Community API request failed:', error);
-                        // Handle the error here, e.g., display an error message to the user
                     });
             }
 
-            // Check if accessToken exists
             if (accessToken) {
                 console.log('API Requests started...');
                 console.log('AccessToken:', accessToken);
-                // Call the function to fetch community data
+
                 fetchCommunityData();
             } else {
-                // Handle when accessToken does not exist
                 console.error('No accessToken found. Redirecting to login page...');
-                window.location.href = '/loginPage'; // Redirect to your login page
+                window.location.href = '/loginPage';
             }
         });
     </script>
@@ -193,7 +184,6 @@
     </script>
 
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-
 
 </body>
 </html>
