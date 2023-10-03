@@ -196,7 +196,8 @@ function closeAddItemModal() {
 const saveItemButton = document.getElementById('saveClosetButton');
 saveItemButton.addEventListener('click', () => {
     const closetName = document.getElementById('closetName').value;
-    const isHidden = document.getElementById('isHidden').value;
+    const isHiddenCheckbox = document.querySelector('input[name="hide"]');
+    const isHidden = isHiddenCheckbox.checked;
 
     const queryParams = new URLSearchParams({
         closetName: closetName,
@@ -218,7 +219,6 @@ function sendItemToServer(queryParams) {
     fetch(requestUrl, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': `Bearer ${accessToken}`
         },
     })
