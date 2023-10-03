@@ -42,7 +42,6 @@ public class LikeArticleController {
         model.addAttribute("likedCommunityPage", likedCommunityPage);
 
         return "mypage/likedCommunityList";
-
     }
 
     // OOTD

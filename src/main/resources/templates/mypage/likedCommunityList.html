@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" >
     <title>Liked Article</title>
-    <link rel="stylesheet" href="/static/css/community/list.css">
+    <link rel="stylesheet" href="/static/css/mypage/communityList.css">
     <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -19,7 +19,7 @@
     <article id="list">
 
         <div class="categories">
-            <div class="category current">
+            <div class="category current" title="community">
                 <a href="/mypage/liked/community?page=0" data-category="community">
                     <span>COMMUNITY</span>
                 </a>
@@ -58,16 +58,18 @@
                 </div>
             </div>
 
-                <div class="prev"></div>
-                <div class="number">
-                    <a class="selected" th:href="'&page=0'">1</a>
-                    <a class="notSelected" th:href="'&page=1'">2</a>
-                    <a class="notSelected" th:href="'&page=2'">3</a>
-                    <a class="notSelected" th:href="'&page=3'">4</a>
-                    <a class="notSelected" th:href="'&page=4'">5</a>
-                </div>
-                <div class="next">
-                    <a href="?page=5">다음</a>
+                <div class="pagination">
+                    <div class="prev"></div>
+                    <div class="number">
+                        <a class="selected" th:href="'&page=0'">1</a>
+                        <a class="notSelected" th:href="'&page=1'">2</a>
+                        <a class="notSelected" th:href="'&page=2'">3</a>
+                        <a class="notSelected" th:href="'&page=3'">4</a>
+                        <a class="notSelected" th:href="'&page=4'">5</a>
+                    </div>
+                    <div class="next">
+                        <a href="?page=5">다음</a>
+                    </div>
                 </div>
 
         </section>
