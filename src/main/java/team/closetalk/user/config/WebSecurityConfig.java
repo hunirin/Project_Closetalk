@@ -53,6 +53,11 @@ public class WebSecurityConfig {
                                         , "/issue/view/{articleId}"
                                         , "/mypage/liked/community"
                                         , "/mypage/liked/ootd"
+                                        , "/find/id"
+                                        , "/findId"
+                                        , "/find/password"
+                                        , "/findPassword"
+                                        , "/tempPassword"
                                 ).permitAll()
                                 .anyRequest()
                                 .authenticated()

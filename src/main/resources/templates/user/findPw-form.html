@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Closetalk</title>
+    <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="/static/css/login/findIdAndPw.css">
+</head>
+<body>
+<header th:insert="~{header :: header}"></header>
+
+<div id="content" class="find-form">
+    <div class="titleText">
+        <h2>비밀번호 찾기</h2>
+        <hr>
+    </div>
+    <br>
+    <form action="/find/password" method="post" id="findPwForm">
+        <div class="textForm">
+            <input type="text" class="loginId" id="loginId" name="loginId" required placeholder="아이디">
+        </div>
+        <div class="textForm">
+            <input type="email" class="email" id="email" name="email" required placeholder="이메일">
+        </div>
+        <div class="findBtnDiv">
+            <button type="button" class="findBtn" id="findBtn" onclick="findPw()">비밀번호 찾기</button>
+        </div>
+        <div id="modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close" id="closeModalButton" onclick="closeModal()">&times;</span>
+                <p id="modalMessage"></p>
+                <button type="button" class="findBtn" id="getPwBtn" onclick="getTempPw()">임시 비밀번호 받기</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<footer th:insert="~{footer :: footer}"></footer>
+
+<script>
+    // 모달 띄우기
+    function openModal(message) {
+        const modal = document.getElementById("modal");
+        const modalMessage = document.getElementById("modalMessage");
+
+        modalMessage.innerText = message;
+        modal.style.display = "block";
+
+        // 모달이 열릴 때 close 버튼을 보이도록 변경
+        closeModalButton.style.display = "block";
+    }
+
+    // 모달 닫기
+    function closeModal() {
+        const modal = document.getElementById("modal");
+        modal.style.display = "none";
+    }
+
+    // 모달 외부 클릭 시 닫기
+    window.onclick = function(event) {
+        const modal = document.getElementById("modal");
+        if (event.target === modal) {
+            closeModal();
+        }
+    };
+
+    //비밀번호 찾기(계정 있는지 검사)
+    function findPw() {
+        const loginId = document.getElementById("loginId").value;
+        const email = document.getElementById("email").value;
+
+        fetch(`/findPassword?loginId=${loginId}&email=${email}`)
+            .then(response => response.json())
+            .then(data => {
+                openModal(data.message);
+                if (data.message !== "입력하신 이메일로 임시 비밀번호를 발급합니다.") {
+                    document.getElementById("getPwBtn").style.display = "none";
+                } else {
+                    document.getElementById("getPwBtn").style.display = "block";
+                }
+            })
+            .catch(error => {
+                console.error("Error finding Password", error);
+            });
+    }
+
+    //비밀번호 찾기(임시 비밀번호 전송)
+    function getTempPw() {
+        $.ajax({
+            url: "/tempPassword",
+            type: "post",
+            dataType: "text",
+            data: { "email": $("#email").val() },
+            success: function (data) {
+                alert("임시 비밀번호가 전송되었습니다.");
+            },
+            error: function (request, status, error) {
+                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            }
+        });
+    }
+</script>
+</body>
+</html>
