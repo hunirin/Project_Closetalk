@@ -276,7 +276,7 @@ public class UserService implements UserDetailsManager {
         MimeMessage message = javaMailSender.createMimeMessage();
 
         try {
-            message.setFrom("closetalk@gmail.com");
+            message.setFrom("hun053@naver.com");
             message.setRecipients(MimeMessage.RecipientType.TO, email);
             message.setSubject("[Closetalk] 임시 비밀번호 발급");
             String body = "";
