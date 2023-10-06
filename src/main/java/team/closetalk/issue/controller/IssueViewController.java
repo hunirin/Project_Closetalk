@@ -104,9 +104,10 @@ public class IssueViewController {
             model.addAttribute("category", category);
 
             return "issue/issueList";
+
         } else {
-            // 사용자가 인증되지 않은 경우, 로그인 페이지로 리디렉션 또는 오류 메시지 표시
-            return "redirect:/loginPage"; // 또는 다른 리디렉션 URL을 지정
+
+            return "redirect:/loginPage";
         }
     }
 }

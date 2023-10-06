@@ -18,7 +18,7 @@
   <div id="root">
     <div class="main_body">
       <div class="board_top">
-        <form th:action="@{/issue/view/create}" enctype="multipart/form-data" method="post" th:objects="${issueArticle}">
+        <form action="/issue/view/create" method="post">
           <div class="board_top_title">
             <label for="category">카테고리:</label>
             <select id="category" name="category">
@@ -61,25 +61,37 @@
   });
 
   document.addEventListener("submit", function (event) {
-    event.preventDefault();
+    // event.preventDefault();
 
     function checkLogin() {
       const accessToken = localStorage.getItem("accessToken")
 
       if (accessToken) {
+        alert(`${document.getElementById('category').value},
+                ${document.getElementById('title').value},
+                ${document.getElementById('content').value},
+                ${document.getElementById('imageUrl').value}`);
+
+        const formData = new FormData();
+        formData.append('category', document.getElementById('category').value);
+        formData.append('title', document.getElementById('title').value);
+        formData.append('content', document.getElementById('content').value);
+        formData.append('imageUrl', document.getElementById('imageUrl').files[0]);
+
+
         fetch('/issue/view/create', {
           method: 'POST',
           headers: {
             'Authorization': 'Bearer ' + accessToken,
-            'Content-Type': 'application/json'
-          }
+            // 'Content-Type': 'application/json'
+          },
+          body: formData,
         })
                 .then(response => {
                   if (response.status === 200) {
-                    // 요청이 성공적으로 처리되면 원하는 동작을 수행합니다.
+
                     window.location.href = '/issue/view/list';
                   } else {
-                    // 오류 처리
                     console.error('요청이 실패했습니다.');
                   }
                 })
@@ -87,7 +99,7 @@
                   console.error('오류 발생: ' + error);
                 });
       } else {
-        // 로그인되지 않은 경우
+
         window.location.href = '/loginPage';
       }
     }
