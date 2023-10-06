@@ -225,7 +225,10 @@ function sendItemToServer(queryParams) {
         .then(response => {
             if (response.status === 200) {
                 closeAddItemModal();
-                // 아이템 목록을 다시 불러오는 등의 작업을 수행할 수 있습니다.
+                alert('옷장이 생성되었습니다.');
+                location.reload();
+            } else if (response.status === 400) {
+                alert('옷장을 더 이상 생성할 수 없습니다.');
             } else {
                 throw new Error('옷장 추가 실패');
             }
@@ -235,6 +238,13 @@ function sendItemToServer(queryParams) {
             alert('옷장 추가 실패: ' + error.message);
         });
 }
+
+// 옷장 생성 버튼 눌렸을 때
+const deleteIcon = document.querySelector('.bi-trash3');
+deleteIcon.addEventListener('click', () => {
+    const selectedClosetName = document.getElementById('closetSelect').value;
+    alert(`선택된 옷장: ${selectedClosetName}`);
+});
 
 // 페이지 로드 시 옷장 목록 호출
 fetchClosetList();
