@@ -239,11 +239,11 @@ function sendItemToServer(queryParams) {
         });
 }
 
-// 옷장 생성 버튼 눌렸을 때
+// 옷장 삭제 버튼 눌렸을 때
 const deleteIcon = document.querySelector('.bi-trash3');
 deleteIcon.addEventListener('click', () => {
     const selectedClosetName = document.getElementById('closetSelect').value;
-    alert(`선택된 옷장: ${selectedClosetName}`);
+    alert(`선택된 옷장 [${selectedClosetName}]을 삭제하시겠습니까?`);
 });
 
 // 페이지 로드 시 옷장 목록 호출
