@@ -240,22 +240,33 @@ function sendItemToServer(queryParams) {
 }
 
 // 옷장 삭제 모달 열기
-function openDeleteModal(selectedCloset) {
-    document.getElementById('selectedClosetName').textContent = selectedCloset;
+function openDeleteModal() {
     const deleteModal = document.getElementById('deleteClosetModal');
     deleteModal.style.display = 'block';
 }
 
 // 옷장 삭제 모달 닫기
 function closeDeleteModal() {
-    document.getElementById('deleteClosetModal').style.display = 'none';
+    const deleteModal = document.getElementById('deleteClosetModal');
+    deleteModal.style.display = 'none';
 }
 
 // 옷장 삭제 버튼 눌렸을 때
-const deleteIcon = document.querySelector('.bi-trash3');
-deleteIcon.addEventListener('click', () => {
-    const selectedClosetName = document.getElementById('closetSelect').value;
-    openDeleteModal(selectedClosetName);
+const deleteClosetButton = document.querySelector('.bi-trash3');
+deleteClosetButton.addEventListener('click', () => {
+    openDeleteModal();
+});
+
+// 취소 버튼 클릭 이벤트 핸들러
+const cancelButton = document.getElementById('cancelButton');
+cancelButton.addEventListener('click', () => {
+    closeDeleteModal();
+});
+
+// 삭제 확인 버튼 클릭 이벤트 핸들러
+const acceptButton = document.getElementById('acceptButton');
+acceptButton.addEventListener('click', () => {
+
 });
 
 // 페이지 로드 시 옷장 목록 호출

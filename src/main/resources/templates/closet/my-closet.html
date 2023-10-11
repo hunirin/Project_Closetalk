@@ -48,10 +48,10 @@
     </div>
 
     <!-- 옷장 추가 -->
-    <div id="addItemModal" class="modal">
-      <div id="modal-closet" class="modal-content">
+    <div id="addItemModal" class="modal closetModal">
+      <div id="modal-closet" class="modal-content modal-closet">
         <h4>옷장 추가</h4>
-        <input type="text" id="closetName" placeholder="옷장 이름">
+        <input type="text" id="closetName" placeholder="옷장 이름" style="margin-top: 10px">
         <div class="horizontal-container">
           <p>옷장 공개</p>
           <label class="checkbox-label">
@@ -61,6 +61,18 @@
         <div class="horizontal-container2">
         <button id="saveClosetButton" class="Closet-Button">추가</button>
         <button id="cancelClosetButton" class="Closet-Button">취소</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 옷장 삭제 -->
+    <div id="deleteClosetModal" class="modal closetModal">
+      <div id="delete-modal-closet" class="modal-content modal-closet">
+        <h4>옷장 삭제</h4>
+        <p style="margin-top: 10px">현재 선택된 옷장을 삭제하시겠습니까?</p>
+        <div class="horizontal-container2">
+          <button id="acceptButton" class="Closet-Button">삭제</button>
+          <button id="cancelButton" class="Closet-Button">취소</button>
         </div>
       </div>
     </div>
