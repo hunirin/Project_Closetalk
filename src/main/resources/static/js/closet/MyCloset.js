@@ -84,6 +84,11 @@ function openModal() {
     const close = document.getElementById('modal-close');
     modal.style.display = 'block';
     close.style.display = 'block';
+
+    const addItemModal = document.getElementById('addItemModal');
+    const deleteModal = document.getElementById('deleteClosetModal');
+    addItemModal.style.display = 'none';
+    deleteModal.style.display = 'none';
 }
 
 // 모달 닫기
@@ -108,6 +113,17 @@ function displayItemDetails(item) {
     const detailsElement = document.createElement('div');
     detailsElement.innerHTML = `이름: ${item.itemName}<br>브랜드: ${item.brand}<br>카테고리: ${item.category}`;
 
+    // 이미지 엘리먼트를 생성하고 속성을 설정
+    const imageElement = document.createElement('img');
+    imageElement.src = item.itemImageUrl;
+
+    // 이미지 크기 조절 및 상세 설정
+    imageElement.style.width = '450px';
+    imageElement.style.height = '450px';
+    imageElement.style.objectFit = 'cover';
+    imageElement.style.marginRight = '10px';
+
+    itemDetailsContainer.appendChild(imageElement);
     itemDetailsContainer.appendChild(detailsElement);
 }
 
@@ -163,6 +179,7 @@ function displayItemsByCategory(data) {
                 itemImage.style.height = '150px';
                 itemImage.style.objectFit = 'cover';
                 itemImage.style.marginRight = '10px';
+
                 // 아이템을 클릭했을 때 세부 정보를 표시하기 위한 이벤트 리스너 추가
                 itemImage.addEventListener('click', () => {
                     handleItemClick(item);
@@ -184,6 +201,13 @@ addClothingButton.addEventListener('click', () => {
 function openAddItemModal() {
     const addItemModal = document.getElementById('addItemModal');
     addItemModal.style.display = 'block';
+
+    const deleteModal = document.getElementById('deleteClosetModal');
+    const modal = document.getElementById('itemDetailsModal');
+    const close = document.getElementById('modal-close');
+    deleteModal.style.display = 'none';
+    modal.style.display = 'none';
+    close.style.display = 'none';
 }
 
 // 옷장 생성 모달 닫기
@@ -243,6 +267,13 @@ function sendItemToServer(queryParams) {
 function openDeleteModal() {
     const deleteModal = document.getElementById('deleteClosetModal');
     deleteModal.style.display = 'block';
+
+    const addItemModal = document.getElementById('addItemModal');
+    const modal = document.getElementById('itemDetailsModal');
+    const close = document.getElementById('modal-close');
+    addItemModal.style.display = 'none';
+    modal.style.display = 'none';
+    close.style.display = 'none';
 }
 
 // 옷장 삭제 모달 닫기
