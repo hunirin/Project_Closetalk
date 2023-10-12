@@ -266,8 +266,33 @@ cancelButton.addEventListener('click', () => {
 // 삭제 확인 버튼 클릭 이벤트 핸들러
 const acceptButton = document.getElementById('acceptButton');
 acceptButton.addEventListener('click', () => {
-
+    if (selectedCloset) {
+        deleteCloset(selectedCloset);
+    }
 });
+
+// 옷장 삭제 요청 보내는 함수
+function deleteCloset(closetName) {
+    fetch(`/closet/${closetName}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        },
+    })
+        .then(response => {
+            if (response.status === 200) {
+                closeDeleteModal();
+                alert(`옷장 '${closetName}'이(가) 삭제되었습니다.`);
+                location.reload(); // 페이지 새로고침
+            } else {
+                throw new Error(`옷장 '${closetName}' 삭제 실패`);
+            }
+        })
+        .catch(error => {
+            console.error('옷장 삭제 실패:', error);
+            alert(`옷장 삭제 실패: ${error.message}`);
+        });
+}
 
 // 페이지 로드 시 옷장 목록 호출
 fetchClosetList();

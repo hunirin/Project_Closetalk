@@ -6,10 +6,12 @@
     transform: translate(-50%, -60%); /* 가운데 정렬을 위한 위치 조정 */
     max-width: 40%; /* 모달의 최대 너비를 지정 (창 크기보다 작게 설정 가능) */
     max-height: 30%;
+    width: 900px;
     background-color: white; /* 배경색 설정 */
     padding: 20px; /* 내용과 모달 창 사이의 간격 설정 */
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* 그림자 효과 추가 */
     z-index: 1000; /* 다른 요소 위에 표시하기 위한 z-index 설정 */
+    display: none;
 }
 
 #deleteClosetModal {
