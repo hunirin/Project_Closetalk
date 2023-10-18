@@ -22,11 +22,12 @@ public class OotdArticleDto {
     // 좋아요
     public Long likes;
 
-    // LocalDateTime으로 전달하는 편이 어떨지... 데이터 가공할 때 그게 더 편할 것 같은데
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String createdAt;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String modifiedAt;
+
+    private Boolean isDeleted;
 
     // 게시물 대표 이미지
     private String thumbnail;

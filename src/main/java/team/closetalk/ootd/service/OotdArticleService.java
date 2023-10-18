@@ -109,13 +109,13 @@ public class OotdArticleService {
     public Page<OotdArticleDto> readOotdPaged(Integer pageNum, Integer pageSize) {
         Pageable pageable = PageRequest.of(
                 pageNum, pageSize, Sort.by("id").descending());
-        Page<OotdArticleEntity> ootdEntityPage = ootdArticleRepository.findAll(pageable);
+        Page<OotdArticleEntity> ootdEntityPage = ootdArticleRepository.findByIsDeletedFalse(pageable);
         return ootdEntityPage.map(OotdArticleDto::fromEntityForList);
     }
 
     // 상세페이지
     public OotdArticleDto readOotdOne(Long articleId) {
-        Optional<OotdArticleEntity> optionalOotd = ootdArticleRepository.findById(articleId);
+        Optional<OotdArticleEntity> optionalOotd = ootdArticleRepository.findByIdAndIsDeletedFalse(articleId);
 
         if (optionalOotd.isPresent()) return OotdArticleDto.fromEntity(optionalOotd.get());
         else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -144,8 +144,9 @@ public class OotdArticleService {
         Optional<OotdArticleEntity> savedEntity = ootdArticleRepository.findById(articleId);
         if(savedEntity.isEmpty()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         if(!savedEntity.get().getUserEntity().getLoginId().equals(CustomUserDetails.fromAuthentication(authentication).getLoginId())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-
-        ootdArticleRepository.deleteById(articleId);
+        //소프트 딜리트로 변경
+        savedEntity.get().setIsDeleted(true);
+        ootdArticleRepository.save(savedEntity.get());
     }
 
 }
