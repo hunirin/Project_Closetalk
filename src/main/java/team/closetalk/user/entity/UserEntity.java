@@ -1,6 +1,7 @@
 package team.closetalk.user.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -33,6 +34,12 @@ public class UserEntity {
     private String password; //암호화해서 저장할 것.
     @Column(unique = true, nullable = false)
     private String email;
+
+    // 임시 비밀번호
+    @Builder
+    public void setTempPassword(String password) {
+        this.password = password;
+    }
 
     @ColumnDefault(value = "'/src/main/resources/static/images/profile/default_profile.png'")
     private String profileImageUrl;

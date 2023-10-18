@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+  <html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" >
+    <title>Liked Article</title>
+    <link rel="stylesheet" href="/static/css/mypage/ootdList.css">
+    <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+      <style>
+          .hidden {
+              display: none;
+          }
+      </style>
+</head>
+  <body>
+    <header th:insert="~{header :: header}"></header>
+
+    <div id="root">
+
+    <article id="list">
+
+        <div class="categories">
+            <div class="category" title="community">
+                <a href="/mypage/liked/community?page=0" data-category="community">
+                    <span>COMMUNITY</span>
+                </a>
+            </div>
+            <div class="category current" title="ootd">
+                <a href="/mypage/liked/ootd?page=0" data-category="ootd">
+                    <span>OOTD</span>
+                </a>
+            </div>
+        </div>
+
+
+        <section id="ootdList">
+            <div class="ootd-container-a">
+                <div class="ootd-container-b" id="ootd-container">
+                    <div th:each="ootd : ${likedOotdPage}">
+                        <div class="ootd-image" id="ootd-image">
+                            <img th:src="@{${ootd.thumbnail}}" style="width: 100%; height: 100%;" >
+                            <p th:text="${ootd.id}" style="display: none;"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+    </article>
+    </div>
+
+    <div class="pop-up-btn">
+        <i id="up-btn" class="fa-solid fa-square-caret-up fa-2x"></i>
+        <i id="plus-btn" class="fa-solid fa-square-plus fa-2x"></i>
+        <i id="down-btn" class="fa-solid fa-square-caret-down fa-2x"></i>
+    </div>
+
+    <script>
+        window.addEventListener('load', function () {
+            const accessToken = localStorage.getItem('accessToken');
+            const ootdContainer = document.getElementById('ootd-container');
+            let page = 0;
+            let isLoading = false;
+
+            function fetchOotdData(page) {
+                return fetch(`/mypage/liked/ootd/list?page=${page}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.text();
+                    })
+                    .catch(error => {
+                        console.error('OOTD API request failed:', error);
+                    });
+            }
+
+            function createOotdImage(thumbnailUrl, articleId) {
+                var ootdImageDiv = document.createElement('div');
+                ootdImageDiv.className = 'ootd-image';
+
+                var img = document.createElement('img');
+                img.src = thumbnailUrl;
+                img.style.borderRadius = '0px';
+                img.style.width = '100%';
+                img.style.height = '100%';
+
+                img.addEventListener('click', function() {
+                    window.location.href = '/ootd/' + articleId;
+                });
+
+                ootdImageDiv.appendChild(img);
+
+                var articleIdParagraph = document.createElement('p');
+                ootdImageDiv.appendChild(articleIdParagraph);
+
+                return ootdImageDiv;
+            }
+
+            function loadMoreThumbnails() {
+                if (isLoading) {
+                    return;
+                }
+                isLoading = true;
+
+                fetchOotdData(page)
+                    .then(data => {
+                        if (data.trim() === '') {
+                            // No more data to load, stop infinite scroll
+                            window.removeEventListener('scroll', onScroll);
+                        } else {
+                            var newThumbnails = $(data).find('.ootd-image img');
+
+                            newThumbnails.each(function() {
+                                var thumbnailUrl = $(this).attr('src');
+
+                                // Get the articleId for this specific image
+                                var articleId = $(this).siblings('p').text();
+
+                                var ootdImageDiv = createOotdImage(thumbnailUrl, articleId);
+                                ootdContainer.appendChild(ootdImageDiv);
+                            });
+
+                            isLoading = false;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('API request failed:', error);
+                        // Handle the error here, e.g., display an error message to the user
+                        isLoading = false; // Reset isLoading on error
+                    });
+
+                page++;
+            }
+
+            function onScroll() {
+                clearTimeout(debounceTimer);
+
+                var scrollPosition = window.innerHeight + window.scrollY;
+                var contentHeight = ootdContainer.offsetHeight;
+                var distanceToBottom = contentHeight - scrollPosition;
+
+                if (distanceToBottom < 200) {
+                    debounceTimer = setTimeout(loadMoreThumbnails);
+                }
+            }
+
+            window.addEventListener('scroll', onScroll);
+
+            if (accessToken) {
+                console.log('API Requests started...');
+                console.log('AccessToken:', accessToken);
+                fetchOotdData(0); // Load initial page
+            } else {
+                console.error('No accessToken found. Redirecting to login page...');
+                window.location.href = '/loginPage';
+            }
+
+            loadMoreThumbnails();
+        });
+    </script>
+
+    <script>
+        // 페이지 번호 클릭 시 색 변환
+        function setCurrentPageClass() {
+            var currentPage = getCurrentPageNumber();
+            var pageLinks = document.querySelectorAll('.number a');
+            for (var i = 0; i < pageLinks.length; i++) {
+                if (i === currentPage) {
+                    pageLinks[i].classList.remove('notSelected');
+                    pageLinks[i].classList.add('selected');
+                } else {
+                    pageLinks[i].classList.remove('selected');
+                    pageLinks[i].classList.add('notSelected');
+                }
+            }
+        }
+
+        function getCurrentPageNumber() {
+            var urlParams = new URLSearchParams(window.location.search);
+            return parseInt(urlParams.get('page')) || 0;
+        }
+
+        setCurrentPageClass();
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $("#up-btn").click(function() {
+                $('html, body').animate({scrollTop: 0});
+            });
+
+            $("#down-btn").click(function() {
+                $('html, body').animate({scrollTop: $(document).height()});
+            });
+
+            function updateButtonPosition() {
+                var scrollPos = $(window).scrollTop();
+                var windowHeight = $(window).height();
+                var documentHeight = $(document).height();
+                var buttonHeight = $(".pop-up-btn").outerHeight();
+
+                var maxButtonPosition = documentHeight - buttonHeight - 20;
+
+                if (scrollPos > maxButtonPosition) {
+                    $(".pop-up-btn").css("transform", "translateY(" + (maxButtonPosition - scrollPos) + "px)");
+                } else {
+                    $(".pop-up-btn").css("transform", "translateY(0)");
+                }
+            }
+
+            updateButtonPosition();
+            $(window).on("scroll", updateButtonPosition);
+        });
+    </script>
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+
+</body>
+</html>

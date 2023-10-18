@@ -87,7 +87,8 @@ public class ClosetService {
         ClosetEntity closet = getClosetEntity(closetName, user.getNickname());
 
         // 해당 옷장 내 모든 아이템 삭제
-        closetItemRepository.deleteAllByClosetId_Id(closet.getId());
+        closetItemRepository.deleteAllByClosetId(closet.getId());
+        closetItemRepository.deleteClosetItemByClosetId(closet.getId());
 
         // 해당 옷장 삭제
         closetRepository.deleteById(closet.getId());

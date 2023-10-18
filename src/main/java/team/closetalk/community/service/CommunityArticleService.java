@@ -153,7 +153,10 @@ public class CommunityArticleService {
             saveImageService.saveArticleImage(article, imageUrlList);
             CommunityArticleImagesEntity imagesEntityList =
                     communityArticleImagesRepository.findAllByCommunityArticleId_Id(article.getId()).get(0);
-            communityArticleRepository.save(article.saveThumbnail(imagesEntityList.getImageUrl()));
+
+            // thumbnail 경로 설정 (상대 경로)
+            String thumbnailImagePath = imagesEntityList.getImageUrl().replace("src/main/resources", "");
+            communityArticleRepository.save(article.saveThumbnail(thumbnailImagePath));
         }
         return readArticle(article.getId());
     }

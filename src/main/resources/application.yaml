@@ -4,16 +4,17 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     username: '${DB_USERNAME}'
     password: '${DB_PASSWORD}'
-
     redis:
       port: '${REDIS_PORT}'  #Redis 기본 포트 번호
-      host: '${REDIS_HOST}'  #로컬 테스트에서는 localhost, 배포시에는 redis(redis 환경변수)
+      host: '${REDIS_HOST}' #로컬 테스트에서는 localhost, 배포시에는 redis(redis 환경변수)
       password: '${REDIS_PASSWORD}'
+
   jpa:
     hibernate:
       ddl-auto: create
     database-platform: org.hibernate.dialect.MariaDBDialect
     defer-datasource-initialization: true
+
   sql:
     init:
       mode: always

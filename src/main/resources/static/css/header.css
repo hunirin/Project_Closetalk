@@ -16,12 +16,17 @@
 .header-icon {
     position: relative;
     float: right;
+    text-decoration: none;
 }
 #alert {
     margin-right: 10px;
 }
 #user {
     margin-right: 10px;
+}
+#login {
+    margin-right: 10px;
+    color: black;
 }
 .header-closetalk {
     font-family: 'Roboto Condensed', sans-serif;

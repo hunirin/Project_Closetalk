@@ -19,6 +19,8 @@ import team.closetalk.community.repository.CommunityArticleImagesRepository;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -29,30 +31,44 @@ public class CommunityArticleSaveImageService {
     private final ClosetItemRepository closetItemRepository;
     private final ArticleAndClosetItemRepository articleAndClosetItemRepository;
 
+    private final String ROOT_DIRECTORY = "src/main/resources";
+
     // 이미지 저장
-    public void saveArticleImage(CommunityArticleEntity article,
-                                    List<MultipartFile> articleImages){
-        //이미지 저장 디렉토리 생성
-        String ARTICLE_IMAGE_DIRECTORY =
-                String.format("src/main/resources/static/images/community/%d", article.getId());
+    public void saveArticleImage(CommunityArticleEntity article, List<MultipartFile> articleImages) {
+        // 이미지 저장 디렉토리 생성 (경로 수정)
+        String ARTICLE_IMAGE_DIRECTORY = String.format("/static/images/community/%d", article.getId());
+        ARTICLE_IMAGE_DIRECTORY = ARTICLE_IMAGE_DIRECTORY.replace("\\", "/"); // 역슬래시를 슬래시로 치환
+
         try {
-            Files.createDirectories(Path.of(ARTICLE_IMAGE_DIRECTORY));
+            Files.createDirectories(Path.of(ROOT_DIRECTORY + ARTICLE_IMAGE_DIRECTORY));
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         for (MultipartFile image : articleImages) {
-            String imageFileName = image.getOriginalFilename();
-            assert imageFileName != null;
-            String imageFilePath = Path.of(ARTICLE_IMAGE_DIRECTORY, imageFileName).toString();
+            // 현재 날짜와 시간을 이용하여 파일 이름 생성
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+            String timestamp = now.format(formatter);
+
+            // 원본 파일 이름에서 확장자 추출
+            String originalFileName = image.getOriginalFilename();
+            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+
+            // 새로운 파일 이름 생성 (날짜와 확장자 포함)
+            String newFileName = timestamp + fileExtension;
+
+            // 파일 경로 설정
+            String imageFilePath = Path.of(ARTICLE_IMAGE_DIRECTORY, newFileName).toString();
+            imageFilePath = imageFilePath.replace("\\", "/"); // 역슬래시를 슬래시로 치환
 
             try {
-                image.transferTo(Path.of(imageFilePath));
+                image.transferTo(Path.of(ROOT_DIRECTORY + imageFilePath));
             } catch (IOException e) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
-            imagesRepository.save(new CommunityArticleImagesEntity(article ,imageFilePath));
+            imagesRepository.save(new CommunityArticleImagesEntity(article, imageFilePath));
         }
     }
 

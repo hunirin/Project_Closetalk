@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&family=Roboto+Condensed:ital,wght@1,300;1,700&display=swap');
+
+@media (min-width : 768px) {
+
+    body.on {
+        overflow: hidden;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    body {
+        background: #fefefe;
+        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+        color: #000;
+        margin: 0;
+        padding: 0;
+    }
+
+    * {
+        box-sizing: border-box;
+        background-color: transparent;
+    }
+
+
+    #root {
+        max-width: 768px;
+        height: auto;
+        width: 300vw;
+        position: relative;
+        margin: 100px auto auto;
+        font-size: 18px;
+        display: block;
+    }
+
+    #list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .categories {
+        position: relative;
+        display: flex;
+        gap: 10px;
+        justify-content: start;
+        width: 100%;
+        height: 32px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        overflow: auto;
+        padding: 0 20px;
+    }
+
+    .category {
+        font-size: .9em;
+    }
+
+    .category.current {
+        font-weight: bold;
+    }
+
+    .category a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        background-color: transparent;
+        border-radius: 8px;
+        color: #4d5154;
+        text-decoration: none;
+    }
+
+    .category a span {
+        padding: 0 10px;
+    }
+
+    #boardList {
+        box-sizing: border-box;
+        width: 100%;
+        font-size: 1em;
+        padding: 0 10px;
+    }
+
+    .ootd-container-a {
+        max-width: 768px;
+        height: 100%;
+        width: 100%;
+        margin: 20px auto auto;
+    }
+
+    .ootd-container-b {
+        cursor: pointer;
+        grid-template-columns: repeat(3, minmax(0px, 1fr));
+        display: grid;
+        gap: 2px;
+    }
+
+    .pop-up-btn {
+        cursor: pointer;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .pop-up-btn i {
+        background-color: #fefefe;
+        border-radius: 80%;
+        width: 25px;
+        height: 20px;
+        margin: 5px 0;
+        text-align: center;
+        line-height: 20px;
+    }
+
+    .pop-up-button-item {
+        margin: 5px 0;
+    }
+
+}
+@media (max-width : 768px) {
+
+}
