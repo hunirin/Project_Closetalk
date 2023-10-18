@@ -40,7 +40,7 @@
             <div class="col-md-6" th:each="issue : ${issueList}">
                 <div class="card mb-4">
                     <a th:href="'/issue/view/' + ${issue.id}">
-                        <img class="card-img-top" th:src="${issue.thumbnail}" alt="thumbnail">
+                        <img class="card-img-top" th:src="@{${issue.thumbnail}}" alt="thumbnail">
                         <div style="margin-top: 20px;"></div>
                         <p><b th:text="${issue.category}"></b></p>
                         <p th:text="${issue.title}"></p>
