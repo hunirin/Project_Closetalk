@@ -32,16 +32,15 @@ public class CommunityArticleSaveImageService {
     private final ArticleAndClosetItemRepository articleAndClosetItemRepository;
 
     private final String ROOT_DIRECTORY = "src/main/resources";
-    private final String COMMUNITY_IMAGE_DB_PATH = "/static/images/ootd/";
 
     // 이미지 저장
     public void saveArticleImage(CommunityArticleEntity article, List<MultipartFile> articleImages) {
         // 이미지 저장 디렉토리 생성 (경로 수정)
-        String ARTICLE_IMAGE_DIRECTORY = String.format("src/main/resources/static/images/community/%d", article.getId());
+        String ARTICLE_IMAGE_DIRECTORY = String.format("/static/images/community/%d", article.getId());
         ARTICLE_IMAGE_DIRECTORY = ARTICLE_IMAGE_DIRECTORY.replace("\\", "/"); // 역슬래시를 슬래시로 치환
 
         try {
-            Files.createDirectories(Path.of(ARTICLE_IMAGE_DIRECTORY));
+            Files.createDirectories(Path.of(ROOT_DIRECTORY + ARTICLE_IMAGE_DIRECTORY));
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -64,7 +63,7 @@ public class CommunityArticleSaveImageService {
             imageFilePath = imageFilePath.replace("\\", "/"); // 역슬래시를 슬래시로 치환
 
             try {
-                image.transferTo(Path.of(imageFilePath));
+                image.transferTo(Path.of(ROOT_DIRECTORY + imageFilePath));
             } catch (IOException e) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
             }
