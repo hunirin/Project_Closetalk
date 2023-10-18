@@ -14,6 +14,8 @@ import team.closetalk.user.service.EmailSendService;
 import team.closetalk.user.service.UserService;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -25,10 +27,39 @@ public class UserController {
     private final EmailSendService emailSendService;
 
     //C
-    //이메일 인증 처리
+    //아이디 중복 체크
+    @PostMapping("/check-id")
+    public ResponseEntity<Map<String, Boolean>> checkDuplicateId(@RequestBody String loginId){
+        System.out.println("진입완료 " + loginId);
+        Map<String, Boolean> resultMap = new HashMap<>();
+        Boolean resultDupChk = userService.userExists(loginId);
+        System.out.println(resultDupChk);
+        resultMap.put("idDup", resultDupChk);
+
+        if(resultDupChk) log.error("로그인 아이디 중복");
+
+        return ResponseEntity.status(HttpStatus.OK).body(resultMap);
+    }
+    //닉네임 중복 체크
+    @PostMapping("/check-nickname")
+    public ResponseEntity<Map<String, Boolean>> checkDuplicateNickname(@RequestBody String nickname){
+        Map<String, Boolean> resultMap = new HashMap<>();
+        Boolean resultDupChk = userService.userExistsByNickname(nickname);
+        System.out.println(resultDupChk);
+        resultMap.put("nicknameDup", resultDupChk);
+
+        if(resultDupChk) log.error("닉네임 중복");
+        return ResponseEntity.status(HttpStatus.OK).body(resultMap);
+
+    }
+    //이메일 중복 체크 및 인증 처리
     @ResponseBody
     @PostMapping(value = "/sendEmail")
     public ResponseEntity<EmailAuthDto> sendAuthEmail(@RequestBody String email){
+        if(userService.userExistsByEmail(email)){
+            log.error("이메일 중복");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
         String code = emailSendService.makeEmailAuth(email.substring(1,email.length()-1));
 
         EmailAuthDto emailAuthDto = new EmailAuthDto();

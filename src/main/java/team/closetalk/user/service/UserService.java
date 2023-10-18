@@ -80,6 +80,7 @@ public class UserService implements UserDetailsManager {
         else return false;
     }
 
+
     //회원가입
     @Override
     public void createUser(UserDetails user) {
@@ -121,6 +122,7 @@ public class UserService implements UserDetailsManager {
 
     //로그인
     public LoginResponseDto login(CustomUserDetails responseUser) {
+        log.info("로그인 유저의 닉네임: {}", responseUser.getNickname());
 
         String accessToken = jwtUtils.generateAccessToken(responseUser);
         String refreshToken = tokenService.getRefreshToken(responseUser.getLoginId());
@@ -209,5 +211,13 @@ public class UserService implements UserDetailsManager {
     @Override
     public boolean userExists(String username) {
         return userRepository.existsByLoginId(username);
+    }
+
+    public boolean userExistsByNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+
+    public boolean userExistsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }
