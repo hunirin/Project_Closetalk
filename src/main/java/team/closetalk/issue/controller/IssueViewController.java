@@ -2,6 +2,7 @@ package team.closetalk.issue.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 import team.closetalk.issue.dto.IssueArticleDto;
 import team.closetalk.issue.dto.IssueArticleListDto;
 import team.closetalk.issue.dto.IssueCreateArticleDto;
+import team.closetalk.issue.entity.IssueArticleImageEntity;
 import team.closetalk.issue.enumeration.Category;
+import team.closetalk.issue.service.IssueArticleSaveImageService;
 import team.closetalk.issue.service.IssueArticleSearchService;
 import team.closetalk.issue.service.IssueArticleService;
 
@@ -90,23 +93,63 @@ public class IssueViewController {
         return "issue/issueCreate";
     }
 
-    @PostMapping("/create")
+    @PostMapping(path = "/create",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String CreateArticle(@ModelAttribute IssueCreateArticleDto dto,
-                                @RequestParam(value = "category", defaultValue = "MAGAZINE") Category category,
-                                @RequestParam(value = "imageUrlList", required = false) List<MultipartFile> imageUrlList,
+                                @RequestParam(value = "category") Category category,
+                                @RequestParam(value = "imageUrl", required = false) List<MultipartFile> imageUrlList,
                                 Authentication authentication,
                                 Model model) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            // 사용자가 인증되었는지 확인
+        if (authentication != null) {
+
             IssueArticleDto issueArticle = issueArticleService.createArticle(dto, imageUrlList, authentication);
 
             model.addAttribute("issueArticle", issueArticle);
             model.addAttribute("category", category);
+            model.addAttribute("imageUrl", imageUrlList);
 
             return "issue/issueList";
         } else {
-            // 사용자가 인증되지 않은 경우, 로그인 페이지로 리디렉션 또는 오류 메시지 표시
-            return "redirect:/loginPage"; // 또는 다른 리디렉션 URL을 지정
+
+            return "redirect:/loginPage";
         }
+    }
+
+    // 게시글 수정
+    @GetMapping("/update/{articleId}")
+    public String updateArticleForm(@PathVariable Long articleId) {
+        return "issue/issueUpdate";
+    }
+
+    @PostMapping("/update/{articleId}")
+    public String updateArticle(
+            @ModelAttribute IssueArticleDto dto,
+            @PathVariable("articleId") Long articleId,
+            @RequestParam(value = "category") Category category,
+            @RequestParam(value = "imageUrl", required = false) List<MultipartFile> imagesUrlList,
+            Authentication authentication,
+            Model model
+    ) {
+        if (authentication != null) {
+            IssueArticleDto issueArticle = issueArticleService.updateArticle(articleId, authentication, imagesUrlList, dto);
+
+            model.addAttribute("articleId", articleId);
+            model.addAttribute("issueArticle", issueArticle);
+            model.addAttribute("category", category);
+            model.addAttribute("newImageUrl", imagesUrlList);
+
+            return "issue/issueList";
+        } else {
+            return "redirect:/loginPage";
+        }
+    }
+
+        // 게시글 삭제
+        @DeleteMapping("/{articleId}")
+        public void deleteArticle (
+                @PathVariable("articleId") Long articleId,
+                Authentication authentication
+    ){
+            issueArticleService.deleteArticle(articleId, authentication);
     }
 }

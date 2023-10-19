@@ -50,8 +50,17 @@ public class WebSecurityConfig {
                                         , "/issue/{id}"
                                         , "/community/**"
                                         , "/ootd/rest/list"
+                                        , "/closet/view/item"
                                         , "/closet/view/**"
-                                        , "/issue/view/**"
+                                        , "/issue/view/list"
+                                        , "/issue/view/{articleId}"
+                                        , "/mypage/liked/community"
+                                        , "/mypage/liked/ootd"
+                                        , "/find/id"
+                                        , "/findId"
+                                        , "/find/password"
+                                        , "/findPassword"
+                                        , "/tempPassword"
                                 ).permitAll()
                                 .anyRequest()
                                 .authenticated()

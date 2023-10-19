@@ -40,7 +40,7 @@
             <div class="col-md-6" th:each="issue : ${issueList}">
                 <div class="card mb-4">
                     <a th:href="'/issue/view/' + ${issue.id}">
-                        <img class="card-img-top" th:src="${issue.thumbnail}" alt="thumbnail">
+                        <img class="card-img-top" th:src="@{${issue.thumbnail}}" alt="thumbnail">
                         <div style="margin-top: 20px;"></div>
                         <p><b th:text="${issue.category}"></b></p>
                         <p th:text="${issue.title}"></p>
@@ -94,7 +94,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.0/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
 

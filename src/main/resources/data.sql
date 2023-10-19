@@ -63,7 +63,7 @@ VALUES ('유니클로', 'BOTTOM', '/static/images/closetItem/userNo.1/아우터�
 insert into ootd_article (id, user_id, content, hashtag, created_at, thumbnail) VALUES (1, 1, '수변공원에서 사는 사람', '#ootd#가을코디#수변공원', '2023-08-16 11:23:32', '/static/images/ootd/1/1.jpg');
 insert into ootd_article (id, content, thumbnail, user_id, created_at) VALUES (2, '두번째 글', '/static/images/ootd/2/2.jpg', 1, '2023-08-16 13:23:32');
 insert into ootd_article (id, content, thumbnail, user_id, created_at) VALUES (3, '세번째 글', '/static/images/ootd/3/3.jpg', 1, '2023-08-26 12:22:12');
-insert into ootd_article (id, content, thumbnail, user_id, created_at) VALUES (4, '네번째 글', '/static/images/ootd/4/4.jpg', 2, '2023-08-26 13:23:32');
+insert into ootd_article (id, content, thumbnail, user_id, created_at) VALUES (4, '네번째 글', '/static/images/ootd/4/4.jpg', 1, '2023-08-26 13:23:32');
 insert into ootd_article (id, content, thumbnail, user_id, created_at) VALUES (5, '다섯번째 글', '/static/images/ootd/5/5.jpg', 5, '2023-08-26 14:23:32');
 insert into ootd_article (id, content, thumbnail, user_id, created_at) VALUES (6, '여섯번째 글', '/static/images/ootd/6/6.jpg', 4, '2023-08-26 14:25:32');
 insert into ootd_article (id, content, thumbnail, user_id, created_at) VALUES (7, '일곱번째 글', '/static/images/ootd/7/7.jpg', 4, '2023-08-26 15:03:32');
@@ -132,7 +132,26 @@ insert into ootd_comment (id, ootd_article_id, user_id, content, created_at) val
 
 -- INSERT OOTD_COMMENT_REPLY
 insert into ootd_comment (id, ootd_article_id, user_id, ootd_comment_id, content, created_at) values (3, 1, 1, 1, 'reply testing', '2023-08-30 11:23:32');
--- INSERT OOTD_LIKE..?
+-- INSERT OOTD_LIKE
+insert into ootd_like (id, ootd_article_id, user_id) values (1, 1, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (2, 2, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (3, 3, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (4, 4, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (5, 5, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (6, 6, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (7, 7, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (8, 8, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (9, 9, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (10, 11, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (12, 12, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (13, 13, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (14, 14, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (15, 15, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (16, 16, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (17, 17, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (18, 18, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (19, 19, 2);
+insert into ootd_like (id, ootd_article_id, user_id) values (20, 20, 2);
 
 -- INSERT ISSUE_ARTICLE
 insert into issue_article (id, user_id, category, title, content, hits, thumbnail, created_at) VALUES (1, 1, 'ISSUE', '첫번째 이슈', '첫번째 내용', 0, '/static/images/issue/1/1.jpg', NOW());
@@ -263,6 +282,12 @@ insert into community_comment (id, content, created_at, modified_at, user_id, co
 values  (10, '첫번째 게시물의 수정된 다섯번째 댓글', NOW(), NOW(), 2, 1);
 
 -- INSERT COMMUNITY_LIKE
+insert into community_like (id, community_article_id, user_id) values (1, 1, 2);
+insert into community_like (id, community_article_id, user_id) values (2, 2, 2);
+insert into community_like (id, community_article_id, user_id) values (3, 3, 2);
+insert into community_like (id, community_article_id, user_id) values (4, 4, 2);
+insert into community_like (id, community_article_id, user_id) values (5, 5, 2);
+
 -- INSERT COMMUNITY_CLOSET_ITEM
 insert into closetalk_item (closet_item_id, community_article_id) values (1, 1);
 insert into closetalk_item (closet_item_id, community_article_id) values (5, 38);

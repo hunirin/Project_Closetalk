@@ -23,12 +23,12 @@ public class IssueArticleEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Column(nullable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Category category;        // 카테고리
-//    @Column(nullable = false)
+    @Column(nullable = false)
     private String title;            // 제목
-//    @Column(nullable = false)
+    @Column(nullable = false)
     private String content;          // 내용
     private String thumbnail;        // 대표이미지
     @ColumnDefault(value = "0")
@@ -41,7 +41,7 @@ public class IssueArticleEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @OneToMany(mappedBy = "issueArticleId")
+    @OneToMany(mappedBy = "issueArticleId", cascade = CascadeType.ALL)
     private List<IssueArticleImageEntity> issueImages = new ArrayList<>();
 
     @ManyToOne

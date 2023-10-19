@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Data
 @Entity
@@ -16,7 +17,7 @@ public class IssueArticleImageEntity {
     private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "issueArticle_id")
+    @JoinColumn(name = "issue_article_id")
     private IssueArticleEntity issueArticleId;
 
     public IssueArticleImageEntity(IssueArticleEntity article, String imageFilePath) {
