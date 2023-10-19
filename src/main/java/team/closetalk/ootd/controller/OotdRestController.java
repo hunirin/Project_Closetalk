@@ -53,12 +53,12 @@ public class OotdRestController {
     @PutMapping("/{articleId}")
     public Long updateOotdArticle(Authentication authentication
             , @PathVariable("articleId") Long articleId
-            , @RequestParam("content") String content
-            , @RequestParam("hashtag") String hashtag
+            , @RequestBody OotdArticleDto ootdArticleDto
     ){
-        OotdArticleDto ootdArticleDto = new OotdArticleDto();
-        ootdArticleDto.setContent(content);
-        ootdArticleDto.setHashtag(hashtag);
+        System.out.println(ootdArticleDto.toString());
+//        OotdArticleDto ootdArticleDto = new OotdArticleDto();
+//        ootdArticleDto.setContent(content);
+//        ootdArticleDto.setHashtag(hashtag);
         return ootdArticleService.updateOotdArticle(authentication, articleId, ootdArticleDto).getId();
 
     }

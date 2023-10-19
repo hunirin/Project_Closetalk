@@ -31,6 +31,9 @@ public class OotdArticleEntity {
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
 
+    @ColumnDefault(value = "false")
+    private Boolean isDeleted;
+
     @OneToMany(mappedBy = "ootdArticle")
     private List<OotdArticleImagesEntity> ootdImages = new ArrayList<>();
 
