@@ -17,6 +17,12 @@
       <a href="/loginPage"><i id="login" class="fa-solid fa-right-to-bracket fa-2x"></i></a>
 <!--      <a href="/logout"><i class="fa-solid fa-right-from-bracket fa-2x"></i><a> -->
     </div>
+    <div id="floatMenu">
+      <ul>
+        <a href="/" id="aCloset"><li>내 옷장</li></a>
+        <a href="/" id="aMypage"><li>회원정보 수정</li></a>
+      </ul>
+    </div>
   </div>
 
   <div class="header-closetalk" style="margin-top: -20px">
@@ -76,6 +82,21 @@
         loginButton.classList.add("fa-sign-out-alt"); // 로그아웃 아이콘으로 변경합니다.
       }
     });
+
+
+    // const iconUser = document.querySelector("#user")
+    const iconUser = document.getElementById('user')
+    const floatMenu = document.getElementById('floatMenu')
+    iconUser.addEventListener('click', () => {
+      console.log('마이페이지 클릭')
+      if(floatMenu.style.visibility === 'hidden') floatMenu.style.visibility = 'visible'
+      else floatMenu.style.visibility = 'hidden'
+    })
+
+    const aCloset = document.getElementById('aCloset')
+    aCloset.href = "/closet/view/" + localStorage.getItem('nickname')
+    const aMypage = document.getElementById('aMypage')
+    aMypage.href = "/" + localStorage.getItem('nickname')
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
