@@ -58,6 +58,7 @@ function fetchItemsForCloset(selectedCloset) {
         requestUrl += `?category=${selectedCategory}`;
     }
 
+    console.log(requestUrl)
     fetch(requestUrl, {
         method: 'GET',
         headers: {

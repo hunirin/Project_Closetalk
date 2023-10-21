@@ -37,11 +37,11 @@
         </label>
         <button type="submit" style="margin-top: 10px; padding: 5px; border-radius: 5px; border: 1px solid #333333; font-weight: bold">LOGIN</button>
     </form>
-    <div style="margin-top: 16px; text-align: right">
-        <a href="/oauth2/authorization/naver" style="text-decoration: none; color: black">네이버</a>
-        <a href="/oauth2/authorization/kakao" style="text-decoration: none; color: black">카카오</a>
+    <div style="margin-top: 16px; display: inline-block">
+        <a href="/oauth2/authorization/naver" style="text-decoration: none; color: black"><img src="static/images/login/naver.png" style="height: 30px; width: 30px"></a>
+        <a href="/oauth2/authorization/kakao" style="text-decoration: none; color: black"><img src="static/images/login/daum.ico" style="height: 30px; width: 30px"></a>
     </div>
-    <div style="margin-top: 16px; text-align: right" >
+    <div style="margin-top: 16px; text-align: right; display: inline-block" >
         <a href="/find/id" style="text-decoration: none; color: black">아이디 찾기</a>
         <span class="separator">|</span>
         <a href="/find/password" style="text-decoration: none; color: black">비밀번호 찾기</a>
@@ -80,6 +80,7 @@
                 }
 
                 localStorage.setItem('accessToken', accessToken);
+                localStorage.setItem('nickname', data.nickname)
                 window.location.href = '/ootd/main';
             })
             .catch(error => {
