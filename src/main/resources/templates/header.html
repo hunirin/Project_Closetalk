@@ -20,7 +20,7 @@
     <div id="floatMenu">
       <ul>
         <a href="/" id="aCloset"><li>내 옷장</li></a>
-        <a href="/" id="aMypage"><li>회원정보 수정</li></a>
+        <a href="/" id="aMypage"><li>회원정보</li></a>
         <a href="/" id="aLikeCommunity"><li>내가 좋아요한 글</li></a>
       </ul>
     </div>
@@ -98,7 +98,7 @@
     const aCloset = document.getElementById('aCloset')
     aCloset.href = "/closet/view/" + localStorage.getItem('nickname')
     const aMypage = document.getElementById('aMypage')
-    aMypage.href = "/" + localStorage.getItem('nickname')
+    aMypage.href = "/profile"
     const aLikeCommunity = document.getElementById('aLikeCommunity')
     aLikeCommunity.href = "/mypage/liked/community"
   </script>
