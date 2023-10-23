@@ -61,6 +61,8 @@ public class WebSecurityConfig {
                                         , "/find/password"
                                         , "/findPassword"
                                         , "/tempPassword"
+                                        , "/profile"
+                                        ,"/profile/changePw"
                                 ).permitAll()
                                 .anyRequest()
                                 .authenticated()
