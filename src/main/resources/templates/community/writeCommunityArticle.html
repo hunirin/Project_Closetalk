@@ -36,6 +36,10 @@
                       </lable>
                   </div>
 
+                  <div id="closetalkItems" style="margin: 10px 15px 0 15px; display: none">
+                      <!-- Closetalk 아이템 목록 표시 -->
+                  </div>
+
                   <div class="board_middle_content">
                       <label>내용 :
                           <textarea name="content" id="content"></textarea></label>
@@ -46,9 +50,6 @@
                       <div class="file-list" id="image_container"></div>
                   </div>
               </div>
-
-
-
 
               <div class="board_bottom_btn">
                   <button type="submit" class="board_bottom_btn_save" >저장</button>
@@ -166,7 +167,8 @@
             const data = {
                 title: title,
                 category: category,
-                content: content
+                content: content,
+                selectClosetItemNumList: Object.keys(selectedItems) // 선택된 아이템 ID 목록
             };
 
             // data 객체를 JSON 문자열로 변환
@@ -191,6 +193,110 @@
                     }
                 });
         });
+
+        // category 선택 함수
+        function handleCategoryChange(selectElement) {
+            const selectedValue = selectElement.value;
+            const itemList = document.getElementById('closetalkItems'); // 모달 요소
+
+            if (selectedValue === "CLOSETALK") {
+                // "CLOSETALK"이 선택된 경우 모달 요소를 보이도록 설정
+                itemList.style.display = "block";
+                fetchItemsForCloset();
+            } else {
+                // 다른 값이 선택된 경우 모달 요소를 숨김 처리
+                itemList.style.display = "none";
+            }
+        }
+
+        const selectElement = document.getElementById('category');
+        selectElement.addEventListener('change', function() {
+            handleCategoryChange(this);
+        });
+
+        // 선택한 옷장의 아이템 목록을 서버에서 가져오는 함수
+        function fetchItemsForCloset() {
+            let nickname = localStorage.getItem('nickname');
+            const accessToken = localStorage.getItem('accessToken');
+
+            let requestUrl = `/closet/${nickname}`;
+
+            fetch(requestUrl, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+                .then(response => {
+                    if (response.status === 200) {
+                        return response.json();
+                    } else {
+                        throw new Error('아이템 목록을 불러오는데 실패했습니다.');
+                    }
+                })
+                .then(data => {
+                    displayItems(data);
+                })
+                .catch(error => {
+                    console.error('요청 실패:', error);
+                });
+        }
+
+        function filterItemsByCategory(data, category) {
+            return data.filter(item => item.category === category);
+        }
+
+        // 클릭한 이미지의 선택 상태를 저장할 객체
+        const selectedItems = {};
+
+        function displayItems(data) {
+            const closetalkItems = document.getElementById('closetalkItems');
+            closetalkItems.innerHTML = ''; // 이전 아이템 목록 초기화
+
+            const categories = [...new Set(data.map(item => item.category))]; // 중복되지 않는 카테고리 목록
+
+            categories.forEach(category => {
+                const categoryItems = filterItemsByCategory(data, category);
+                if (categoryItems.length > 0) {
+                    const categoryTitle = document.createElement('p');
+                    categoryTitle.style.fontWeight = 'bold';
+                    categoryTitle.style.marginBottom = '0px';
+                    categoryTitle.textContent = category;
+                    closetalkItems.appendChild(categoryTitle);
+
+                    categoryItems.forEach(item => {
+                        const itemImage = document.createElement('img');
+                        itemImage.src = item.itemImageUrl; // 아이템 이미지 URL 설정
+                        itemImage.alt = item.itemName; // 아이템 이름을 alt 속성으로 설정
+
+                        // 이미지 크기 조절 및 상세 설정
+                        itemImage.style.width = '150px';
+                        itemImage.style.height = '150px';
+                        itemImage.style.objectFit = 'cover';
+                        itemImage.style.marginRight = '10px';
+                        itemImage.style.marginBottom = '10px';
+
+                        // 이미지 클릭 이벤트 핸들러
+                        itemImage.addEventListener('click', () => {
+                            const itemId = item.id; // 아이템의 고유 ID 또는 식별자를 사용
+
+                            // 이미 선택된 아이템인지 확인
+                            if (selectedItems[itemId]) {
+                                // 이미 선택된 아이템인 경우, 선택 해제
+                                itemImage.style.border = 'none'; // 선택 해제 표시
+                                delete selectedItems[itemId]; // 선택 목록에서 제거
+                            } else {
+                                // 선택되지 않은 아이템인 경우, 선택
+                                itemImage.style.border = '2px solid #505050';
+                                selectedItems[itemId] = item; // 선택 목록에 추가
+                            }
+                        });
+
+                        closetalkItems.appendChild(itemImage);
+                    });
+                }
+            });
+        }
 
     </script>
       <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
