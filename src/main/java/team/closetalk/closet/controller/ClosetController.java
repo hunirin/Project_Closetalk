@@ -64,4 +64,11 @@ public class ClosetController {
         if (optionalCategory.isEmpty()) return closetService.readByCloset(nickname, closetName, authentication);
         else return closetService.readByCategory(nickname, closetName, optionalCategory.get(), authentication);
     }
+
+    // 해당하는 닉네임을 가진 유저의 옷장 아이템 목록 조회
+    @GetMapping("/{nickname}")
+    public List<ClosetItemDto> readAllItem(@PathVariable("nickname") String nickname,
+                                           Authentication authentication) {
+        return closetService.readAllItem(nickname, authentication);
+    }
 }

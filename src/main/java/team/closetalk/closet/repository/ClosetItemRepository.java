@@ -9,6 +9,7 @@ import team.closetalk.closet.entity.ClosetItemEntity;
 import java.util.List;
 
 public interface ClosetItemRepository extends JpaRepository<ClosetItemEntity, Long> {
+    List<ClosetItemEntity> findAllByClosetId_UserId_Nickname(String nickname);
     List<ClosetItemEntity> findAllByClosetId_Id(Long closetId);
     List<ClosetItemEntity> findAllByClosetId_IdAndCategory(Long closetId, String category);
     ClosetItemEntity findByIdAndClosetId_UserId_Nickname(Long itemId, String nickname);
