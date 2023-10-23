@@ -159,6 +159,21 @@ public class ClosetService {
         }
     }
 
+    // 4. 모든 아이템 조회
+    public List<ClosetItemDto> readAllItem(String nickname,
+                                           Authentication authentication) {
+        UserEntity user = getUserEntityByNickname(nickname);
+        if (user == getUserEntity(authentication.getName())) {
+            List<ClosetItemEntity> itemEntities =
+                    closetItemRepository.findAllByClosetId_UserId_Nickname(nickname);
+            log.info("{}의 아이템 목록 조회 완료", nickname);
+            return itemEntities.stream().map(ClosetItemDto::toClosetItemDto).toList();
+        } else {
+            log.info("잘못된 접근입니다.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
     // closetId로 해당 ClosetEntity 찾기
     private ClosetEntity getClosetEntity(String closetName, String nickName) {
         return entityRetrievalService.getClosetEntity(closetName, nickName);
