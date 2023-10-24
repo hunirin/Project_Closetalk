@@ -60,7 +60,7 @@ public class ClosetItemService {
             if (itemImageUrl != null && !itemImageUrl.isEmpty()) {
 
                 // 이미지 저장
-                String imageDir = String.format("src/main/resources/static/images/closetItem/%s/%s/", nickname, closetName);
+                String imageDir = String.format("/static/images/closetItem/%s/%s/", nickname, closetName);
                 try { // 읽고 쓰는데서 발생할 수 있는 예외 처리
                     Files.createDirectories(Path.of(imageDir));
                 } catch (IOException e) {
