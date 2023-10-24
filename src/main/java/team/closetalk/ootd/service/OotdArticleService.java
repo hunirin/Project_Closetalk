@@ -82,6 +82,8 @@ public class OotdArticleService {
         //OOTD ARTICLE 저장
         OotdArticleEntity ootdArticleEntity = ootdArticleDto.newEntity();
         ootdArticleEntity.setUserEntity(userEntity);
+        ootdArticleEntity.setLikeCount(0L);
+        ootdArticleEntity.setIsDeleted(false);
         OotdArticleEntity savedOotdArticle = ootdArticleRepository.save(ootdArticleEntity);
         ootdArticleEntity.setCreatedAt(LocalDateTime.now());
         ootdArticleEntity.setModifiedAt(LocalDateTime.now());
