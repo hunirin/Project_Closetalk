@@ -20,10 +20,10 @@
 
             <div class="itemRegister_top">
                 <form id="itemRegistrationForm" enctype="multipart/form-data">
-                <div class="itemRegister_top_btn">
-                    <button class="itemRegister_top_btn_list">목록</button>
-                    <button type="submit" class="itemRegister_top_btn_regi">등록</button>
-                </div>
+                    <div class="itemRegister_top_btn">
+                        <button id="listButton" class="itemRegister_top_btn_list">목록</button>
+                        <button id="registerButton" type="submit" class="itemRegister_top_btn_regi">등록</button>
+                    </div>
                 </form>
             </div>
 
@@ -199,6 +199,22 @@
                     // Example: window.location.href = '/login';
                 }
             });
+        });
+    </script>
+
+    <script>
+        const nickname = localStorage.getItem('nickname');
+
+        // 목록 버튼 redirect
+        const listButton = document.getElementById('listButton');
+        listButton.addEventListener('click', function () {
+            window.location.href = `/closet/view/${nickname}`;
+        });
+
+        // 등록 버튼 redirect
+        const registerButton = document.getElementById('registerButton');
+        registerButton.addEventListener('click', function () {
+            window.location.href = `/closet/view/${nickname}`;
         });
     </script>
 
