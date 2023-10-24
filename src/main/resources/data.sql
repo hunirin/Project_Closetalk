@@ -127,11 +127,11 @@ insert into ootd_article_images (id, ootd_article_id, image_url) values (32, 29,
 insert into ootd_article_images (id, ootd_article_id, image_url) values (33, 30, '/static/images/ootd/30/30.jpg');
 
 -- INSERT OOTD_COMMENT
-insert into ootd_comment (id, ootd_article_id, user_id, content, created_at) values (1, 1, 2, 'comment testing', '2023-08-30 11:23:32');
-insert into ootd_comment (id, ootd_article_id, user_id, content, created_at) values (2, 1, 2, 'comment testing', '2023-08-30 11:23:32');
+insert into ootd_comment (id, ootd_article_id, user_id, content, created_at) values (1, 1, 2, '코디 좋은데요!', '2023-08-30 11:23:32');
+insert into ootd_comment (id, ootd_article_id, user_id, content, created_at) values (2, 1, 2, '배경이랑 잘 어울리네요', '2023-08-30 11:23:32');
 
 -- INSERT OOTD_COMMENT_REPLY
-insert into ootd_comment (id, ootd_article_id, user_id, ootd_comment_id, content, created_at) values (3, 1, 1, 1, 'reply testing', '2023-08-30 11:23:32');
+insert into ootd_comment (id, ootd_article_id, user_id, ootd_comment_id, content, created_at) values (3, 1, 1, 1, '감사합니다', '2023-08-30 11:23:32');
 -- INSERT OOTD_LIKE
 insert into ootd_like (id, ootd_article_id, user_id) values (1, 1, 2);
 insert into ootd_like (id, ootd_article_id, user_id) values (2, 2, 2);
