@@ -6,7 +6,7 @@ spring:
     password: '${DB_PASSWORD}'
     redis:
       port: '${REDIS_PORT}'  #Redis 기본 포트 번호
-      host: '${REDIS_HOST}' #로컬 테스트에서는 localhost, 배포시에는 redis(redis 환경변수)
+      host: '${REDIS_HOST_TEST}' #로컬 테스트에서는 localhost, 배포시에는 redis(redis 환경변수)
       password: '${REDIS_PASSWORD}'
 
   jpa:
