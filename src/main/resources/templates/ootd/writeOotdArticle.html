@@ -76,14 +76,14 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 
     <script>
-        function checkAuth(){
-            const accessToken = localStorage.getItem('accessToken')
-            if(accessToken === null) {
-                alert("로그인이 필요합니다.")
-                const moveUrl = document.documentURI.replace("ootd/writePage", "loginPage")
-                location.href = moveUrl
+        const accessToken = localStorage.getItem('accessToken')
+        document.addEventListener('DOMContentLoaded', function() {
+            //로그인 여부 확인
+            if(accessToken == null) {
+                alert('로그인이 필요합니다.')
+                location.href = document.documentURI.replace('ootd/writePage', 'loginPage')
             }
-        }
+        })
 
         let fileNum = 0;
         let fileArr = new Array();

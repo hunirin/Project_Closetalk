@@ -30,6 +30,9 @@ public class ClosetItemService {
     private final ClosetRepository closetRepository;
     private final EntityRetrievalService entityRetrievalService;
 
+    private final String ROOT_DIRECTORY = "src/main/resources";
+    private final String CLOSET_IMAGE_DB_PATH = "/static/images/closetItem";
+
     // 1. 해당 옷장의 단일 아이템 조회
     public ClosetItemDto readClosetItem(String nickname, String closetName, Long itemId,
                                         Authentication authentication) {
@@ -60,13 +63,16 @@ public class ClosetItemService {
             if (itemImageUrl != null && !itemImageUrl.isEmpty()) {
 
                 // 이미지 저장
-                String imageDir = String.format("src/main/resources/static/images/closetItem/%s/%s/", nickname, closetName);
+                String imageDir = ROOT_DIRECTORY + CLOSET_IMAGE_DB_PATH + "/" + nickname + "/" + closetName.replace(" ", "");
+                imageDir = imageDir.replace("\\", "/");
+
                 try { // 읽고 쓰는데서 발생할 수 있는 예외 처리
                     Files.createDirectories(Path.of(imageDir));
                 } catch (IOException e) {
                     log.error(e.getMessage());
                     throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
+                String imagePath = CLOSET_IMAGE_DB_PATH + "/" + nickname + "/" + closetName.replace(" ", "");
 
                 // 저장되는 시간을 파일명으로
                 LocalDateTime currentTime = LocalDateTime.now();
@@ -79,11 +85,13 @@ public class ClosetItemService {
                 String extension = fileNameSplit[fileNameSplit.length - 1];
                 String itemImageFilename = currentTimeStr + extension;
                 // 폴더와 이미지 이름을 포함한 파일 경로
-                String itemImagePath = imageDir + itemImageFilename; // 파일 경로
+                String itemImagePath = Path.of(imagePath, itemImageFilename).toString(); // 파일 경로
+                itemImagePath = itemImagePath.replace("\\", "/");
                 log.info(itemImagePath);
+
                 // MultipartFile을 저장
                 try {
-                    itemImageUrl.transferTo(Path.of(itemImagePath));
+                    itemImageUrl.transferTo(Path.of(ROOT_DIRECTORY + itemImagePath));
                 } catch (IOException e) {
                     log.error(e.getMessage());
                     throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);

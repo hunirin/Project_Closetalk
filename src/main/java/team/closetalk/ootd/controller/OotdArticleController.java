@@ -62,4 +62,15 @@ public class OotdArticleController {
     public String writeOotdPage(Model model){
         return "ootd/writeOotdArticle";
     }
+
+    @GetMapping("/{articleId}/editPage")
+    public String editOotdPage(
+            Model model,
+            @PathVariable Long articleId
+    ){
+        OotdArticleDto ootdArticle = ootdArticleService.readOotdOne(articleId);
+        model.addAttribute("ootdArticle", ootdArticle);
+
+        return "ootd/editOotdArticle";
+    }
 }

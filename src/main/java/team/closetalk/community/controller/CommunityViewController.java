@@ -2,6 +2,7 @@ package team.closetalk.community.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -94,4 +95,9 @@ public class CommunityViewController {
         return "community/communityArticle";
     }
 
+    // 게시글 작성
+    @GetMapping("/writePage")
+    public String writeCommunityArticle() {
+        return "community/writeCommunityArticle";
+    }
 }

@@ -151,6 +151,10 @@
                 $('html, body').animate({scrollTop: $(document).height()});
             });
 
+            $("#plus-btn").click(function() {
+                window.location.href = "/community/view/writePage";
+            });
+
             function updateButtonPosition() {
                 var scrollPos = $(window).scrollTop();
                 var windowHeight = $(window).height();

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+  <html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" >
+    <title>OOTD</title>
+    <link rel="stylesheet" href="/static/css/community/write.css">
+    <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+</head>
+<body onload="checkAuth()">
+<!--  <body>-->
+<section class="community">
+    <!-- header -->
+    <header th:insert="~{header :: header}"></header>
+
+    <div id="root">
+      <div class="main_body">
+          <form method="post" enctype="multipart/form-data" id="form">
+
+              <div class="board_middle">
+                  <div class="board_middle_title">
+                      <lable>제목 :
+                      <textarea name="title" id="title"></textarea></lable>
+                  </div>
+
+                  <div class="board_middle_category">
+                      <lable>카테고리 :
+                          <select name="category" id="category">
+                              <option value="">== Category ==</option>
+                              <option value="CLOSETALK">Closetalk</option>
+                              <option value="SMALLTALK">Smalltalk</option>
+                          </select>
+                      </lable>
+                  </div>
+
+                  <div id="closetalkItems" style="margin: 10px 15px 0 15px; display: none">
+                      <!-- Closetalk 아이템 목록 표시 -->
+                  </div>
+
+                  <div class="board_middle_content">
+                      <label>내용 :
+                          <textarea name="content" id="content"></textarea></label>
+                  </div>
+
+                  <div class="board_imageList">
+                      <input type="file" id="content-image" accept="image/*" onchange="addFile(this);" multiple>
+                      <div class="file-list" id="image_container"></div>
+                  </div>
+              </div>
+
+              <div class="board_bottom_btn">
+                  <button type="submit" class="board_bottom_btn_save" >저장</button>
+                  <button type="button" class="board_bottom_btn_list" onclick="location.href=document.documentURI.replace('writePage', 'list')">
+                      목록
+                  </button>
+              </div>
+          </form>
+      </div>
+    </div>
+
+    <footer th:insert="~{footer :: footer}"></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+    <script>
+        // function checkAuth(){
+        //     const accessToken = localStorage.getItem('accessToken')
+        //     if(accessToken === null) {
+        //         alert("로그인이 필요합니다.")
+        //         const moveUrl = document.documentURI.replace("community/view/writePage", "loginPage")
+        //         location.href = moveUrl
+        //     }
+        // }
+
+        let fileNum = 0;
+        let fileArr = new Array();
+        function addFile(obj){
+            let maxFileCnt = 10
+            let attachedFileCnt = document.querySelectorAll(".preview").length
+
+            console.log("addfile 진입")
+            if(obj.files.length + attachedFileCnt  > maxFileCnt ) alert("첨부파일은 최대 10장까지 첨부할 수 있습니다.")
+            else {
+
+                console.log("else 진입")
+                for(const file of obj.files) {
+
+                    console.log("for 진입")
+                    console.log(file)
+                    console.log(validation(file))
+
+                    if (validation(file)) {
+                        const imageUrl = URL.createObjectURL(file)
+                        fileArr.push(file);
+                        let htmlData = '';
+                        htmlData += '<div id="file' + fileNum + '" class="preview" style="display: inline-block">';
+                        htmlData += '   <a class="delete" onclick="deleteFile(' + fileNum + ');"><i class="far fa-minus-square"></i></a>';
+                        htmlData += '   <img src="' + imageUrl + '" width="50px" height="50px"/>'
+                        htmlData += '</div>';
+
+                        console.log(htmlData)
+
+                        $('.file-list').append(htmlData);
+                        fileNum++;
+                    } else {
+                        continue;
+                    }
+                }
+            }
+
+            document.querySelector("input[type=file]").value = "";
+        }
+        function validation(obj){
+            const fileTypes = ['application/pdf', 'image/gif', 'image/jpeg', 'image/png', 'image/bmp', 'image/tif', 'application/haansofthwp', 'application/x-hwp'];
+            if (obj.name.length > 100) {
+                alert("파일명이 100자 이상인 파일은 제외되었습니다.");
+                return false;
+            } else if (obj.size > (10 * 1024 * 1024)) {
+                alert("최대 파일 용량인 100MB를 초과한 파일은 제외되었습니다.");
+                return false;
+            } else if (obj.name.lastIndexOf('.') == -1) {
+                alert("확장자가 없는 파일은 제외되었습니다.");
+                return false;
+            } else if (!fileTypes.includes(obj.type)) {
+                alert("첨부가 불가능한 파일은 제외되었습니다.");
+                return false;
+            } else {
+                return true;
+            }
+        }
+        function deleteFile(num) {
+            document.querySelector("#file" + num).remove();
+            fileArr[num].is_delete = true;
+        }
+
+        const form = document.getElementById('form');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('저장 버튼 클릭');
+            const saveUrl = '/community/create';
+
+            // 추가된 부분: title, category, content 필드를 FormData에 추가
+            const title = document.getElementById('title').value;
+            const category = document.getElementById('category').value;
+            const content = document.getElementById('content').value;
+
+
+            // data 필드를 객체로 만들어 FormData에 추가
+            const form = new FormData();
+            form.append('title', title); // title 필드 추가
+            form.append('category', category); // category 필드 추가
+            form.append('content', content); // content 필드 추가
+
+            for (let i = 0; i < fileArr.length; i++) {
+                // 삭제되지 않은 파일만 폼데이터에 담기
+                if (!fileArr[i].is_delete) {
+                    form.append('imageUrl', fileArr[i]);
+                }
+            }
+
+            // data 파트에 들어갈 객체 생성
+            const data = {
+                title: title,
+                category: category,
+                content: content,
+                selectClosetItemNumList: Object.keys(selectedItems) // 선택된 아이템 ID 목록
+            };
+
+            // data 객체를 JSON 문자열로 변환
+            const jsonData = JSON.stringify(data);
+
+            // FormData에 JSON 문자열 추가
+            form.append('data', new Blob([jsonData], { type: 'application/json' }));
+
+            fetch(saveUrl, {
+                method: 'POST',
+                body: form, // FormData 객체 전송
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                }
+            })
+                .then((response) => {
+                    if (response.status === 200) {
+                        // 게시글 저장에 성공하면 이동할 경로로 변경
+                        location.href = '/community/view/list'; // 예시 경로, 실제 경로에 맞게 수정
+                    } else {
+                        alert('게시글 저장에 실패했습니다.');
+                    }
+                });
+        });
+
+        // category 선택 함수
+        function handleCategoryChange(selectElement) {
+            const selectedValue = selectElement.value;
+            const itemList = document.getElementById('closetalkItems'); // 모달 요소
+
+            if (selectedValue === "CLOSETALK") {
+                // "CLOSETALK"이 선택된 경우 모달 요소를 보이도록 설정
+                itemList.style.display = "block";
+                fetchItemsForCloset();
+            } else {
+                // 다른 값이 선택된 경우 모달 요소를 숨김 처리
+                itemList.style.display = "none";
+            }
+        }
+
+        const selectElement = document.getElementById('category');
+        selectElement.addEventListener('change', function() {
+            handleCategoryChange(this);
+        });
+
+        // 선택한 옷장의 아이템 목록을 서버에서 가져오는 함수
+        function fetchItemsForCloset() {
+            let nickname = localStorage.getItem('nickname');
+            const accessToken = localStorage.getItem('accessToken');
+
+            let requestUrl = `/closet/${nickname}`;
+
+            fetch(requestUrl, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+                .then(response => {
+                    if (response.status === 200) {
+                        return response.json();
+                    } else {
+                        throw new Error('아이템 목록을 불러오는데 실패했습니다.');
+                    }
+                })
+                .then(data => {
+                    displayItems(data);
+                })
+                .catch(error => {
+                    console.error('요청 실패:', error);
+                });
+        }
+
+        function filterItemsByCategory(data, category) {
+            return data.filter(item => item.category === category);
+        }
+
+        // 클릭한 이미지의 선택 상태를 저장할 객체
+        const selectedItems = {};
+
+        function displayItems(data) {
+            const closetalkItems = document.getElementById('closetalkItems');
+            closetalkItems.innerHTML = ''; // 이전 아이템 목록 초기화
+
+            const categories = [...new Set(data.map(item => item.category))]; // 중복되지 않는 카테고리 목록
+
+            categories.forEach(category => {
+                const categoryItems = filterItemsByCategory(data, category);
+                if (categoryItems.length > 0) {
+                    const categoryTitle = document.createElement('p');
+                    categoryTitle.style.fontWeight = 'bold';
+                    categoryTitle.style.marginBottom = '0px';
+                    categoryTitle.textContent = category;
+                    closetalkItems.appendChild(categoryTitle);
+
+                    categoryItems.forEach(item => {
+                        const itemImage = document.createElement('img');
+                        itemImage.src = item.itemImageUrl; // 아이템 이미지 URL 설정
+                        itemImage.alt = item.itemName; // 아이템 이름을 alt 속성으로 설정
+
+                        // 이미지 크기 조절 및 상세 설정
+                        itemImage.style.width = '150px';
+                        itemImage.style.height = '150px';
+                        itemImage.style.objectFit = 'cover';
+                        itemImage.style.marginRight = '10px';
+                        itemImage.style.marginBottom = '10px';
+
+                        // 이미지 클릭 이벤트 핸들러
+                        itemImage.addEventListener('click', () => {
+                            const itemId = item.id; // 아이템의 고유 ID 또는 식별자를 사용
+
+                            // 이미 선택된 아이템인지 확인
+                            if (selectedItems[itemId]) {
+                                // 이미 선택된 아이템인 경우, 선택 해제
+                                itemImage.style.border = 'none'; // 선택 해제 표시
+                                delete selectedItems[itemId]; // 선택 목록에서 제거
+                            } else {
+                                // 선택되지 않은 아이템인 경우, 선택
+                                itemImage.style.border = '2px solid #505050';
+                                selectedItems[itemId] = item; // 선택 목록에 추가
+                            }
+                        });
+
+                        closetalkItems.appendChild(itemImage);
+                    });
+                }
+            });
+        }
+
+    </script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+</section>
+</body>
+</html>

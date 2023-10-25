@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+  <html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" >
+    <title>OOTD</title>
+    <link rel="stylesheet" href="/static/css/ootd/article.css">
+    <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+</head>
+<body>
+<section class="ootd">
+
+    <!-- header -->
+    <header th:insert="~{header :: header}"></header>
+
+    <div id="root">
+      <div class="main_body">
+
+        <div class="board_top">
+          <div class="board_top_info">
+            <div class="board_top_userinfo">
+                <img th:src="@{${ootdArticle.profile}}" th:if="${ootdArticle != null}">
+                <p class="user_nickname" th:text="${ootdArticle?.nickname}">nickname</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="board_image">
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" id="swiper-slide" th:each="image : ${ootdArticle?.ootdImages}">
+                      <!-- 이미지 슬라이드로 불러오기 -->
+                      <img th:src="@{${image.getImageUrl()}}" style="height: 100%; width: 100%">
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+
+        <div class="board_middle">
+          <div class="board_middle_boardinfo">
+            <p th:text="${ootdArticle?.createdAt}">2023.08.28</p>
+          </div>
+          <div class="board_bottom_content"></div>
+        </div>
+
+        <div class="board_bottom">
+          <div class="board_bottom_content">
+              <textarea th:text="${ootdArticle?.content}" name="content" id="content">content</textarea>
+<!--            <div th:text="${ootdArticle?.content}">content</div>-->
+          </div>
+          <div class="board_bottom_hashtag">
+              <input type="text" th:text="${ootdArticle?.hashtag}" name="hashtag" id="hashtag"/>
+<!--            <p th:text="${ootdArticle?.hashtag}">#ootd</p>-->
+          </div>
+          </div>
+        </div>
+
+        <div class="board_bottom_btn">
+            <button class="board_bottom_btn_eidt" id="btn-save">저장</button>
+          <a href="/ootd/main">
+            <button class="board_bottom_btn_list">목록</button>
+          </a>
+        </div>
+     </div>
+
+
+    <footer th:insert="~{footer :: footer}"></footer>
+
+    <script th:inline="javascript">
+        const accessToken = localStorage.getItem('accessToken')
+        /*<![CDATA[*/
+        document.addEventListener('DOMContentLoaded', () => {
+            //로그인 여부 확인
+            if(accessToken == null) {
+                alert("로그인이 필요합니다.")
+                location.href = document.documentURI.replace('ootd/writePage', 'loginPage')
+            }
+            //글쓴이 여부 확인
+            const loginNickname = localStorage.getItem('nickname')
+            const writerNickname = [[${ootdArticle.nickname}]]
+            if(loginNickname != writerNickname){
+                console.log('작성자가 아닙니다.')
+                alert("본인이 작성한 글만 수정 가능합니다.")
+                location.href = document.referrer
+            }
+        })
+
+        const btnSave = document.querySelector('#btn-save')
+        btnSave.addEventListener('click', () => {
+            let ootdArticle = {
+                'content': document.querySelector('#content').value
+                , 'hashtag': document.querySelector('#hashtag').value
+            }
+            fetch('/ootd/'+[[${ootdArticle.id}]], {
+                method: 'PUT'
+                , headers: {
+                    'Content-Type': 'application/json'
+                    , 'Authorization': 'Bearer ' + accessToken
+                }
+                , body: JSON.stringify(ootdArticle)
+            }).then((response) => {
+                if (response.status === 200) location.href = '/ootd/'+[[${ootdArticle.id}]]
+                else alert('게시글 저장에 실패했습니다.')
+            })
+        })
+        /*]]>*/
+    </script>
+    <!-- 배너 스와이프 API -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script>
+        var swiper = new Swiper(".mySwiper", {
+            pagination: {
+                el: ".swiper-pagination",
+            },
+        });
+    </script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+</section>
+</body>
+</html>

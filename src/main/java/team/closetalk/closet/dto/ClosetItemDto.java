@@ -26,6 +26,7 @@ public class ClosetItemDto {
     // ClosetItemEntity -> ClosetItemDto
     public static ClosetItemDto toClosetItemDto(ClosetItemEntity item) {
         return ClosetItemDto.builder()
+                .id(item.getId())
                 .createdAt(item.getCreatedAt())
                 .itemImageUrl(item.getItemImageUrl())
                 .category(item.getCategory())

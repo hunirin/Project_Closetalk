@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Closetalk</title>
+    <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="/static/css/login/findIdAndPw.css">
+</head>
+<body>
+<header th:insert="~{header :: header}"></header>
+
+<div id="content" class="find-form">
+    <div class="titleText">
+        <h2>아이디 찾기</h2>
+        <hr>
+    </div>
+    <br>
+    <form action="/findId" method="post" id="findIdForm">
+        <div class="textForm">
+            <input type="email" class="email" id="email" name="email" required placeholder="이메일">
+        </div>
+        <div class="findBtnDiv">
+            <button type="button" class="findBtn" id="findBtn" onclick="findId()">아이디 찾기</button>
+        </div>
+        <div id="modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close" id="closeModalButton" onclick="closeModal()">&times;</span>
+                <p id="modalMessage"></p>
+            </div>
+        </div>
+    </form>
+</div>
+
+<footer th:insert="~{footer :: footer}"></footer>
+
+<script>
+    // 모달 띄우기
+    function openModal(message) {
+        const modal = document.getElementById("modal");
+        const modalMessage = document.getElementById("modalMessage");
+
+        modalMessage.innerText = message;
+        modal.style.display = "block";
+
+        // 모달이 열릴 때 close 버튼을 보이도록 변경
+        closeModalButton.style.display = "block";
+    }
+
+    // 모달 닫기
+    function closeModal() {
+        const modal = document.getElementById("modal");
+        modal.style.display = "none";
+    }
+
+    // 모달 외부 클릭 시 닫기
+    window.onclick = function(event) {
+        const modal = document.getElementById("modal");
+        if (event.target === modal) {
+            closeModal();
+        }
+    };
+
+    //아이디 찾기
+    function findId() {
+        const email = document.getElementById("email").value;
+
+        fetch(`/findId?email=${email}`)
+            .then(response => response.json())
+            .then(data => {
+                openModal(data.message);
+            })
+            .catch(error => {
+                console.error("Error finding ID", error);
+            });
+    }
+</script>
+</body>
+</html>

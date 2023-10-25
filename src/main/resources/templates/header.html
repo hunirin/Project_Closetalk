@@ -12,7 +12,17 @@
 <header id="header">
   <div class="header-top">
     <div class="header-icon">
-      <i id="alert" class="fa-solid fa-bell fa-2x"></i><i id="user" class="fa-solid fa-circle-user fa-2x"></i>
+      <i id="alert" class="fa-solid fa-bell fa-2x" style="visibility: hidden"></i>
+      <i id="user" class="fa-solid fa-circle-user fa-2x"></i>
+      <a href="/loginPage"><i id="login" class="fa-solid fa-right-to-bracket fa-2x"></i></a>
+<!--      <a href="/logout"><i class="fa-solid fa-right-from-bracket fa-2x"></i><a> -->
+    </div>
+    <div id="floatMenu">
+      <ul>
+        <a href="/" id="aCloset"><li>내 옷장</li></a>
+        <a href="/" id="aMypage"><li>회원정보</li></a>
+        <a href="/" id="aLikeCommunity"><li>내가 좋아요한 글</li></a>
+      </ul>
     </div>
   </div>
 
@@ -32,6 +42,67 @@
       <a href="/issue/view/list">issue</a>
     </div>
   </div>
+
+  <script>
+    window.addEventListener('load', function () {
+      const accessToken = localStorage.getItem('accessToken');
+      console.log(accessToken);
+
+      if (accessToken) {
+        // DOM 요소를 가져옵니다.
+        var loginButton = document.getElementById("login");
+
+        // "accessToken"이 있을 경우 버튼을 변경합니다.
+        loginButton.setAttribute("href", "#"); // 임시로 "#"으로 설정합니다.
+
+        // 로그아웃 버튼 클릭 이벤트를 추가합니다.
+        loginButton.addEventListener("click", function (event) {
+          event.preventDefault(); // 기본 동작(링크 이동)을 막습니다.
+
+          // accessToken을 삭제합니다.
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('nickname');
+
+          // 로그아웃 처리를 수행하는 코드를 추가합니다.
+          fetch("/logout", {
+            method: "POST",
+            headers: {
+              "Authorization": "Bearer " + accessToken
+            }
+          })
+                  .then(response => {
+                    // 로그아웃 처리 완료 후 필요한 동작을 수행합니다.
+                    window.location.href = "/ootdMain";
+                  })
+                  .catch(error => {
+                    console.error("로그아웃 실패: " + error);
+                  });
+        });
+
+        // "accessToken"이 있을 경우 버튼을 변경합니다.
+        loginButton.classList.remove("fa-right-to-bracket");
+        loginButton.classList.add("fa-sign-out-alt"); // 로그아웃 아이콘으로 변경합니다.
+      }
+    });
+
+
+    // const iconUser = document.querySelector("#user")
+    const iconUser = document.getElementById('user')
+    const floatMenu = document.getElementById('floatMenu')
+    iconUser.addEventListener('click', () => {
+      console.log('마이페이지 클릭')
+      if(floatMenu.style.visibility == 'hidden') floatMenu.style.visibility = 'visible'
+      else floatMenu.style.visibility = 'hidden'
+    })
+
+    const aCloset = document.getElementById('aCloset')
+    aCloset.href = "/closet/view/" + localStorage.getItem('nickname')
+    const aMypage = document.getElementById('aMypage')
+    aMypage.href = "/profile"
+    const aLikeCommunity = document.getElementById('aLikeCommunity')
+    aLikeCommunity.href = "/mypage/liked/community"
+  </script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </header>
 </html>

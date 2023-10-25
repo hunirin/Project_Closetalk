@@ -77,7 +77,7 @@ public class IssueArticleService {
     // 게시글 전체 조회
     public Page<IssueArticleListDto> readIssuePaged(Integer pageNum, Integer pageSize) {
         Pageable pageable = PageRequest.of(
-                pageNum, pageSize, Sort.by("id").ascending());
+                pageNum, pageSize, Sort.by("id").descending());
 
         Page<IssueArticleEntity> issueArticleEntityPage =
                 issueArticleRepository.findAllByDeletedAtIsNull(pageable);

@@ -98,8 +98,8 @@
         </div>
 
         <div class="board_bottom_btn">
-          <button class="board_bottom_btn_edit">수정</button>
-          <button class="board_bottom_btn_delete">삭제</button>
+          <button class="board_bottom_btn_edit" id="btn-editArticle">수정</button>
+          <button class="board_bottom_btn_delete" id="btn-deleteArticle">삭제</button>
           <a href="/ootd/main">
             <button class="board_bottom_btn_list">목록</button>
           </a>
@@ -118,6 +118,61 @@
               },
           });
       </script>
+    <script th:inline="javascript">
+        const loginNickname = localStorage.getItem('nickname')
+        const writerNickname = [[${ootdArticle.nickname}]]
+        //글쓴이 여부 확인하기
+        /*<![CDATA[*/
+        const btnEditArticle = document.getElementById('btn-editArticle')
+        const btnDeleteArticle = document.getElementById('btn-deleteArticle')
+        document.addEventListener('DOMContentLoaded', function() {
+            let visibleStatus = ''
+            console.log(localStorage.getItem('nickname'))
+            console.log([[${ootdArticle.nickname}]])
+            //로그인 하지 않은 경우
+            if(loginNickname == null || loginNickname == '') {
+                console.log('로그인 하지 않았습니다.')
+                visibleStatus = 'hidden'
+            } else if(loginNickname != writerNickname){
+                console.log('작성자가 아닙니다.')
+                visibleStatus = 'hidden'
+            } else {
+                console.log('작성자입니다.')
+                visibleStatus = 'visibility'
+            }
+            btnEditArticle.style.visibility = visibleStatus
+            btnDeleteArticle.style.visibility = visibleStatus
+        })
+
+        btnEditArticle.addEventListener('click', () => {
+            location.href = '/ootd/'+[[${ootdArticle.id}]]+'/editPage'
+
+        })
+
+        btnDeleteArticle.addEventListener('click', () => {
+
+            if(confirm('정말로 삭제하시겠습니까?')){
+                if(loginNickname != writerNickname){
+                    alert('작성자만 글 삭제가 가능합니다.')
+                } else {
+                    fetch('/ootd/'+[[${ootdArticle.id}]], {
+                        method: 'DELETE'
+                        , headers: {
+                            Authorization: 'Bearer ' + accessToken
+                        }
+                    }).then((response) => {
+                        if(response.status == 200) {
+                            alert('삭제되었습니다.')
+                            location.href = '/ootd/main'
+                        } else {
+                            alert('게시글을 삭제할 수 없습니다.')
+                        }
+                    })
+                }
+            }
+        })
+        /*]]>*/
+    </script>
       <!-- heart 클릭 시 좋아요 -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
