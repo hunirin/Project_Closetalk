@@ -63,7 +63,7 @@ public class ClosetItemService {
             if (itemImageUrl != null && !itemImageUrl.isEmpty()) {
 
                 // 이미지 저장
-                String imageDir = ROOT_DIRECTORY + CLOSET_IMAGE_DB_PATH + nickname + "/" + closetName.replace(" ", "");
+                String imageDir = ROOT_DIRECTORY + CLOSET_IMAGE_DB_PATH + "/" + nickname + "/" + closetName.replace(" ", "");
                 imageDir = imageDir.replace("\\", "/");
 
                 try { // 읽고 쓰는데서 발생할 수 있는 예외 처리
@@ -72,7 +72,7 @@ public class ClosetItemService {
                     log.error(e.getMessage());
                     throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
-                String imagePath = CLOSET_IMAGE_DB_PATH + nickname + closetName.replace(" ", "");
+                String imagePath = CLOSET_IMAGE_DB_PATH + "/" + nickname + "/" + closetName.replace(" ", "");
 
                 // 저장되는 시간을 파일명으로
                 LocalDateTime currentTime = LocalDateTime.now();
